@@ -4,7 +4,6 @@ export class OfficeGame {
  engine:Engine; scene:Scene; camera:ArcRotateCamera; floor:any; desks:TransformNode[]=[]; placing=false; onFloorTap?:(x:number,z:number)=>boolean;
  constructor(canvas:HTMLCanvasElement){
   this.engine=new Engine(canvas,true,{preserveDrawingBuffer:false,stencil:true,adaptToDeviceRatio:true});
-  this.scene=new Scene(canvas.ownerDocument ? this.engine.getRenderingCanvas() ? this.engine.getRenderingCanvas()!.ownerDocument.defaultView ? undefined as never : undefined as never : undefined as never : undefined as never);
   this.scene=new Scene(this.engine);this.scene.clearColor=new Color4(.72,.83,.91,1);
   this.camera=new ArcRotateCamera('camera',-Math.PI/4,1.05,15,new Vector3(0,0,0),this.scene);
   this.camera.lowerRadiusLimit=10;this.camera.upperRadiusLimit=22;this.camera.wheelPrecision=45;this.camera.panningSensibility=90;this.camera.attachControl(canvas,true);
