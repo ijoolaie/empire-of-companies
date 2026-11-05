@@ -84,12 +84,12 @@ A browser-first, bilingual 3D idle management game. The player starts with one s
 ## Phase 3 — Progression, onboarding and usability
 **Status: in progress**
 
-3.1 Add a short first-run tutorial with skippable steps. (Implemented and browser-verified.)
-3.2 Add objectives and reward milestones. (Three initial milestones implemented with one-time cash/XP rewards.)
+3.1 Add a short first-run tutorial with skippable steps. (Implemented; covered by Playwright browser regression.)
+3.2 Add objectives and reward milestones. (Three initial milestones implemented with one-time cash/XP rewards; browser regression covers rewards and reload persistence.)
 3.3 Define XP/level progression and unlock requirements. (Player XP and level 2 threshold implemented; further unlocks remain.)
 3.4 Add a progression screen explaining next unlocks.  
 3.5 Add contextual hints, confirmation dialogs and error messages.  
-3.6 Improve HUD hierarchy and responsive layouts for desktop/tablet/mobile.  
+3.6 Improve HUD hierarchy and responsive layouts for desktop/tablet/mobile. (320x568 browser layout regression is automated; broader sizes remain.)
 3.7 Ensure all interactive actions are keyboard reachable where practical.  
 3.8 Add sound settings and restrained UI feedback (sound can be deferred).  
 3.9 Complete Persian and English copy; audit RTL/LTR, numbers, currency and layout.  
@@ -201,7 +201,7 @@ A browser-first, bilingual 3D idle management game. The player starts with one s
 ## Current execution order (do not skip ahead)
 
 1. Complete P3 tutorial/objective/XP browser regression checks and save migration edge cases.
-2. Add repeatable browser automation to the repository and CI.
+2. Add repeatable browser automation to the repository and CI. (Playwright suite and CI Chromium step implemented locally; pending push and CI verification.)
 3. Improve HUD and responsive layout for desktop, tablet and mobile.
 4. Add a progression screen for upcoming unlocks and contextual guidance.
 5. Continue Persian/English accessibility and settings work.

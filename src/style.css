@@ -20,3 +20,4 @@
 .tutorial .text-button{padding:2px 0;font-size:11px;cursor:pointer}
 @media(max-width:600px){.panel{max-height:calc(100vh - 130px);bottom:74px;max-width:min(320px,calc(100vw - 14px));left:7px;padding:9px 11px}.panel h3{font-size:14px;margin:4px 0}.panel p{font-size:11px}.objective-copy strong{font-size:11px}}
 @media(max-width:380px){.panel{bottom:98px;max-height:calc(100vh - 270px)}.toolbar{flex-wrap:wrap;gap:6px;padding:0 7px}.toolbar .action{flex:1 1 calc(50% - 6px);max-width:calc(50% - 6px);font-size:11px;padding:8px}}
+.topbar,.stats{pointer-events:auto}

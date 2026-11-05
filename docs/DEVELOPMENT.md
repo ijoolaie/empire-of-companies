@@ -22,6 +22,12 @@ npm run build
 npm run preview
 ```
 
+## Browser regression tests
+- npm run test:browser runs the committed Playwright suite against the production preview build.
+- Install the local browser once with npx playwright install chromium.
+- CI installs Chromium and runs the browser suite after unit tests.
+- The suite covers tutorial dismissal, Persian RTL / English LTR, progression rewards and persistence, offline earnings, and a 320x568 layout check.
+
 ## Data boundaries
 - Game economy, workers, desks, progression and saves: device-local only.
 - Supabase: authentication/identity only.
