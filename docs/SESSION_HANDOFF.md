@@ -1,47 +1,51 @@
 # Session Handoff — Read First
 
-Last updated: 2026-11-05 — documentation committed; bootstrap CI rerun started
+Last updated: 2026-11-05 — P2 interactive browser smoke test passed
 
 ## Mission
-Continue the browser-first 3D idle management game **Empire of Companies / امپراتور شرکت‌ها** in repository https://github.com/ijoolaie/empire-of-companies.
+Continue **Empire of Companies / امپراتور شرکت‌ها** in https://github.com/ijoolaie/empire-of-companies.
 
 ## Read order
 1. README.fa.md
 2. docs/PROJECT_STATUS.md
 3. docs/ROADMAP.md
-4. docs/DECISIONS.md
-5. docs/DEVELOPMENT.md
+4. docs/WORK_BREAKDOWN_STRUCTURE.md
+5. docs/DECISIONS.md
+6. docs/DEVELOPMENT.md
 
 ## Non-negotiable decisions
 - Babylon.js + TypeScript + Vite.
 - Persian/English, RTL/LTR.
 - Browser/PWA first; Android later via Capacitor.
-- Procedural art first; do not require Blender.
-- Local-only game saves; Supabase Auth only.
-- No service-role/secret key in frontend.
-- Private GitHub repo.
-- Do not claim build, gameplay, or auth is verified without a successful test.
+- Procedural art first; Blender is not required.
+- Game saves are local-only; no cloud save/sync.
+- Supabase Auth only; no service-role/secret key in frontend.
+- GitHub repository is Public by explicit user approval.
+- Never claim gameplay/auth verified without a successful observable test.
 
-## Last verified repository baseline
-Initial app baseline: 7d210c2f0362fb445b87fbf455a3a4f8439b5e64. Documentation and workflow fixes have since been committed on main; read the current main branch before editing.
-Source files exist in main. CI workflow is .github/workflows/build.yml.
-Latest observed CI run: 41985209822 — failed in setup-node because npm caching expected a lockfile which did not exist. npm install and npm run build were skipped. This is not an app build failure.
+## Repository state
+- Default branch: main.
+- Development branch: feat/p2-core-game-loop.
+- Draft PR: #1 — https://github.com/ijoolaie/empire-of-companies/pull/1.
+- Code commit verified by CI: 2fecf6e6b0fe156979f71884ef5005b44c8164ef.
+- Local clone: C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies.
+- Node v22.23.2; npm 10.9.8.
+- package-lock.json committed; CI uses npm ci and npm cache.
+- GitHub Actions run #24 (41995386118) passed.
+- Local npm ci, npm test (10/10), and npm run build passed.
+- Headless Chrome gameplay smoke passed: desk placement, hire, upgrade, passive income, save/refresh persistence, simulated 60-second offline earnings, and Persian RTL/English LTR toggle. No runtime exceptions observed.
+- Supabase Auth and wider QA remain pending.
 
 ## Current phase
-P0 continuity docs + P1 reproducible build.
+P2 core gameplay acceptance smoke test passed locally. P1 reproducible engineering and GitHub CI are green. PR #1 remains Draft and is not merged.
 
-## Immediate next steps
-1. Inspect latest CI run 41986757841 after the cache setting was removed.
-2. If install/build passes, generate and commit package-lock.json using Node 22; switch CI to npm ci + cache.
-3. Fix only actual TypeScript/build errors exposed by CI.
-4. Verify repository visibility: the latest Actions API payload reported private=false; user requirement is private repository.
-5. Update PROJECT_STATUS.md and this handoff with commit SHA, run ID, exact outcomes.
-6. Then begin P2 core loop work.
+## Next exact task
+Create repeatable browser regression automation and wire it into CI. Then verify Supabase Auth flows separately, without moving game save data to the cloud. Continue P3 progression and UX once the test automation is stable.
 
 ## Session update rule
-At the end of every substantial work session:
+At the end of each substantial session:
 - Update docs/PROJECT_STATUS.md with verified facts only.
-- Update docs/SESSION_HANDOFF.md with current phase, exact next command/task, latest commit and CI run.
-- Update ROADMAP.md only when scope/order/exit criteria change.
-- Record any changed product/architecture decision in DECISIONS.md.
-- Never mark a task done merely because code was drafted or uploaded; require an observable test.
+- Update docs/SESSION_HANDOFF.md with current phase, next task, commit and CI run.
+- Update docs/ROADMAP.md / docs/WORK_BREAKDOWN_STRUCTURE.md when scope or order changes.
+- Record product/architecture changes in docs/DECISIONS.md.
+- Never mark code complete just because it was written or uploaded.

@@ -1,44 +1,59 @@
 # Project Status
 
-Last verified: 2026-11-05 (documentation and workflow bootstrap updated)
+Last verified: 2026-11-05
 
 ## Repository
 - GitHub: https://github.com/ijoolaie/empire-of-companies
+- Visibility: Public (explicitly approved by user).
 - Default branch: main
-- Verified baseline commit: 7d210c2f0362fb445b87fbf455a3a4f8439b5e64
-- Existing app files verified: package.json, index.html, tsconfig.json, src/main.ts, src/game.ts, src/auth.ts, src/i18n.ts, src/style.css, .env.example, README.fa.md.
-- CI workflow exists at .github/workflows/build.yml (not ci.yml).
-- Vite config file is not present; Vite can use its defaults, so this is not automatically a defect.
+- Development branch: feat/p2-core-game-loop
+- PR #1: https://github.com/ijoolaie/empire-of-companies/pull/1 (Draft; not merged).
+- Latest code commit verified by CI: 2fecf6e6b0fe156979f71884ef5005b44c8164ef.
+- Local clone: C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies
 
-## Implemented (repository inspection only)
-- Babylon.js 3D scene and initial office prototype.
-- Basic interaction/economy prototype as described in README.fa.md.
-- Persian/English dictionary and UI styling.
-- Supabase Auth client scaffold.
-- localStorage-based game progress approach documented.
-- GitHub Actions build workflow.
+## Implemented on the P2 branch
+- Versioned local GameState v3 and guarded save parsing.
+- Legacy save-key lookup and basic v2-to-v3 shape migration.
+- Passive income based on workers and office level.
+- Desk capacity check before hiring.
+- Desk construction with cash, bounds, integer-coordinate and overlap checks.
+- Office upgrade with level-based cost.
+- Offline earnings calculation capped at 8 hours.
+- HUD updates for cash, income, employees and level.
+- Persian/English labels for new actions.
+- Ten deterministic Node tests covering economy and save behavior.
 
-## Not yet verified
-- Clean dependency install.
-- TypeScript compilation and production build.
-- Actual gameplay loop and save/load behavior in a running browser.
-- Supabase sign-up/sign-in, redirect configuration and email confirmation.
-- PWA behavior and Android packaging.
+## Verified
+- Environment: Node v22.23.2 / npm 10.9.8.
+- package-lock.json committed; clean npm ci succeeds and audit reports 0 vulnerabilities.
+- npm test: 10 passed, 0 failed.
+- npm run build: TypeScript and Vite production build passed.
+- GitHub Actions run #24 (41995386118) on code commit 2fecf6e completed successfully: npm ci, build and tests all passed.
+- Headless Chrome interactive smoke test passed against the local Vite app using Chrome DevTools Protocol:
+  - Initial UI and Babylon canvas loaded (canvas 762x484).
+  - English LTR and Persian RTL language toggles passed.
+  - Placed a desk at (3, 2); desk count increased to 3 and cash decreased to 11,000.
+  - Hired a second worker and upgraded office to level 2.
+  - Passive income accrued while the test waited (cash reached 3,524 after the 3,500 post-action balance).
+  - Saved and reloaded; workers, level and all 3 desks persisted.
+  - Simulated 60 seconds offline; offline earnings notice appeared and cash increased to 4,741.
+  - No JavaScript runtime exceptions were observed.
+- Temporary browser test scripts and screenshots were removed; working tree is clean after documentation commit.
 
-## CI baseline
-Workflow run 41985209822 for commit 7d210c2f0362fb445b87fbf455a3a4f8439b5e64 failed before npm install/build. The exact failure was: setup-node could not find a dependency lock file because package-lock.json/yarn.lock was absent while npm cache was enabled. This is a workflow setup failure, not evidence of a TypeScript or application build failure.
+## Open issues / unverified
+- Supabase sign-up/sign-in and redirect settings have not been end-to-end tested.
+- PWA behavior and Android packaging are not implemented/verified.
+- Worker visuals/animation and visible worker-to-desk assignment remain incomplete.
+- Large Babylon.js main chunk (~6.0 MB minified) needs performance/code-splitting work.
+- Additional browser coverage is needed for malformed/legacy saves and longer idle/offline scenarios.
 
 ## Current phase
-P0 continuity documentation is committed. P1 reproducible build is underway.
+P1 reproducible engineering is complete. P2 core economy, desk placement, hiring, upgrade, passive income, refresh persistence and a simulated offline-earnings browser path have passed smoke testing. Supabase Auth and broader QA remain open.
 
-## Documentation commits
-Roadmap, status, decisions, development guide and session handoff are committed under docs/. README.md now links to them. The workflow no longer enables npm cache before a lockfile exists.
-
-## Latest CI observation
-Run 41986757841 completed successfully on commit 33249ef5c4b856a17f0ab31e103f247316864e01. Both npm install and npm run build passed in GitHub Actions (Node 22). This verifies the current repository build in CI; a local clean install and browser gameplay smoke test are still pending.
-
-## Repository privacy warning
-The GitHub repository API currently reports private=false and visibility=public. This conflicts with the product decision that the repository be private. The available GitHub connection cannot change repository visibility. Do not commit additional project details until the owner changes it to Private in GitHub Settings → General → Danger Zone → Change repository visibility (or explicitly approves keeping it public).
-
-## Next action
-Inspect run 41986757841. If it reaches npm install/build, fix any actual errors. Then create and commit package-lock.json and switch CI to npm ci with caching. Verify the repository visibility setting because the workflow API payload reported `private: false`, despite the intended private-repository requirement.
+## Immediate next actions
+1. Add browser regression automation to the project so the verified gameplay path is repeatable in CI.
+2. Complete Supabase Auth end-to-end checks separately; game saves must remain device-local.
+3. Continue P3 progression and UX: tutorial, objectives, XP/levels, unlocks, milestones, responsive layout and settings.
+4. Plan worker visuals/animation and visible desk assignment for the 3D content phase.
+5. Address Babylon.js bundle size with measured code splitting/performance work.
+6. Keep PR #1 Draft until the remaining review/acceptance criteria are satisfied; do not merge automatically.
