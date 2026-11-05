@@ -1,6 +1,6 @@
 # Session Handoff — Read First
 
-Last updated: 2026-11-05
+Last updated: 2026-11-05 — documentation committed; bootstrap CI rerun started
 
 ## Mission
 Continue the browser-first 3D idle management game **Empire of Companies / امپراتور شرکت‌ها** in repository https://github.com/ijoolaie/empire-of-companies.
@@ -23,7 +23,7 @@ Continue the browser-first 3D idle management game **Empire of Companies / ام�
 - Do not claim build, gameplay, or auth is verified without a successful test.
 
 ## Last verified repository baseline
-Commit: 7d210c2f0362fb445b87fbf455a3a4f8439b5e64
+Initial app baseline: 7d210c2f0362fb445b87fbf455a3a4f8439b5e64. Documentation and workflow fixes have since been committed on main; read the current main branch before editing.
 Source files exist in main. CI workflow is .github/workflows/build.yml.
 Latest observed CI run: 41985209822 — failed in setup-node because npm caching expected a lockfile which did not exist. npm install and npm run build were skipped. This is not an app build failure.
 
@@ -31,10 +31,10 @@ Latest observed CI run: 41985209822 — failed in setup-node because npm caching
 P0 continuity docs + P1 reproducible build.
 
 ## Immediate next steps
-1. Fix workflow to avoid npm cache until package-lock.json is committed.
-2. Trigger and inspect CI.
-3. Commit package-lock.json using npm install in a Node 22 environment; switch CI to npm ci + cache.
-4. Fix only the real TypeScript/build errors exposed by CI.
+1. Inspect latest CI run 41986757841 after the cache setting was removed.
+2. If install/build passes, generate and commit package-lock.json using Node 22; switch CI to npm ci + cache.
+3. Fix only actual TypeScript/build errors exposed by CI.
+4. Verify repository visibility: the latest Actions API payload reported private=false; user requirement is private repository.
 5. Update PROJECT_STATUS.md and this handoff with commit SHA, run ID, exact outcomes.
 6. Then begin P2 core loop work.
 
