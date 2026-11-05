@@ -16,7 +16,7 @@ Continue Empire of Companies: https://github.com/ijoolaie/empire-of-companies
 
 ## Repository
 - Branch: feat/p3-progression-ux.
-- Latest remote functional commit before current slice: bae936f.
+- Latest pushed feature commit: e506463 — feat: add procedural seated office workers. Follow-up typing animation/chair polish is local and pending push.
 - PR #2: https://github.com/ijoolaie/empire-of-companies/pull/2.
 - CI run #33 (42063106976) passed for bae936f.
 - Local path: C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies.
@@ -25,7 +25,7 @@ Continue Empire of Companies: https://github.com/ijoolaie/empire-of-companies
 P3 progression/usability remains active. P4 has started with an initial procedural worker visual slice:
 - OfficeGame.syncWorkers(count) creates seated procedural worker models for staffed desks and removes excess worker nodes.
 - Hiring synchronizes the scene after the economy action succeeds.
-- Models use primitive Babylon meshes/materials and subtle idle vertical motion; no external assets or Blender.
+- Models use primitive Babylon meshes/materials, subtle body motion and simple typing/arm motion; desk chair backrests are added. No external assets or Blender.
 - Canvas data-worker-model-count is used by Playwright to verify initial/hired model counts.
 
 ## Local verification
@@ -34,7 +34,7 @@ P3 progression/usability remains active. P4 has started with an initial procedur
 - npm run test:browser: 8/8 passed, including initial worker count and second worker after hiring.
 - git diff --check: passed.
 - Babylon main chunk warning: about 6,025.15 kB minified / 1,321.96 kB gzip.
-- Current worker slice is still uncommitted/unpushed and not CI-verified.
+- Initial worker slice e506463 is pushed; CI run #35 (42106950970) is still running. Follow-up typing animation/chair polish is locally tested but not yet committed/pushed.
 - Visual acceptance on a real browser display is still outstanding; automated checks do not prove model aesthetics.
 
 ## Exact next task

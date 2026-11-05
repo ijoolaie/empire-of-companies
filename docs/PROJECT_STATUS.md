@@ -6,7 +6,7 @@ Last verified: 2026-11-06
 - GitHub: https://github.com/ijoolaie/empire-of-companies
 - Default branch: main; P2 merge: 06ebb5c.
 - Development branch: feat/p3-progression-ux.
-- Latest remote functional commit before this local slice: bae936f.
+- Latest pushed feature commit: e506463 (procedural seated workers); follow-up worker animation/furniture polish is local and pending push.
 - PR #2: https://github.com/ijoolaie/empire-of-companies/pull/2 (open, Draft, not merged).
 - CI run #33 (42063106976) passed for bae936f, including Chromium browser tests.
 - Local clone: C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies.
@@ -29,7 +29,8 @@ Last verified: 2026-11-06
 ## P4 initial procedural worker slice (local, not yet pushed)
 - Procedural seated worker models are attached to the first staffed desk positions.
 - Hiring calls syncWorkers and creates the additional worker model at the next available desk.
-- Workers have basic skin/shirt/hair meshes and a subtle idle vertical motion.
+- Workers have skin/shirt/hair meshes, seated poses, subtle body motion and simple typing/arm motion.
+- Desk furniture now includes a chair backrest.
 - A canvas data attribute exposes current rendered worker-model count for browser regression checks.
 - No external assets or Blender dependency.
 - Work/walk animations, character variants, detailed poses, scene profiling and visual manual acceptance remain open.
@@ -40,7 +41,7 @@ Last verified: 2026-11-06
 - npm run test:browser: 8 passed, 0 failed; existing progression/mobile/accessibility suite plus worker model-count assertion.
 - git diff --check: passed.
 - Babylon main chunk warning remains: about 6,025.15 kB minified / 1,321.96 kB gzip.
-- Current worker visual slice is not yet committed, pushed or CI-verified.
+- Initial worker model commit e506463 is pushed; GitHub Actions run #35 (42106950970) is in progress. Follow-up typing animation/chair polish is locally tested but not yet committed/pushed.
 
 ## Open
 - Review worker model proportions/placement visually in a real browser session.

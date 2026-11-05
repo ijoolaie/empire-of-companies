@@ -103,7 +103,7 @@ A browser-first, bilingual 3D idle management game. The player starts with one s
 4.1 Define visual direction, palette, scale and camera conventions.  
 4.2 Build reusable procedural furniture: desk, chair, monitor, lamp, cabinet, plant.  
 4.3 Build worker character variants using procedural meshes or licensed assets. (Initial procedural seated worker model added; variants remain.)
-4.4 Add idle/work/walk animations or simple readable motion. (Subtle idle motion added; work/walk states remain.)
+4.4 Add idle/work/walk animations or simple readable motion. (Subtle body and typing/arm motion added; walk state remains.)
 4.5 Add room modules, walls, doors, windows and floor materials.  
 4.6 Add departments with distinct furniture and production roles.  
 4.7 Add additional company types with different production loops.  

@@ -1,7 +1,7 @@
 import {Engine,Scene,ArcRotateCamera,Vector3,HemisphericLight,DirectionalLight,MeshBuilder,StandardMaterial,Color3,Color4,TransformNode,PointerEventTypes} from '@babylonjs/core';
 
 export class OfficeGame {
- engine:Engine; scene:Scene; camera:ArcRotateCamera; floor:any; desks:TransformNode[]=[]; workers:TransformNode[]=[]; placing=false; onFloorTap?:(x:number,z:number)=>boolean;
+ engine:Engine; scene:Scene; camera:ArcRotateCamera; floor:any; desks:TransformNode[]=[]; workers:TransformNode[]=[]; workerArms:Array<[any,any]>=[]; placing=false; onFloorTap?:(x:number,z:number)=>boolean;
  constructor(canvas:HTMLCanvasElement){
   this.engine=new Engine(canvas,true,{preserveDrawingBuffer:false,stencil:true,adaptToDeviceRatio:true});
   this.scene=new Scene(this.engine);this.scene.clearColor=new Color4(.72,.83,.91,1);
@@ -24,7 +24,7 @@ export class OfficeGame {
   this.scene.onPointerObservable.add(pi=>{if(pi.type===PointerEventTypes.POINTERPICK&&this.placing){const pick=this.scene.pick(this.scene.pointerX,this.scene.pointerY,m=>m===this.floor);if(pick?.hit&&pick.pickedPoint){const x=Math.round(pick.pickedPoint.x),z=Math.round(pick.pickedPoint.z);if(this.onFloorTap?.(x,z))this.addDesk(x,z);}}});
   this.scene.onBeforeRenderObservable.add(()=>{
    const time=performance.now()*.001;
-   this.workers.forEach((worker,index)=>{worker.position.y=.08+Math.sin(time*2+index*.8)*.018;});
+   this.workers.forEach((worker,index)=>{worker.position.y=.08+Math.sin(time*2+index*.8)*.018;const arms=this.workerArms[index];if(arms){arms[0].rotation.z=Math.sin(time*5+index)*.08;arms[1].rotation.z=-Math.sin(time*5+index)*.08;}});
   });
   this.engine.runRenderLoop(()=>this.scene.render());window.addEventListener('resize',()=>this.engine.resize());
  }
@@ -35,12 +35,13 @@ export class OfficeGame {
   for(const dx of [-.62,.62])for(const dz of [-.25,.25]){const leg=MeshBuilder.CreateBox('desk-leg',{width:.08,height:.82,depth:.08},this.scene);leg.parent=root;leg.position.set(dx,.41,dz);leg.material=wood;}
   const chair=new StandardMaterial('chair',this.scene);chair.diffuseColor=new Color3(.12,.24,.38);
   const seat=MeshBuilder.CreateBox('chair-seat',{width:.62,height:.13,depth:.62},this.scene);seat.parent=root;seat.position.set(0,.53,.72);seat.material=chair;
+  const backrest=MeshBuilder.CreateBox('chair-back',{width:.62,height:.62,depth:.12},this.scene);backrest.parent=root;backrest.position.set(0,.88,1.0);backrest.material=chair;
   const monitor=MeshBuilder.CreateBox('monitor',{width:.65,height:.42,depth:.07},this.scene);monitor.parent=root;monitor.position.set(0,1.2,-.12);const screen=new StandardMaterial('screen',this.scene);screen.diffuseColor=new Color3(.035,.07,.12);monitor.material=screen;
   this.desks.push(root);return root;
  }
  syncWorkers(count:number){
   const target=Math.max(0,Math.min(Math.floor(count),this.desks.length));
-  while(this.workers.length>target){const worker=this.workers.pop()!;worker.dispose();}
+  while(this.workers.length>target){const worker=this.workers.pop()!;this.workerArms.pop();worker.dispose();}
   while(this.workers.length<target){
    const index=this.workers.length,desk=this.desks[index],worker=new TransformNode('worker-'+(index+1),this.scene);
    worker.parent=desk;
@@ -50,9 +51,11 @@ export class OfficeGame {
    const torso=MeshBuilder.CreateCylinder('worker-torso-'+index,{height:.48,diameterTop:.34,diameterBottom:.42,tessellation:8},this.scene);torso.parent=worker;torso.position.set(0,1.03,.65);torso.material=shirt;
    const head=MeshBuilder.CreateSphere('worker-head-'+index,{diameter:.34,segments:10},this.scene);head.parent=worker;head.position.set(0,1.43,.55);head.material=skin;
    const hairCap=MeshBuilder.CreateSphere('worker-hair-'+index,{diameter:.35,segments:8},this.scene);hairCap.parent=worker;hairCap.scaling.y=.48;hairCap.position.set(0,1.57,.55);hairCap.material=hair;
+   const arms:any[]=[];
    for(const side of [-1,1]){
-    const arm=MeshBuilder.CreateCapsule('worker-arm-'+index+'-'+side,{height:.48,radius:.075,tessellation:6},this.scene);arm.parent=worker;arm.rotation.x=Math.PI/2;arm.position.set(side*.22,1.05,.35);arm.material=shirt;
+    const arm=MeshBuilder.CreateCapsule('worker-arm-'+index+'-'+side,{height:.48,radius:.075,tessellation:6},this.scene);arm.parent=worker;arm.rotation.x=Math.PI/2;arm.position.set(side*.22,1.05,.35);arm.material=shirt;arms.push(arm);
    }
+   this.workerArms.push([arms[0],arms[1]]);
    this.workers.push(worker);
   }
   this.engine.getRenderingCanvas()?.setAttribute('data-worker-model-count',String(this.workers.length));
