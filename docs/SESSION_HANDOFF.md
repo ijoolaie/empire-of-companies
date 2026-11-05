@@ -1,6 +1,6 @@
 # Session Handoff — Read First
 
-Last updated: 2026-11-05
+Last updated: 2026-11-05 — reproducible install and initial headless render verified
 
 ## Mission
 Continue **Empire of Companies / امپراتور شرکت‌ها** in https://github.com/ijoolaie/empire-of-companies.
@@ -27,19 +27,20 @@ Continue **Empire of Companies / امپراتور شرکت‌ها** in https://g
 - Default branch: main.
 - Development branch: feat/p2-core-game-loop.
 - Draft PR: #1 — https://github.com/ijoolaie/empire-of-companies/pull/1.
-- Remote branch commit at clone: 03b4011f11d0e880f485e0a10690861f61155012.
+- Latest pushed commit: 2fecf6e6b0fe156979f71884ef5005b44c8164ef.
 - Local clone: C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies.
 - Node v22.23.2; npm 10.9.8.
-- package-lock.json generated locally.
-- npm ci, npm test (10/10) and npm run build passed locally.
-- Workflow changed locally to npm ci with npm cache; changes are not yet committed/pushed.
-- Browser gameplay smoke test remains pending.
+- package-lock.json committed; CI uses npm ci and npm cache.
+- GitHub Actions run #24 (41995386118) completed successfully.
+- Local npm ci, npm test (10/10), and npm run build passed.
+- HTTP and initial headless Chrome render smoke passed (1365x900 screenshot produced; temporary artifact removed).
+- Interactive browser gameplay and save/restore QA remain pending.
 
 ## Current phase
-P1 reproducible engineering is locally verified. P2 core economy/save implementation and automated tests are complete in code; browser acceptance remains pending.
+P1 reproducible engineering complete. P2 core economy/save implementation and automated tests complete in code; initial render is checked, but interactive gameplay acceptance remains pending.
 
 ## Next exact task
-Review git diff, commit package-lock.json + CI workflow + docs/.gitignore changes, push to feat/p2-core-game-loop, and verify the new GitHub Actions run. Then perform browser smoke test before merging PR #1.
+Perform interactive browser QA: build a desk, hire a worker, verify income changes, upgrade the office, save, refresh/reopen, and verify restored state. Then test offline earnings and migration in browser. Do not merge PR #1 before these checks pass.
 
 ## Session update rule
 At the end of each substantial session:
