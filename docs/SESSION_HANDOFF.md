@@ -1,6 +1,6 @@
 # Session Handoff — Read First
 
-Last updated: 2026-11-05 — P2 automated economy/save tests pass in CI
+Last updated: 2026-11-05
 
 ## Mission
 Continue **Empire of Companies / امپراتور شرکت‌ها** in https://github.com/ijoolaie/empire-of-companies.
@@ -25,21 +25,21 @@ Continue **Empire of Companies / امپراتور شرکت‌ها** in https://g
 
 ## Repository state
 - Default branch: main.
-- Current branch: feat/p2-core-game-loop.
-- Current Draft PR: #1.
-- Latest branch commit: 2b7cbb2172081f3c1a796652322babb4f503824c.
-- Latest tested code commit: 5d310faace22ad1ed8366c95d2dd150cf85c3efa.
-- Latest P2 workflow run: 41988139202 — completed successfully.
-- npm install, npm run build and npm test all passed.
-- Ten deterministic economy/save tests are included.
-- package-lock.json is not committed; npm ci remains pending.
-- Browser gameplay smoke test is pending.
+- Development branch: feat/p2-core-game-loop.
+- Draft PR: #1 — https://github.com/ijoolaie/empire-of-companies/pull/1.
+- Remote branch commit at clone: 03b4011f11d0e880f485e0a10690861f61155012.
+- Local clone: C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies.
+- Node v22.23.2; npm 10.9.8.
+- package-lock.json generated locally.
+- npm ci, npm test (10/10) and npm run build passed locally.
+- Workflow changed locally to npm ci with npm cache; changes are not yet committed/pushed.
+- Browser gameplay smoke test remains pending.
 
 ## Current phase
-P2 — Playable core loop.
+P1 reproducible engineering is locally verified. P2 core economy/save implementation and automated tests are complete in code; browser acceptance remains pending.
 
 ## Next exact task
-Generate and commit package-lock.json using Node 22/npm, switch CI to npm ci with cache, and verify clean install/build/tests. Then run browser smoke test before merging PR #1.
+Review git diff, commit package-lock.json + CI workflow + docs/.gitignore changes, push to feat/p2-core-game-loop, and verify the new GitHub Actions run. Then perform browser smoke test before merging PR #1.
 
 ## Session update rule
 At the end of each substantial session:

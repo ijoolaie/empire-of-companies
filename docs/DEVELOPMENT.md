@@ -9,7 +9,7 @@
 ```powershell
 git clone https://github.com/ijoolaie/empire-of-companies.git
 cd empire-of-companies
-npm install
+npm ci
 Copy-Item .env.example .env.local
 ```
 
