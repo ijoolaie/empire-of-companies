@@ -16,8 +16,8 @@ Continue Empire of Companies: https://github.com/ijoolaie/empire-of-companies
 
 ## Repository
 - Branch: feat/p3-progression-ux.
-- Latest remote commit: 70ff58f — docs: refresh session handoff after worker placement fix.
-- Current uncommitted local change: direct Babylon module imports in src/game.ts, reducing the largest bundle chunk; validate and commit/push next.
+- Latest remote commit: d662645 — perf: narrow Babylon imports and reduce bundle.
+- Local branch is pushed and synchronized with origin; CI for d662645 is not yet confirmed.
 - PR #2: https://github.com/ijoolaie/empire-of-companies/pull/2.
 - CI run #40 (42109392998) passed for 1991369, including Chromium browser tests.
 - Local path: C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies.

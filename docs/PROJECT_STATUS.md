@@ -6,8 +6,8 @@ Last verified: 2026-11-06
 - GitHub: https://github.com/ijoolaie/empire-of-companies
 - Default branch: main; P2 merge: 06ebb5c.
 - Development branch: feat/p3-progression-ux.
-- Latest pushed commit before this session: 70ff58f — docs: refresh session handoff after worker placement fix.
-- Current local change: replace the Babylon.js barrel import with direct module imports to reduce bundled code; pending commit/CI.
+- Latest pushed commit: d662645 — perf: narrow Babylon imports and reduce bundle.
+- PR #2 head is synchronized with the pushed commit; CI for d662645 is not yet confirmed.
 - PR #2: https://github.com/ijoolaie/empire-of-companies/pull/2 (open, Draft, not merged).
 - GitHub Actions run #40 (42109392998) passed for 1991369, including Chromium browser regression tests.
 - Local clone: C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies.
