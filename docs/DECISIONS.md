@@ -11,7 +11,7 @@ Last reviewed: 2026-11-05
 | D-005 | Supabase Auth only | Identity/account separate from game state. |
 | D-006 | Browser uses publishable/anon key only | Service-role and secret keys must never ship to clients. |
 | D-007 | Procedural 3D art first; licensed GLB assets allowed | Blender is not a required workflow; track asset licenses. |
-| D-008 | Private GitHub repository | Source is maintained in the user's private repository. |
+| D-008 | Public GitHub repository | User explicitly approved public visibility on 2026-11-05. |
 | D-009 | Build verification before feature expansion | Avoid layering features on an unverified baseline. |
 
 ## Change control
