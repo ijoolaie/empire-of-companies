@@ -1,6 +1,6 @@
 # Session Handoff — Read First
 
-Last updated: 2026-11-05 — progression screen implemented locally; CI verification pending
+Last updated: 2026-11-05 — progression dialog keyboard accessibility implemented locally; CI pending for this slice
 
 ## Mission
 Continue Empire of Companies: https://github.com/ijoolaie/empire-of-companies
@@ -16,18 +16,24 @@ Continue Empire of Companies: https://github.com/ijoolaie/empire-of-companies
 
 ## Repository
 - Branch: feat/p3-progression-ux.
-- HEAD at start of this slice: 238f914; current progression screen is uncommitted.
+- Latest verified remote commit before this slice: be7375650597bef112e7b04092d6e3a5bb0e29c4.
 - PR #2: https://github.com/ijoolaie/empire-of-companies/pull/2.
-- CI run #30 (42054389812) passed for f298529, not the current uncommitted changes.
+- CI run #32 (42061404610) passed for be73756, including Chromium browser regression tests.
 - Local path: C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies.
 
 ## Current phase and work
-P3 progression and usability. This session added a progression dialog with player XP/level, ordered milestone states and rewards, plus future roadmap entries at levels 3, 5 and 10. Future entries are explicitly marked planned, not playable in this build.
+P3 progression and usability. Progression dialog contains player XP/level, ordered milestone states/rewards and future roadmap at levels 3, 5 and 10; future entries are explicitly planned, not playable. This slice adds accessible dialog description, keyboard focus containment, Escape dismissal, and focus restoration to the opener. Browser coverage includes 320, 375, 768 and 1366px widths.
 
-Local checks: 14/14 unit tests; production build passed; 6/6 Playwright browser tests passed. Browser tests cover tutorial, rewards/persistence, offline earnings, 320x568 layout, progression content, Escape dismissal, and Persian localization. Current changes still need clean-install verification, diff review, commit/push and CI.
+## Local verification for current uncommitted slice
+- npm test: 14/14 passed.
+- npm run build: passed.
+- npm run test:browser: 8/8 passed.
+- git diff --check: passed.
+- Build warning: Babylon main chunk about 6,023.70 kB minified / 1,321.52 kB gzip.
+- Current accessibility slice still needs review, commit/push and GitHub Actions verification.
 
 ## Exact next task
-Run npm ci, npm test, npm run build, npm run test:browser and git diff --check. Review and push this slice to feat/p3-progression-ux, then verify GitHub Actions. Keep PR #2 Draft and unmerged. Next improve dialog focus management and wider responsive/accessibility coverage.
+Review the current diff, commit and push to feat/p3-progression-ux, then verify the new GitHub Actions run. Keep PR #2 Draft and unmerged. Do not claim CI success until the run completes successfully.
 
 ## Session update rule
 Update PROJECT_STATUS and SESSION_HANDOFF with verified facts after substantial work. Update ROADMAP/WBS when scope changes. Never claim a feature is complete solely because code was written.

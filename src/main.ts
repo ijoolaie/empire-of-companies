@@ -44,6 +44,7 @@ function render(){
  document.querySelector('#tutorial-skip')?.addEventListener('click',()=>{state.tutorialDismissed=true;persist();render();});
 }
 function showProgression(){
+ const opener=document.querySelector<HTMLButtonElement>('#progress');
  const completed=new Set(state.completedObjectives);
  const milestones=OBJECTIVES.map((objective,index)=>{
   const done=completed.has(objective.id);
@@ -57,13 +58,26 @@ function showProgression(){
  ];
  const planned=future.map(item=>'<li class="future-item"><span class="future-level">'+t(lang,'levelShort')+' '+item.level+'</span><span><strong>'+t(lang,item.title)+'</strong><small>'+t(lang,item.detail)+'</small></span><em>'+t(lang,'planned')+'</em></li>').join('');
  const modal=document.createElement('section');modal.className='progress-modal modal-backdrop';modal.setAttribute('role','dialog');modal.setAttribute('aria-modal','true');modal.setAttribute('aria-labelledby','progress-title');
- modal.innerHTML='<div class="progress-sheet"><header><div><h2 id="progress-title">🏆 '+t(lang,'progression')+'</h2><p>'+t(lang,'progressionSubtitle')+'</p></div><button type="button" class="close" aria-label="'+t(lang,'close')+'">×</button></header><div class="progress-summary"><strong>'+t(lang,'playerLevel')+' '+money(playerLevelForXp(state.playerXp))+'</strong><span>'+money(xpIntoCurrentLevel(state.playerXp))+' / 100 XP</span></div><div class="xp-track"><span style="width:'+xpIntoCurrentLevel(state.playerXp)+'%"></span></div><h3>'+t(lang,'milestonePath')+'</h3><ol class="roadmap-list">'+milestones+'</ol><h3>'+t(lang,'futureUnlocks')+'</h3><p class="planned-note">'+t(lang,'plannedNote')+'</p><ul class="future-list">'+planned+'</ul></div>';
+ modal.innerHTML='<div class="progress-sheet"><header><div><h2 id="progress-title">🏆 '+t(lang,'progression')+'</h2><p id="progress-description">'+t(lang,'progressionSubtitle')+'</p></div><button type="button" class="close" aria-label="'+t(lang,'close')+'">×</button></header><div class="progress-summary"><strong>'+t(lang,'playerLevel')+' '+money(playerLevelForXp(state.playerXp))+'</strong><span>'+money(xpIntoCurrentLevel(state.playerXp))+' / 100 XP</span></div><div class="xp-track"><span style="width:'+xpIntoCurrentLevel(state.playerXp)+'%"></span></div><h3>'+t(lang,'milestonePath')+'</h3><ol class="roadmap-list">'+milestones+'</ol><h3>'+t(lang,'futureUnlocks')+'</h3><p class="planned-note">'+t(lang,'plannedNote')+'</p><ul class="future-list">'+planned+'</ul></div>';
+ modal.setAttribute('aria-describedby','progress-description');
  ui.append(modal);
- const close=()=>modal.remove();
- modal.querySelector('.close')!.addEventListener('click',close);
+ const close=()=>{
+  modal.remove();
+  if(opener?.isConnected)opener.focus();
+ };
+ const closeButton=modal.querySelector<HTMLButtonElement>('.close')!;
+ closeButton.addEventListener('click',close);
  modal.addEventListener('click',event=>{if(event.target===modal)close();});
- modal.addEventListener('keydown',event=>{if(event.key==='Escape')close();});
- (modal.querySelector('.close') as HTMLButtonElement).focus();
+ modal.addEventListener('keydown',event=>{
+  if(event.key==='Escape'){event.preventDefault();close();return;}
+  if(event.key!=='Tab')return;
+  const focusable=[...modal.querySelectorAll<HTMLElement>('button:not([disabled]),a[href],input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])')].filter(el=>el.getAttribute('aria-hidden')!=='true');
+  if(!focusable.length){event.preventDefault();modal.focus();return;}
+  const first=focusable[0],last=focusable[focusable.length-1];
+  if(event.shiftKey&&(document.activeElement===first||!modal.contains(document.activeElement))){event.preventDefault();last.focus();}
+  else if(!event.shiftKey&&(document.activeElement===last||!modal.contains(document.activeElement))){event.preventDefault();first.focus();}
+ });
+ closeButton.focus();
 }
 function showAuth(){
  const modal=document.createElement('div');modal.className='modal-backdrop';modal.innerHTML=`<form class="auth-card"><button type="button" class="close">×</button><h2>${lang==='fa'?'حساب بازیکن':'Player account'}</h2><p>${lang==='fa'?'حساب فقط برای هویت بازیکن است؛ ذخیره بازی روی دستگاه می‌ماند.':'Your account identifies you; game saves stay on this device.'}</p>${!authConfigured()?'<p>Supabase config missing. Set .env.local first.</p>':''}<input name="email" type="email" placeholder="Email" required autocomplete="email"/><input name="password" type="password" placeholder="Password (min 8 characters)" required minlength="8"/><button class="action" type="submit" ${!authConfigured()?'disabled':''}>${authMode==='signin'?(lang==='fa'?'ورود':'Sign in'):(lang==='fa'?'ساخت حساب':'Create account')}</button><button class="text-button" type="button" id="switch">${authMode==='signin'?'Need an account? Register':'Already registered? Sign in'}</button><div class="auth-error" role="status">${authMessage}</div></form>`;

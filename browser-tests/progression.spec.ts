@@ -141,3 +141,47 @@ test('progression screen is localized and fits a narrow mobile viewport', async 
   await expect(dialog).toContainText('گسترش به طبقه جدید');
   await expect(dialog).toContainText('در برنامه توسعه هستند');
 });
+
+test('progression dialog traps keyboard focus and restores the opener on close', async ({ page }) => {
+  await page.goto('/');
+  const opener = page.locator('#progress');
+  await opener.focus();
+  await page.keyboard.press('Enter');
+
+  const dialog = page.getByRole('dialog');
+  const close = dialog.getByRole('button', { name: 'Close' });
+  await expect(dialog).toBeVisible();
+  await expect(close).toBeFocused();
+
+  await page.keyboard.press('Tab');
+  await expect(close).toBeFocused();
+  await page.keyboard.press('Shift+Tab');
+  await expect(close).toBeFocused();
+
+  await page.keyboard.press('Escape');
+  await expect(dialog).toHaveCount(0);
+  await expect(opener).toBeFocused();
+});
+
+test('progression dialog fits common mobile, tablet and desktop viewport widths', async ({ page }) => {
+  for (const viewport of [
+    { width: 375, height: 667 },
+    { width: 768, height: 1024 },
+    { width: 1366, height: 768 }
+  ]) {
+    await page.setViewportSize(viewport);
+    await page.goto('/');
+    await page.locator('#progress').click();
+    const dialog = page.getByRole('dialog');
+    await expect(dialog).toBeVisible();
+    const metrics = await dialog.evaluate(el => ({
+      width: el.scrollWidth,
+      clientWidth: el.clientWidth,
+      sheetHeight: el.querySelector('.progress-sheet').getBoundingClientRect().height,
+      viewportHeight: window.innerHeight
+    }));
+    expect(metrics.width).toBeLessThanOrEqual(metrics.clientWidth);
+    expect(metrics.sheetHeight).toBeLessThanOrEqual(metrics.viewportHeight);
+    await page.keyboard.press('Escape');
+  }
+});
