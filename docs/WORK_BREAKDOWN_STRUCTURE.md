@@ -1,6 +1,6 @@
 # Work Breakdown Structure — Empire of Companies
 
-Last reviewed: 2026-11-05
+Last reviewed: 2026-11-05 — P3 initial progression slice verified locally
 Owner: Product / engineering
 Status: Living plan; task status is only changed after observable verification.
 
@@ -30,7 +30,7 @@ A browser-first, bilingual 3D idle management game. The player starts with one s
 **Exit:** decisions and current state are documented; baseline CI build has passed.
 
 ## Phase 1 — Reproducible engineering foundation
-**Status: in progress**
+**Status: complete**
 
 1.1 Pin supported Node major version in project docs and CI.  
 1.2 Generate and commit package-lock.json using the project npm version.  
@@ -44,7 +44,7 @@ A browser-first, bilingual 3D idle management game. The player starts with one s
 **Exit:** a fresh clone installs deterministically and build/tests pass locally and in CI.
 
 ## Phase 2 — Playable core loop
-**Status: active; initial economy implementation submitted in PR #1, browser QA pending**
+**Status: complete; PR #1 merged after local interactive browser acceptance**
 
 ### 2A. Game state and persistence
 2.1 Define a versioned GameState schema.  
@@ -65,10 +65,10 @@ A browser-first, bilingual 3D idle management game. The player starts with one s
 2.14 Add deterministic unit tests for income, costs, hiring, building and upgrades. (Implemented: 10 tests; CI run 41988139202 passed.)
 
 ### 2C. First playable actions
-2.15 Place a desk on valid floor cells. (Basic bounds and overlap validation implemented; browser placement QA pending.)  
+2.15 Place a desk on valid floor cells. (Bounds, overlap and interactive browser placement verified.)
 2.16 Reject overlap, wall, blocked and out-of-bounds placements.  
 2.17 Hire only when an unstaffed desk and enough cash exist.  
-2.18 Show staff assignment on the 3D desk/worker.  
+2.18 Show staff assignment on the 3D desk/worker. (Deferred to Phase 4 worker visuals.)
 2.19 Upgrade office and expose the exact effect and cost.  
 2.20 Provide clear success/failure feedback and prevent double-click exploits.
 
@@ -82,11 +82,11 @@ A browser-first, bilingual 3D idle management game. The player starts with one s
 **Exit:** a new player can complete the loop, refresh/reopen, and retain valid local progress; economy tests pass; browser smoke test passes.
 
 ## Phase 3 — Progression, onboarding and usability
-**Status: planned**
+**Status: in progress**
 
-3.1 Add a short first-run tutorial with skippable steps.  
-3.2 Add objectives and reward milestones.  
-3.3 Define XP/level progression and unlock requirements.  
+3.1 Add a short first-run tutorial with skippable steps. (Implemented and browser-verified.)
+3.2 Add objectives and reward milestones. (Three initial milestones implemented with one-time cash/XP rewards.)
+3.3 Define XP/level progression and unlock requirements. (Player XP and level 2 threshold implemented; further unlocks remain.)
 3.4 Add a progression screen explaining next unlocks.  
 3.5 Add contextual hints, confirmation dialogs and error messages.  
 3.6 Improve HUD hierarchy and responsive layouts for desktop/tablet/mobile.  
@@ -200,12 +200,12 @@ A browser-first, bilingual 3D idle management game. The player starts with one s
 
 ## Current execution order (do not skip ahead)
 
-1. Generate package-lock.json and switch CI to npm ci.
-2. Run clean-install CI and confirm build plus the 10 economy/save tests.
-3. Run browser smoke test: build desk, hire, earn, upgrade, refresh and reopen.
-4. Fix gameplay defects and merge PR #1 only after browser verification.
-5. Continue remaining P2 edge cases and first-session validation.
-6. Start P3 only when P2 exit criteria are met.
+1. Complete P3 tutorial/objective/XP browser regression checks and save migration edge cases.
+2. Add repeatable browser automation to the repository and CI.
+3. Improve HUD and responsive layout for desktop, tablet and mobile.
+4. Add a progression screen for upcoming unlocks and contextual guidance.
+5. Continue Persian/English accessibility and settings work.
+6. Defer worker animation/art to Phase 4 and Supabase Auth lifecycle to Phase 6.
 
 ## Definition of done for every task
 

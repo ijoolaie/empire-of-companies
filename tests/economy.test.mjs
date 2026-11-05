@@ -4,13 +4,18 @@ import {
   buildDesk, createInitialState, earnForElapsed, hireWorker, incomePerSecond,
   OFFLINE_CAP_SECONDS, parseGameState, serializeGameState, upgradeCost, upgradeOffice
 } from '../src/economy.ts';
+import { OBJECTIVES, playerLevelForXp, syncObjectives, xpIntoCurrentLevel } from '../src/progression.ts';
 
-test('new game has valid starter economy', () => {
+test('new game has valid starter economy and progression defaults', () => {
   const state = createInitialState(1_000);
   assert.equal(state.cash, 12_000);
   assert.equal(state.workers, 1);
   assert.equal(state.desks.length, 2);
   assert.equal(incomePerSecond(state), 5);
+  assert.equal(state.version, 4);
+  assert.equal(state.playerXp, 0);
+  assert.deepEqual(state.completedObjectives, []);
+  assert.equal(state.tutorialDismissed, false);
 });
 
 test('hiring requires an empty desk and enough cash', () => {
@@ -65,16 +70,19 @@ test('offline earnings never exceed eight hours', () => {
   assert.equal(loaded.offlineEarned, 144_000);
 });
 
-test('legacy save shape is migrated and worker count is bounded by desks', () => {
+test('legacy v2 and v3 saves migrate to v4 without losing game progress', () => {
   const legacy = JSON.stringify({
-    version: 2, cash: 5_000, workers: 8, level: 3,
-    desks: [{ x: -2, z: -1 }, { x: 1, z: -1 }],
+    version: 3, cash: 5_000, workers: 2, level: 3,
+    desks: [{ x: -2, z: -1 }, { x: 1, z: -1 }, { x: 4, z: 2 }],
     lastSavedAt: 5_000
   });
   const loaded = parseGameState(legacy, 5_000);
-  assert.equal(loaded.state.version, 3);
+  assert.equal(loaded.state.version, 4);
   assert.equal(loaded.state.workers, 2);
   assert.equal(loaded.state.cash, 5_000);
+  assert.equal(loaded.state.playerXp, 0);
+  assert.deepEqual(loaded.state.completedObjectives, []);
+  assert.equal(loaded.state.tutorialDismissed, false);
 });
 
 test('malformed saves recover to a fresh state', () => {
@@ -87,4 +95,60 @@ test('future save timestamps do not suppress future offline earnings', () => {
   const loaded = parseGameState(serializeGameState(saved, 50_000), 40_000);
   assert.equal(loaded.offlineEarned, 0);
   assert.equal(loaded.state.lastSavedAt, 40_000);
+});
+
+test('objectives award cash and XP exactly once and unlock player level 2', () => {
+  const state = createInitialState();
+  assert.deepEqual(syncObjectives(state), []);
+  assert.equal(buildDesk(state, { x: 4, z: 2 }), true);
+  assert.deepEqual(syncObjectives(state), ['first-desk']);
+  assert.equal(state.cash, 11_500);
+  assert.equal(state.playerXp, 20);
+
+  assert.equal(hireWorker(state), true);
+  assert.deepEqual(syncObjectives(state), ['first-hire']);
+  assert.equal(state.cash, 9_750);
+  assert.equal(state.playerXp, 50);
+
+  assert.equal(upgradeOffice(state), true);
+  assert.deepEqual(syncObjectives(state), ['first-upgrade']);
+  assert.equal(state.cash, 5_750);
+  assert.equal(state.playerXp, 100);
+  assert.equal(playerLevelForXp(state.playerXp), 2);
+  assert.equal(state.tutorialDismissed, true);
+  assert.deepEqual(syncObjectives(state), []);
+  assert.equal(state.cash, 5_750);
+});
+
+test('objectives respect the tutorial order even when later actions happen early', () => {
+  const state = createInitialState();
+  assert.equal(hireWorker(state), true);
+  assert.equal(upgradeOffice(state), true);
+  assert.deepEqual(syncObjectives(state), []);
+  assert.equal(state.playerXp, 0);
+
+  assert.equal(buildDesk(state, { x: 4, z: 2 }), true);
+  assert.deepEqual(syncObjectives(state), ['first-desk', 'first-hire', 'first-upgrade']);
+  assert.equal(state.playerXp, 100);
+  assert.equal(state.tutorialDismissed, true);
+});
+
+test('objective synchronization ignores unknown IDs and preserves completed rewards', () => {
+  const state = createInitialState();
+  state.completedObjectives = ['first-desk', 'not-a-real-objective'];
+  state.desks.push({ x: 4, z: 2 });
+  assert.deepEqual(syncObjectives(state), []);
+  assert.deepEqual(state.completedObjectives, ['first-desk']);
+  assert.equal(state.playerXp, 0);
+});
+
+test('player XP maps to bounded levels and progress within the current level', () => {
+  assert.equal(playerLevelForXp(0), 1);
+  assert.equal(playerLevelForXp(99), 1);
+  assert.equal(playerLevelForXp(100), 2);
+  assert.equal(playerLevelForXp(250), 3);
+  assert.equal(playerLevelForXp(1_000_000), 100);
+  assert.equal(xpIntoCurrentLevel(250), 50);
+  assert.equal(xpIntoCurrentLevel(1_000_000), 100);
+  assert.equal(OBJECTIVES.length, 3);
 });

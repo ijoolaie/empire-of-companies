@@ -20,15 +20,15 @@ A browser-first, 3D idle office/company management game. The player starts with 
 Deliverables: roadmap, architecture/decisions, current status, session handoff, reliable build workflow.
 Exit: repository documents the current truth; CI reaches a successful build.
 
-### P1 — Reproducible development build (in progress)
+### P1 — Reproducible development build (complete)
 Tasks: establish Node version, dependency lockfile, clean npm ci workflow; verify TypeScript/Vite build.
 Exit: clean install and npm run build pass locally and in GitHub Actions.
 
-### P2 — Playable core loop (active)
+### P2 — Playable core loop (complete)
 Tasks: typed game state and economy; timed income; build desks; hire workers; upgrades; local save/load; bounded offline earnings.
 Exit: a new player can complete the core loop, refresh, and retain valid progress without cloud storage; income and costs are deterministic and testable.
 
-### P3 — Game progression and UX
+### P3 — Game progression and UX (active)
 Tasks: onboarding/tutorial; goals and milestones; levels; unlocks; feedback; responsive controls; accessibility; complete Persian/English UI.
 Exit: first-session flow is understandable and all core screens work in both languages and directions.
 
@@ -45,4 +45,4 @@ Tasks: automated tests; browser/device QA; performance budgets; PWA install/offl
 Exit: release checklist passes and known limitations are documented.
 
 ## Prioritization
-P1 reproducibility and P2 gameplay proceed in small verifiable increments. Do not expand content or build Android packaging before a stable P2 loop. Keep each task small enough to verify in one session.
+P1 reproducibility and P2 core gameplay are complete and verified. P3 progression/UX is now active. Keep each task small enough to verify in one session; defer worker art, deep business simulation and Android packaging until the progression slice is stable.

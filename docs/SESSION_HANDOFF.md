@@ -1,6 +1,6 @@
 # Session Handoff — Read First
 
-Last updated: 2026-11-05 — P2 interactive browser smoke test passed
+Last updated: 2026-11-05 — P3 first progression slice browser-verified locally; publication pending
 
 ## Mission
 Continue **Empire of Companies / امپراتور شرکت‌ها** in https://github.com/ijoolaie/empire-of-companies.
@@ -25,22 +25,23 @@ Continue **Empire of Companies / امپراتور شرکت‌ها** in https://g
 
 ## Repository state
 - Default branch: main.
-- Development branch: feat/p2-core-game-loop.
-- Draft PR: #1 — https://github.com/ijoolaie/empire-of-companies/pull/1.
-- Code commit verified by CI: 2fecf6e6b0fe156979f71884ef5005b44c8164ef.
+- P2 merged to main at 06ebb5c.
+- Current local branch: feat/p3-progression-ux.
 - Local clone: C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies.
 - Node v22.23.2; npm 10.9.8.
-- package-lock.json committed; CI uses npm ci and npm cache.
-- GitHub Actions run #24 (41995386118) passed.
-- Local npm ci, npm test (10/10), and npm run build passed.
-- Headless Chrome gameplay smoke passed: desk placement, hire, upgrade, passive income, save/refresh persistence, simulated 60-second offline earnings, and Persian RTL/English LTR toggle. No runtime exceptions observed.
-- Supabase Auth and wider QA remain pending.
+- P1 lockfile/npm ci foundation is complete.
+- P2 build/test/browser acceptance passed before merge.
+- P3 local unit tests: 14/14 passed.
+- P3 local headless Chrome smoke passed for objectives, rewards, XP, tutorial skip, save/refresh, offline earnings, v3-to-v4 migration and RTL/LTR.
+- P3 mobile layout probe at 320x568 showed no horizontal overflow and no toolbar/panel overlap.
+- P3 branch is not pushed; no PR/CI result exists for it yet.
+- Supabase Auth lifecycle remains unverified.
 
 ## Current phase
-P2 core gameplay acceptance smoke test passed locally. P1 reproducible engineering and GitHub CI are green. PR #1 remains Draft and is not merged.
+P3 progression and usability is active. The first slice (tutorial, three ordered milestones, one-time cash/XP rewards, player level and v4 save migration) is implemented locally and browser-tested. Local TypeScript/Vite production build and 14 unit tests pass; diff hygiene and publication are the remaining steps. Vite still warns that the main minified bundle is about 6.0 MB.
 
 ## Next exact task
-Create repeatable browser regression automation and wire it into CI. Then verify Supabase Auth flows separately, without moving game save data to the cloud. Continue P3 progression and UX once the test automation is stable.
+Finish build and test verification, remove temporary browser probe scripts, update docs, commit and push feat/p3-progression-ux. Then create/update a PR and verify GitHub Actions. Next implement repeatable browser automation, progression/unlock screen, and further responsive/localization work.
 
 ## Session update rule
 At the end of each substantial session:
