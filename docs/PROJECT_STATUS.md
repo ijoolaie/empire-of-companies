@@ -6,9 +6,9 @@ Last verified: 2026-11-06
 - GitHub: https://github.com/ijoolaie/empire-of-companies
 - Default branch: main; P2 merge: 06ebb5c.
 - Development branch: feat/p3-progression-ux.
-- Latest pushed code commit: 8c445bc; local follow-up adjusts seated leg orientation and passes all local checks. Changes not yet committed.
+- Latest pushed commit: 1991369 — fix: orient seated worker legs toward desk.
 - PR #2: https://github.com/ijoolaie/empire-of-companies/pull/2 (open, Draft, not merged).
-- CI run #33 (42063106976) passed for bae936f, including Chromium browser tests.
+- GitHub Actions run #40 (42109392998) passed for 1991369, including Chromium browser regression tests.
 - Local clone: C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies.
 
 ## Phase status
@@ -26,33 +26,37 @@ Last verified: 2026-11-06
 - Dialog accessibility: modal semantics, accessible description, Escape/backdrop/close-button dismissal, keyboard focus containment and focus restoration.
 - Playwright CI suite covering progression, persistence, localization, accessibility and responsive layouts.
 
-## P4 initial procedural worker slice (pushed; follow-up leg-detail slice locally verified)
+## P4 initial procedural worker slice
 - Procedural seated worker models are attached to the first staffed desk positions.
 - Hiring calls syncWorkers and creates the additional worker model at the next available desk.
-- Workers have skin/shirt/hair meshes, seated torso/arm poses, procedural thighs, lower legs and shoes; lower-body positions were corrected to extend toward the desk. Subtle body motion and simple typing/arm motion remain.
-- Desk furniture now includes a chair backrest.
+- Workers have skin/shirt/hair meshes, seated torso/arm poses, procedural thighs, lower legs and shoes; lower-body positions are oriented toward the desk. Subtle body motion and simple typing/arm motion remain.
+- Desk furniture includes a chair backrest.
 - Canvas data attributes expose worker-model count and expected leg/shoe mesh count for browser regression checks.
 - No external assets or Blender dependency.
 - Work/walk animations, character variants, detailed poses, scene profiling and visual manual acceptance remain open.
 
-## Local verification for current local slice
+## Verification
 - npm test: 14 passed, 0 failed.
 - npm run build: passed.
-- npm run test:browser: 8 passed, 0 failed; progression/mobile/accessibility suite plus worker model and leg/shoe mesh-count assertions.
+- npm run test:browser: 8 passed, 0 failed.
 - git diff --check: passed.
-- Babylon main chunk warning remains: 6,026.40 kB minified / 1,322.29 kB gzip.
-- Initial worker model commit e506463 passed GitHub Actions run #35 (42106950970).
-- Follow-up commit 2146410 passed GitHub Actions run #36 (42107749624).`r`n- Worker lower-body code commit 8c445bc passed GitHub Actions run #38 (42108661210).`r`n- Docs commit 7019cdc run #39 (42108774779) has build/unit tests passed; Chromium install was still running at last check.
+- Babylon main chunk warning: 6,026.40 kB minified / 1,322.29 kB gzip.
+- CI run #36 (42107749624) passed for 2146410.
+- CI run #37 (42108774779) passed for 7019cdc.
+- CI run #38 (42108661210) passed for 8c445bc.
+- CI run #40 (42109392998) passed for latest commit 1991369, including Chromium tests.
+- Automated tests verify model synchronization and mesh counts, not aesthetic quality; visual acceptance remains outstanding.
 
 ## Open
 - Review worker model proportions/placement visually in a real browser session.
-- Commit and push the corrected seated leg placement; verify GitHub Actions.
 - Continue P3 screen-reader, HUD hierarchy and responsive UX work.
 - Continue P4 worker work-state animation, variants, furniture details and performance profiling.
 - Supabase Auth lifecycle remains unverified.
 - PWA and Android packaging remain unimplemented.
 
 ## Next actions
-1. Commit/push corrected seated leg placement and verify CI.`r`n2. Perform a genuine visual review when a screenshot-capable browser surface is available.`r`n3. Continue worker animation/variants and scene profiling.`r`n4. Keep PR #2 Draft and unmerged unless explicitly requested.`r`n5. Keep game saves device-local; Supabase remains identity-only.
+1. Obtain a screenshot-capable browser review of worker proportions and placement.
+2. Improve worker poses/variants and add meaningful visual regression coverage where feasible.
+3. Profile scene mesh/material counts and address the large Babylon bundle with measured changes.
 4. Keep PR #2 Draft and unmerged unless explicitly requested.
 5. Keep game saves device-local; Supabase remains identity-only.
