@@ -16,7 +16,7 @@ Continue Empire of Companies: https://github.com/ijoolaie/empire-of-companies
 
 ## Repository
 - Branch: feat/p3-progression-ux.
-- Latest pushed feature commit: e506463 — feat: add procedural seated office workers. Follow-up typing animation/chair polish is local and pending push.
+- Latest pushed feature commit: 2146410 — feat: animate seated workers at their desks. Initial worker-model commit e506463 passed CI run #35; CI run #36 for 2146410 is in progress.
 - PR #2: https://github.com/ijoolaie/empire-of-companies/pull/2.
 - CI run #33 (42063106976) passed for bae936f.
 - Local path: C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies.
@@ -34,7 +34,8 @@ P3 progression/usability remains active. P4 has started with an initial procedur
 - npm run test:browser: 8/8 passed, including initial worker count and second worker after hiring.
 - git diff --check: passed.
 - Babylon main chunk warning: about 6,025.15 kB minified / 1,321.96 kB gzip.
-- Initial worker slice e506463 is pushed; CI run #35 (42106950970) is still running. Follow-up typing animation/chair polish is locally tested but not yet committed/pushed.
+- CI run #35 (42106950970) passed for e506463.
+- CI run #36 (42107749624) is in progress for 2146410; local unit/build/browser tests passed.
 - Visual acceptance on a real browser display is still outstanding; automated checks do not prove model aesthetics.
 
 ## Exact next task

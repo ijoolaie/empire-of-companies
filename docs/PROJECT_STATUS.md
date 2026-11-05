@@ -6,7 +6,7 @@ Last verified: 2026-11-06
 - GitHub: https://github.com/ijoolaie/empire-of-companies
 - Default branch: main; P2 merge: 06ebb5c.
 - Development branch: feat/p3-progression-ux.
-- Latest pushed feature commit: e506463 (procedural seated workers); follow-up worker animation/furniture polish is local and pending push.
+- Latest pushed feature commit: 2146410 (seated worker typing motion and chair-back detail); initial worker-model commit e506463 passed CI run #35. CI run #36 for 2146410 is in progress.
 - PR #2: https://github.com/ijoolaie/empire-of-companies/pull/2 (open, Draft, not merged).
 - CI run #33 (42063106976) passed for bae936f, including Chromium browser tests.
 - Local clone: C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies.
@@ -26,7 +26,7 @@ Last verified: 2026-11-06
 - Dialog accessibility: modal semantics, accessible description, Escape/backdrop/close-button dismissal, keyboard focus containment and focus restoration.
 - Playwright CI suite covering progression, persistence, localization, accessibility and responsive layouts.
 
-## P4 initial procedural worker slice (local, not yet pushed)
+## P4 initial procedural worker slice (pushed; latest CI pending)
 - Procedural seated worker models are attached to the first staffed desk positions.
 - Hiring calls syncWorkers and creates the additional worker model at the next available desk.
 - Workers have skin/shirt/hair meshes, seated poses, subtle body motion and simple typing/arm motion.
@@ -41,7 +41,8 @@ Last verified: 2026-11-06
 - npm run test:browser: 8 passed, 0 failed; existing progression/mobile/accessibility suite plus worker model-count assertion.
 - git diff --check: passed.
 - Babylon main chunk warning remains: about 6,025.15 kB minified / 1,321.96 kB gzip.
-- Initial worker model commit e506463 is pushed; GitHub Actions run #35 (42106950970) is in progress. Follow-up typing animation/chair polish is locally tested but not yet committed/pushed.
+- Initial worker model commit e506463 passed GitHub Actions run #35 (42106950970).
+- Follow-up commit 2146410 adds typing motion and chair-back detail; GitHub Actions run #36 (42107749624) is in progress.
 
 ## Open
 - Review worker model proportions/placement visually in a real browser session.
