@@ -6,9 +6,10 @@ Last verified: 2026-11-05
 - GitHub: https://github.com/ijoolaie/empire-of-companies
 - Default branch: main; P2 merge: 06ebb5c.
 - Development branch: feat/p3-progression-ux.
-- Latest verified feature commit before this accessibility slice: be73756.
+- Latest functional commit: bae936f (progression dialog keyboard accessibility).
 - PR #2: https://github.com/ijoolaie/empire-of-companies/pull/2 (open, Draft, not merged).
-- CI run #32 (42061404610) succeeded for be73756; npm ci, build, unit tests, Chromium install and browser regression tests all passed.
+- CI run #32 (42061404610) succeeded for be73756.
+- CI run #33 (42063106976) is running for bae936f; build and unit tests passed, Chromium installation is in progress, browser tests are pending.
 - Local clone: C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies.
 
 ## Phase status
@@ -26,23 +27,23 @@ Last verified: 2026-11-05
 - Progression dialog accessibility: modal semantics, accessible description, Escape/backdrop/close-button dismissal, keyboard focus containment and focus restoration to the opener.
 - Responsive progression dialog coverage at 320, 375, 768 and 1366 CSS-pixel viewport widths.
 
-## Verification for current accessibility slice
+## Verification for latest functional slice (bae936f)
 - npm test: 14 passed, 0 failed.
 - npm run build: passed.
-- npm run test:browser: 8 passed, 0 failed, including keyboard focus trap, focus restoration, localization, Escape dismissal and responsive checks.
+- npm run test:browser: 8 passed, 0 failed.
 - git diff --check: passed.
 - Build warning remains: Babylon main chunk about 6,023.70 kB minified / 1,321.52 kB gzip.
-- Local accessibility changes are not yet committed or CI-verified.
+- GitHub Actions run #33 is not yet complete; do not report CI success for bae936f.
 
 ## Open
-- Commit and push accessibility slice; verify GitHub Actions.
+- Verify CI run #33 completion.
 - Supabase Auth lifecycle remains unverified.
 - Worker visuals/animation and visible worker-to-desk assignment remain incomplete.
 - PWA and Android packaging remain unimplemented.
 - Babylon bundle optimization remains open.
 
 ## Next actions
-1. Review diff, commit and push accessibility slice to feat/p3-progression-ux.
-2. Verify GitHub Actions for the new commit; keep PR #2 Draft and unmerged unless explicitly requested.
-3. Continue P3 keyboard/screen-reader and responsive UX review.
+1. Verify GitHub Actions run #33 for bae936f.
+2. Continue P3 keyboard/screen-reader and responsive UX review.
+3. Keep PR #2 Draft and unmerged unless explicitly requested.
 4. Keep game saves device-local; Supabase remains identity-only.
