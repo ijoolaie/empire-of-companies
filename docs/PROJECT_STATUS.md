@@ -1,44 +1,44 @@
 # Project Status
 
-Last verified: 2026-11-05 (documentation and workflow bootstrap updated)
+Last verified: 2026-11-05
 
 ## Repository
 - GitHub: https://github.com/ijoolaie/empire-of-companies
+- Visibility: Public (verified through GitHub repository API; explicitly approved by user).
 - Default branch: main
-- Verified baseline commit: 7d210c2f0362fb445b87fbf455a3a4f8439b5e64
-- Existing app files verified: package.json, index.html, tsconfig.json, src/main.ts, src/game.ts, src/auth.ts, src/i18n.ts, src/style.css, .env.example, README.fa.md.
-- CI workflow exists at .github/workflows/build.yml (not ci.yml).
-- Vite config file is not present; Vite can use its defaults, so this is not automatically a defect.
+- Current development branch: feat/p2-core-game-loop
+- Last verified main commit before this branch: d7a9f2acfa0b62afa483d4f45f066285cd825e31
+- CI workflow: .github/workflows/build.yml
 
-## Implemented (repository inspection only)
-- Babylon.js 3D scene and initial office prototype.
-- Basic interaction/economy prototype as described in README.fa.md.
+## Implemented
+- Babylon.js 3D office scene with desks and basic placement interaction.
+- Basic hire and collect buttons.
 - Persian/English dictionary and UI styling.
 - Supabase Auth client scaffold.
-- localStorage-based game progress approach documented.
+- localStorage save/load scaffold.
 - GitHub Actions build workflow.
+- Roadmap, decisions, development guide, status and session handoff.
 
-## Not yet verified
-- Clean dependency install.
-- TypeScript compilation and production build.
-- Actual gameplay loop and save/load behavior in a running browser.
-- Supabase sign-up/sign-in, redirect configuration and email confirmation.
-- PWA behavior and Android packaging.
+## Verified
+- GitHub Actions run 41986757841 completed successfully on commit 33249ef5c4b856a17f0ab31e103f247316864e01.
+- Both npm install and npm run build passed in GitHub Actions using Node 22.
+- Repository visibility is Public, matching the user's approved decision.
 
-## CI baseline
-Workflow run 41985209822 for commit 7d210c2f0362fb445b87fbf455a3a4f8439b5e64 failed before npm install/build. The exact failure was: setup-node could not find a dependency lock file because package-lock.json/yarn.lock was absent while npm cache was enabled. This is a workflow setup failure, not evidence of a TypeScript or application build failure.
+## Known gaps (not yet verified as fixed)
+- No committed package-lock.json; CI currently uses npm install rather than npm ci.
+- No browser gameplay smoke test yet.
+- Current economy is mostly static: displayed income is not driven by employee/desk production.
+- No upgrade mechanic or safe offline earnings yet.
+- Supabase sign-up/sign-in and redirect settings have not been end-to-end tested.
+- PWA behavior and Android packaging are not implemented/verified.
 
 ## Current phase
-P0 continuity documentation is committed. P1 reproducible build is underway.
+P2 — Playable core loop. Work is beginning on a coherent economy/state model and its local persistence. P1's GitHub Actions build passes, but reproducible clean install remains open until a lockfile and npm ci are in place.
 
-## Documentation commits
-Roadmap, status, decisions, development guide and session handoff are committed under docs/. README.md now links to them. The workflow no longer enables npm cache before a lockfile exists.
-
-## Latest CI observation
-Run 41986757841 completed successfully on commit 33249ef5c4b856a17f0ab31e103f247316864e01. Both npm install and npm run build passed in GitHub Actions (Node 22). This verifies the current repository build in CI; a local clean install and browser gameplay smoke test are still pending.
-
-## Repository privacy warning
-The GitHub repository API currently reports private=false and visibility=public. This conflicts with the product decision that the repository be private. The available GitHub connection cannot change repository visibility. Do not commit additional project details until the owner changes it to Private in GitHub Settings → General → Danger Zone → Change repository visibility (or explicitly approves keeping it public).
-
-## Next action
-Inspect run 41986757841. If it reaches npm install/build, fix any actual errors. Then create and commit package-lock.json and switch CI to npm ci with caching. Verify the repository visibility setting because the workflow API payload reported `private: false`, despite the intended private-repository requirement.
+## Next actions
+1. Implement a typed game state/economy model with validated local save loading.
+2. Connect hiring, desk placement, upgrades and timed income to that model.
+3. Add bounded offline earnings based on the last saved timestamp.
+4. Add tests or deterministic checks for economy calculations and migration.
+5. Generate/commit package-lock.json and move CI to npm ci.
+6. Run a real browser smoke test before marking P2 complete.
