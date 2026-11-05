@@ -7,9 +7,9 @@ Last verified: 2026-11-05
 - Visibility: Public (explicitly approved by user).
 - Default branch: main; P2 merge commit: 06ebb5c.
 - Current development branch: feat/p3-progression-ux.
-- Local HEAD: c378a79 (matched origin/feat/p3-progression-ux before this uncommitted browser-automation slice).
-- PR #2: https://github.com/ijoolaie/empire-of-companies/pull/2 (existing P3 PR; do not merge automatically).
-- Last observed GitHub Actions run for c378a79: 42051228657, Build, completed successfully. This run predates the browser-automation changes in the working tree.
+- Local HEAD: f2985290ef164d7a2c08e806fec17997859d339b (pushed and matches origin/feat/p3-progression-ux).
+- PR #2: https://github.com/ijoolaie/empire-of-companies/pull/2 (open, Draft, not merged; do not merge automatically).
+- GitHub Actions run #30: 42054389812, Build, completed successfully for commit f298529, including Chromium installation and all browser regression tests.
 - Local clone: C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies
 - Node v22.23.2; npm 10.9.8.
 
@@ -45,7 +45,7 @@ Last verified: 2026-11-05
 - Browser automation was verified locally on Windows; the newly added GitHub Actions Chromium installation/test steps have not yet run in CI. git diff --check passed.
 
 ## Open / not verified
-- Browser automation changes are uncommitted and not yet pushed; CI has not yet verified the new workflow.
+- Browser automation changes are committed and pushed in f298529; CI run #30 completed successfully, including the Playwright browser suite.
 - Supabase sign-up/sign-in, confirmation, redirects and session lifecycle are not end-to-end verified.
 - Worker visuals/animation and visible worker-to-desk assignment remain incomplete.
 - PWA behavior and Android packaging are not implemented/verified.
@@ -53,9 +53,7 @@ Last verified: 2026-11-05
 - Browser checks on Firefox, Edge and additional mobile sizes remain outstanding.
 
 ## Immediate next actions
-1. Rerun npm ci, npm test, npm run build, npm run test:browser, and git diff --check.
-2. Review the complete diff and ensure Playwright artifacts are ignored.
-3. Commit and push the browser-regression slice to feat/p3-progression-ux.
-4. Verify the new GitHub Actions run on PR #2; keep the PR unmerged unless explicitly requested.
-5. Continue P3 progression/unlock screen, broader responsive UX, localization and accessibility.
-6. Keep game saves device-local; Supabase remains identity-only if/when Auth is verified.
+1. Continue P3 by implementing a progression/unlock screen that explains the next goals and locked features.
+2. Expand responsive and localization/accessibility checks beyond 320x568.
+3. Keep the PR in Draft until the remaining P3 acceptance criteria are reviewed; do not merge automatically.
+4. Keep game saves device-local; Supabase remains identity-only if/when Auth is verified.

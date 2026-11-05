@@ -26,19 +26,19 @@ Continue **Empire of Companies / امپراتور شرکت‌ها** in https://g
 ## Repository state
 - Default branch: main; P2 merged at 06ebb5c.
 - Current branch: feat/p3-progression-ux.
-- Local HEAD before current uncommitted work: c378a79; branch was clean and matched origin at session start.
+- Current HEAD: f2985290ef164d7a2c08e806fec17997859d339b, committed and pushed; branch matches origin.
 - PR #2 exists: https://github.com/ijoolaie/empire-of-companies/pull/2. Do not merge automatically.
-- Last observed CI run for c378a79: 42051228657, Build success. It does not include current uncommitted changes.
+- GitHub Actions run #30 (42054389812) completed successfully for f298529, including Chromium installation and the Playwright browser regression suite.
 - Local clone: C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies.
 - Node v22.23.2; npm 10.9.8.
 
 ## Current phase
-P3 progression and usability is active. The first slice (tutorial, ordered milestones, one-time cash/XP rewards, player level and v4 save migration) is already in PR #2. This session added a repeatable Playwright browser suite and CI Chromium step. Local browser tests: 4/4 passed. npm ci succeeded with 0 audit vulnerabilities; unit tests: 14/14 passed; production build passed; git diff --check passed. Vite main bundle remains about 6.0 MB minified.
+P3 progression and usability is active. The first slice (tutorial, ordered milestones, one-time cash/XP rewards, player level and v4 save migration) is already in PR #2. This session added and pushed a repeatable Playwright browser suite and CI Chromium step in f298529. Local and CI browser tests: 4/4 passed. npm ci succeeded with 0 audit vulnerabilities; unit tests: 14/14 passed; production build passed; git diff --check passed. Vite main bundle remains about 6.0 MB minified.
 
 A real UI defect was found and fixed while adding browser automation: the full-screen Babylon canvas intercepted clicks on language/account controls in the top bar. The top bar and stats region now explicitly enable pointer events.
 
 ## Next exact task
-Run a clean npm ci, then npm test, npm run build, npm run test:browser, and git diff --check. Review and commit/push this slice to feat/p3-progression-ux; verify the new GitHub Actions run on PR #2. Keep the PR unmerged. After CI is green, implement the P3 progression/unlock screen and expand responsive/localization coverage.
+Implement the P3 progression/unlock screen with clear upcoming unlock requirements, then add focused unit/browser coverage. Expand responsive/localization checks beyond 320x568. Keep PR #2 in Draft and do not merge automatically.
 
 ## Session update rule
 At the end of each substantial session:
