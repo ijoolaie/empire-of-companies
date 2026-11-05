@@ -1,6 +1,6 @@
 # Session Handoff — Read First
 
-Last updated: 2026-11-05 — documentation committed; bootstrap CI rerun started
+Last updated: 2026-11-05 — public repository decision confirmed; P2 branch opened
 
 ## Mission
 Continue the browser-first 3D idle management game **Empire of Companies / امپراتور شرکت‌ها** in repository https://github.com/ijoolaie/empire-of-companies.
@@ -19,29 +19,33 @@ Continue the browser-first 3D idle management game **Empire of Companies / ام�
 - Procedural art first; do not require Blender.
 - Local-only game saves; Supabase Auth only.
 - No service-role/secret key in frontend.
-- Private GitHub repo.
+- Public GitHub repository (explicitly approved by user on 2026-11-05).
 - Do not claim build, gameplay, or auth is verified without a successful test.
 
-## Last verified repository baseline
-Initial app baseline: 7d210c2f0362fb445b87fbf455a3a4f8439b5e64. Documentation and workflow fixes have since been committed on main; read the current main branch before editing.
-Source files exist in main. CI workflow is .github/workflows/build.yml.
-Latest observed CI run: 41985209822 — failed in setup-node because npm caching expected a lockfile which did not exist. npm install and npm run build were skipped. This is not an app build failure.
+## Repository state
+- Public visibility verified through GitHub API.
+- Default branch: main.
+- Last verified main commit before current work: d7a9f2acfa0b62afa483d4f45f066285cd825e31.
+- Current branch: feat/p2-core-game-loop.
+- CI workflow: .github/workflows/build.yml.
+- Latest known successful CI run: 41986757841; npm install and npm run build passed on Node 22.
+- package-lock.json is not yet committed; npm ci transition remains pending.
 
 ## Current phase
-P0 continuity docs + P1 reproducible build.
+P2 — Playable core loop.
 
 ## Immediate next steps
-1. Inspect latest CI run 41986757841 after the cache setting was removed.
-2. If install/build passes, generate and commit package-lock.json using Node 22; switch CI to npm ci + cache.
-3. Fix only actual TypeScript/build errors exposed by CI.
-4. Verify repository visibility: the latest Actions API payload reported private=false; user requirement is private repository.
-5. Update PROJECT_STATUS.md and this handoff with commit SHA, run ID, exact outcomes.
-6. Then begin P2 core loop work.
+1. Add a typed game state/economy module with safe local save parsing.
+2. Integrate hire, desk construction, upgrade and timed income with it.
+3. Implement capped offline earnings.
+4. Add deterministic checks for state/economy logic.
+5. Commit a lockfile and switch CI from npm install to npm ci.
+6. Run browser smoke tests; only then mark gameplay verified.
 
 ## Session update rule
 At the end of every substantial work session:
 - Update docs/PROJECT_STATUS.md with verified facts only.
-- Update docs/SESSION_HANDOFF.md with current phase, exact next command/task, latest commit and CI run.
+- Update docs/SESSION_HANDOFF.md with current phase, exact next task, latest commit and CI run.
 - Update ROADMAP.md only when scope/order/exit criteria change.
-- Record any changed product/architecture decision in DECISIONS.md.
+- Record changed product/architecture decisions in DECISIONS.md.
 - Never mark a task done merely because code was drafted or uploaded; require an observable test.
