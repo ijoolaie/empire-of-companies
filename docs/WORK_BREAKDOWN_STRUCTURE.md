@@ -62,10 +62,10 @@ A browser-first, bilingual 3D idle management game. The player starts with one s
 2.11 Prevent negative balances and invalid worker/desk states.  
 2.12 Cap offline earnings and ignore negative/future clock deltas safely.  
 2.13 Show cash, rate, workers, capacity, level and offline reward clearly.  
-2.14 Add deterministic unit tests for income, costs, hiring, building and upgrades.
+2.14 Add deterministic unit tests for income, costs, hiring, building and upgrades. (Implemented: 10 tests; CI run 41988139202 passed.)
 
 ### 2C. First playable actions
-2.15 Place a desk on valid floor cells.  
+2.15 Place a desk on valid floor cells. (Basic bounds and overlap validation implemented; browser placement QA pending.)  
 2.16 Reject overlap, wall, blocked and out-of-bounds placements.  
 2.17 Hire only when an unstaffed desk and enough cash exist.  
 2.18 Show staff assignment on the 3D desk/worker.  
@@ -200,11 +200,11 @@ A browser-first, bilingual 3D idle management game. The player starts with one s
 
 ## Current execution order (do not skip ahead)
 
-1. Finish PR #1: inspect CI result, fix issues, run browser smoke test.
-2. Add deterministic economy/save tests.
-3. Generate package-lock.json and switch CI to npm ci.
-4. Merge P2 core loop only after verification.
-5. Continue the remaining P2 edge cases and onboarding-ready first session.
+1. Generate package-lock.json and switch CI to npm ci.
+2. Run clean-install CI and confirm build plus the 10 economy/save tests.
+3. Run browser smoke test: build desk, hire, earn, upgrade, refresh and reopen.
+4. Fix gameplay defects and merge PR #1 only after browser verification.
+5. Continue remaining P2 edge cases and first-session validation.
 6. Start P3 only when P2 exit criteria are met.
 
 ## Definition of done for every task
