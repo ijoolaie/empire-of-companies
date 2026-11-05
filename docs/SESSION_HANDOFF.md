@@ -1,6 +1,6 @@
 # Session Handoff — Read First
 
-Last updated: 2026-11-06 — first procedural worker models implemented locally; CI pending
+Last updated: 2026-11-06 — worker leg/shoe detail added locally; previous CI runs #36 and #37 passed
 
 ## Mission
 Continue Empire of Companies: https://github.com/ijoolaie/empire-of-companies
@@ -16,7 +16,7 @@ Continue Empire of Companies: https://github.com/ijoolaie/empire-of-companies
 
 ## Repository
 - Branch: feat/p3-progression-ux.
-- Latest pushed feature commit: 2146410 — feat: animate seated workers at their desks. Initial worker-model commit e506463 passed CI run #35; CI run #36 for 2146410 is in progress.
+- Latest pushed feature commit before current local changes: 669f48c — docs: record procedural worker progress. CI run #36 (42107749624) passed for 2146410 and CI run #37 (42107889996) passed for 669f48c.
 - PR #2: https://github.com/ijoolaie/empire-of-companies/pull/2.
 - CI run #33 (42063106976) passed for bae936f.
 - Local path: C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies.
@@ -25,8 +25,8 @@ Continue Empire of Companies: https://github.com/ijoolaie/empire-of-companies
 P3 progression/usability remains active. P4 has started with an initial procedural worker visual slice:
 - OfficeGame.syncWorkers(count) creates seated procedural worker models for staffed desks and removes excess worker nodes.
 - Hiring synchronizes the scene after the economy action succeeds.
-- Models use primitive Babylon meshes/materials, subtle body motion and simple typing/arm motion; desk chair backrests are added. No external assets or Blender.
-- Canvas data-worker-model-count is used by Playwright to verify initial/hired model counts.
+- Models use primitive Babylon meshes/materials, seated torso/arms, procedural thighs, lower legs and shoes, subtle body motion and typing/arm motion; desk chair backrests are added. No external assets or Blender.
+- Canvas data-worker-model-count and data-worker-leg-mesh-count are used by Playwright to verify initial/hired worker and leg/shoe mesh counts.
 
 ## Local verification
 - npm test: 14/14 passed.

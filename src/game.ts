@@ -48,9 +48,17 @@ export class OfficeGame {
    const skin=new StandardMaterial('worker-skin-'+index,this.scene);skin.diffuseColor=new Color3(.78,.55,.39);
    const shirt=new StandardMaterial('worker-shirt-'+index,this.scene);shirt.diffuseColor=[new Color3(.16,.48,.72),new Color3(.22,.58,.43),new Color3(.62,.36,.68),new Color3(.78,.48,.2)][index%4];
    const hair=new StandardMaterial('worker-hair-'+index,this.scene);hair.diffuseColor=new Color3(.12,.1,.1);
+   const trousers=new StandardMaterial('worker-trousers-'+index,this.scene);trousers.diffuseColor=new Color3(.12,.19,.27);
+   const shoes=new StandardMaterial('worker-shoes-'+index,this.scene);shoes.diffuseColor=new Color3(.055,.065,.075);
    const torso=MeshBuilder.CreateCylinder('worker-torso-'+index,{height:.48,diameterTop:.34,diameterBottom:.42,tessellation:8},this.scene);torso.parent=worker;torso.position.set(0,1.03,.65);torso.material=shirt;
    const head=MeshBuilder.CreateSphere('worker-head-'+index,{diameter:.34,segments:10},this.scene);head.parent=worker;head.position.set(0,1.43,.55);head.material=skin;
    const hairCap=MeshBuilder.CreateSphere('worker-hair-'+index,{diameter:.35,segments:8},this.scene);hairCap.parent=worker;hairCap.scaling.y=.48;hairCap.position.set(0,1.57,.55);hairCap.material=hair;
+   // Seated legs: thighs extend toward the desk, with lower legs and shoes below the desktop.
+   for(const side of [-1,1]){
+    const thigh=MeshBuilder.CreateCapsule('worker-thigh-'+index+'-'+side,{height:.48,radius:.105,tessellation:6},this.scene);thigh.parent=worker;thigh.rotation.x=Math.PI/2;thigh.position.set(side*.13,.69,.91);thigh.material=trousers;
+    const shin=MeshBuilder.CreateCapsule('worker-shin-'+index+'-'+side,{height:.42,radius:.078,tessellation:6},this.scene);shin.parent=worker;shin.position.set(side*.13,.43,1.12);shin.material=trousers;
+    const shoe=MeshBuilder.CreateBox('worker-shoe-'+index+'-'+side,{width:.19,height:.11,depth:.3},this.scene);shoe.parent=worker;shoe.position.set(side*.13,.24,1.23);shoe.material=shoes;
+   }
    const arms:any[]=[];
    for(const side of [-1,1]){
     const arm=MeshBuilder.CreateCapsule('worker-arm-'+index+'-'+side,{height:.48,radius:.075,tessellation:6},this.scene);arm.parent=worker;arm.rotation.x=Math.PI/2;arm.position.set(side*.22,1.05,.35);arm.material=shirt;arms.push(arm);
@@ -59,5 +67,6 @@ export class OfficeGame {
    this.workers.push(worker);
   }
   this.engine.getRenderingCanvas()?.setAttribute('data-worker-model-count',String(this.workers.length));
+  this.engine.getRenderingCanvas()?.setAttribute('data-worker-leg-mesh-count',String(this.workers.length*6));
  }
 }
