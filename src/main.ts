@@ -11,6 +11,7 @@ const state=loaded.state;
 syncObjectives(state);
 const game=new OfficeGame(canvas);
 for(const d of state.desks.slice(2))game.addDesk(d.x,d.z);
+game.syncWorkers(state.workers);
 let lang:Lang=localStorage.getItem('eoc-lang')==='fa'?'fa':navigator.language.toLowerCase().startsWith('fa')?'fa':'en';
 let buildMode=false,accountEmail:string|null=null,authMessage='',authMode:'signin'|'signup'='signin';
 let lastTick=Date.now();
@@ -37,7 +38,7 @@ function render(){
  document.querySelector('#progress')!.addEventListener('click',showProgression);
  document.querySelector('#lang')!.addEventListener('click',()=>{lang=lang==='en'?'fa':'en';persist();render();});
  document.querySelector('#build')!.addEventListener('click',()=>{buildMode=true;game.placing=true;notify(lang==='fa'?'محل میز جدید را روی کف دفتر انتخاب کنید.':'Choose a spot on the office floor for the new desk.');});
- document.querySelector('#hire')!.addEventListener('click',()=>{if(hireWorker(state)){syncProgress();persist();render();}else notify(state.workers>=state.desks.length?(lang==='fa'?'برای استخدام، ابتدا میز جدید بسازید.':'Build another desk before hiring.') : t(lang,'notEnough'));});
+ document.querySelector('#hire')!.addEventListener('click',()=>{if(hireWorker(state)){game.syncWorkers(state.workers);syncProgress();persist();render();}else notify(state.workers>=state.desks.length?(lang==='fa'?'برای استخدام، ابتدا میز جدید بسازید.':'Build another desk before hiring.') : t(lang,'notEnough'));});
  document.querySelector('#upgrade')!.addEventListener('click',()=>{if(upgradeOffice(state)){syncProgress();persist();render();}else notify(t(lang,'notEnough'));});
  document.querySelector('#save')!.addEventListener('click',()=>{persist();notify(lang==='fa'?'بازی روی دستگاه ذخیره شد.':'Game saved on this device.');});
  document.querySelector('#account')!.addEventListener('click',()=>accountEmail?void handleSignOut():showAuth());

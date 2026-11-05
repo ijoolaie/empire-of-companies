@@ -1,6 +1,6 @@
 # Work Breakdown Structure — Empire of Companies
 
-Last reviewed: 2026-11-05 — P3 initial progression slice verified locally
+Last reviewed: 2026-11-06 — P3 accessibility CI verified; P4 procedural worker slice added locally
 Owner: Product / engineering
 Status: Living plan; task status is only changed after observable verification.
 
@@ -87,7 +87,7 @@ A browser-first, bilingual 3D idle management game. The player starts with one s
 3.1 Add a short first-run tutorial with skippable steps. (Implemented; covered by Playwright browser regression.)
 3.2 Add objectives and reward milestones. (Three initial milestones implemented with one-time cash/XP rewards; browser regression covers rewards and reload persistence.)
 3.3 Define XP/level progression and unlock requirements. (Player XP and level 2 threshold implemented; further unlocks remain.)
-3.4 Add a progression screen explaining next unlocks. (Implemented locally: XP summary, ordered milestone path, future unlock roadmap at levels 3/5/10; future features clearly marked planned. Playwright tests added; CI pending.)
+3.4 Add a progression screen explaining next unlocks. (Implemented and CI-verified in run #33; XP summary, ordered milestone path and future unlock roadmap at levels 3/5/10. Future features clearly marked planned.)
 3.5 Add contextual hints, confirmation dialogs and error messages.  
 3.6 Improve HUD hierarchy and responsive layouts for desktop/tablet/mobile. (320x568 browser layout regression is automated; broader sizes remain.)
 3.7 Ensure all interactive actions are keyboard reachable where practical.  
@@ -98,12 +98,12 @@ A browser-first, bilingual 3D idle management game. The player starts with one s
 **Exit:** first-time users can understand the goal and complete the first progression milestone on supported screen sizes and both locales.
 
 ## Phase 4 — 3D content and company identity
-**Status: planned**
+**Status: in progress — initial procedural worker slice**
 
 4.1 Define visual direction, palette, scale and camera conventions.  
 4.2 Build reusable procedural furniture: desk, chair, monitor, lamp, cabinet, plant.  
-4.3 Build worker character variants using procedural meshes or licensed assets.  
-4.4 Add idle/work/walk animations or simple readable motion.  
+4.3 Build worker character variants using procedural meshes or licensed assets. (Initial procedural seated worker model added; variants remain.)
+4.4 Add idle/work/walk animations or simple readable motion. (Subtle idle motion added; work/walk states remain.)
 4.5 Add room modules, walls, doors, windows and floor materials.  
 4.6 Add departments with distinct furniture and production roles.  
 4.7 Add additional company types with different production loops.  
@@ -200,12 +200,12 @@ A browser-first, bilingual 3D idle management game. The player starts with one s
 
 ## Current execution order (do not skip ahead)
 
-1. Complete P3 tutorial/objective/XP browser regression checks and save migration edge cases.
-2. Add repeatable browser automation to the repository and CI. (Playwright suite and CI Chromium step implemented locally; pending push and CI verification.)
-3. Improve HUD and responsive layout for desktop, tablet and mobile.
-4. Add a progression screen for upcoming unlocks and contextual guidance.
-5. Continue Persian/English accessibility and settings work.
-6. Defer worker animation/art to Phase 4 and Supabase Auth lifecycle to Phase 6.
+1. Continue P3 usability: screen-reader review, HUD hierarchy, responsive layouts and settings.
+2. Keep save migration, progression and browser regression tests green.
+3. Continue P4 procedural workers and furniture; add work-state animation and visual variants.
+4. Verify worker-to-desk assignment and rendering across supported browsers.
+5. Profile scene meshes/materials and rendering performance before expanding content.
+6. Defer Supabase Auth lifecycle to Phase 6.
 
 ## Definition of done for every task
 

@@ -1,6 +1,6 @@
 # Session Handoff — Read First
 
-Last updated: 2026-11-05 — progression dialog keyboard accessibility committed and pushed; CI run #33 pending
+Last updated: 2026-11-06 — first procedural worker models implemented locally; CI pending
 
 ## Mission
 Continue Empire of Companies: https://github.com/ijoolaie/empire-of-companies
@@ -16,25 +16,29 @@ Continue Empire of Companies: https://github.com/ijoolaie/empire-of-companies
 
 ## Repository
 - Branch: feat/p3-progression-ux.
-- Latest functional commit: bae936f — a11y: contain progression dialog keyboard focus.
+- Latest remote functional commit before current slice: bae936f.
 - PR #2: https://github.com/ijoolaie/empire-of-companies/pull/2.
-- CI run #32 (42061404610) passed for be73756.
-- CI run #33 (42063106976) is running for bae936f. Build and unit tests passed; Chromium installation is in progress and browser tests are pending.
+- CI run #33 (42063106976) passed for bae936f.
 - Local path: C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies.
 
 ## Current phase and work
-P3 progression and usability. Progression dialog contains player XP/level, ordered milestone states/rewards and future roadmap at levels 3, 5 and 10; future entries are explicitly planned, not playable. Latest functional slice adds accessible dialog description, keyboard focus containment, Escape dismissal, and focus restoration to the opener. Browser coverage includes 320, 375, 768 and 1366px widths.
+P3 progression/usability remains active. P4 has started with an initial procedural worker visual slice:
+- OfficeGame.syncWorkers(count) creates seated procedural worker models for staffed desks and removes excess worker nodes.
+- Hiring synchronizes the scene after the economy action succeeds.
+- Models use primitive Babylon meshes/materials and subtle idle vertical motion; no external assets or Blender.
+- Canvas data-worker-model-count is used by Playwright to verify initial/hired model counts.
 
-## Local verification for bae936f
+## Local verification
 - npm test: 14/14 passed.
 - npm run build: passed.
-- npm run test:browser: 8/8 passed.
+- npm run test:browser: 8/8 passed, including initial worker count and second worker after hiring.
 - git diff --check: passed.
-- Build warning: Babylon main chunk about 6,023.70 kB minified / 1,321.52 kB gzip.
-- CI run #33 must complete before this slice is described as CI-verified.
+- Babylon main chunk warning: about 6,025.15 kB minified / 1,321.96 kB gzip.
+- Current worker slice is still uncommitted/unpushed and not CI-verified.
+- Visual acceptance on a real browser display is still outstanding; automated checks do not prove model aesthetics.
 
 ## Exact next task
-Check run #33 (42063106976). If it passes, record the verified CI result and continue P3 accessibility. If it fails, inspect the failed step and repair it. Keep PR #2 Draft and unmerged.
+Review the worker model placement/proportions and diff. Then commit/push to feat/p3-progression-ux and verify GitHub Actions. Keep PR #2 Draft and unmerged.
 
 ## Session update rule
 Update PROJECT_STATUS and SESSION_HANDOFF with verified facts after substantial work. Update ROADMAP/WBS when scope changes. Never claim a feature is complete solely because code was written.

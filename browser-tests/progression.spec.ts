@@ -42,12 +42,14 @@ test('progression rewards are granted once and persist after reload', async ({ p
   };
   await seedSave(page, seeded);
   await page.goto('/');
+  await expect(page.locator('#game')).toHaveAttribute('data-worker-model-count', '1');
 
   const rows = page.locator('.objectives .objective');
   await expect(rows.nth(0)).toHaveClass(/is-complete/);
   await expect(page.locator('.progress-heading')).toContainText('20 / 100 XP');
 
   await page.locator('#hire').click();
+  await expect(page.locator('#game')).toHaveAttribute('data-worker-model-count', '2');
   await expect(rows.nth(1)).toHaveClass(/is-complete/);
   await expect(page.locator('.progress-heading')).toContainText('50 / 100 XP');
 

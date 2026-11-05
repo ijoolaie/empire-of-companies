@@ -1,7 +1,7 @@
 import {Engine,Scene,ArcRotateCamera,Vector3,HemisphericLight,DirectionalLight,MeshBuilder,StandardMaterial,Color3,Color4,TransformNode,PointerEventTypes} from '@babylonjs/core';
 
 export class OfficeGame {
- engine:Engine; scene:Scene; camera:ArcRotateCamera; floor:any; desks:TransformNode[]=[]; placing=false; onFloorTap?:(x:number,z:number)=>boolean;
+ engine:Engine; scene:Scene; camera:ArcRotateCamera; floor:any; desks:TransformNode[]=[]; workers:TransformNode[]=[]; placing=false; onFloorTap?:(x:number,z:number)=>boolean;
  constructor(canvas:HTMLCanvasElement){
   this.engine=new Engine(canvas,true,{preserveDrawingBuffer:false,stencil:true,adaptToDeviceRatio:true});
   this.scene=new Scene(this.engine);this.scene.clearColor=new Color4(.72,.83,.91,1);
@@ -22,6 +22,10 @@ export class OfficeGame {
   for(const [x,z] of [[-4,3],[4,-2]]){const pot=MeshBuilder.CreateCylinder('pot',{height:.55,diameter:.55},this.scene);pot.position.set(x,.34,z);pot.material=potMat;for(let i=0;i<5;i++){const l=MeshBuilder.CreateSphere('leaf',{diameter:.48,segments:6},this.scene);l.scaling.set(.65,1.6,.65);l.position.set(x+Math.cos(i*1.25)*.22,.82,z+Math.sin(i*1.25)*.22);l.material=leaf;}}
   this.addDesk(-2,-1);this.addDesk(1,-1);
   this.scene.onPointerObservable.add(pi=>{if(pi.type===PointerEventTypes.POINTERPICK&&this.placing){const pick=this.scene.pick(this.scene.pointerX,this.scene.pointerY,m=>m===this.floor);if(pick?.hit&&pick.pickedPoint){const x=Math.round(pick.pickedPoint.x),z=Math.round(pick.pickedPoint.z);if(this.onFloorTap?.(x,z))this.addDesk(x,z);}}});
+  this.scene.onBeforeRenderObservable.add(()=>{
+   const time=performance.now()*.001;
+   this.workers.forEach((worker,index)=>{worker.position.y=.08+Math.sin(time*2+index*.8)*.018;});
+  });
   this.engine.runRenderLoop(()=>this.scene.render());window.addEventListener('resize',()=>this.engine.resize());
  }
  addDesk(x:number,z:number){
@@ -33,5 +37,24 @@ export class OfficeGame {
   const seat=MeshBuilder.CreateBox('chair-seat',{width:.62,height:.13,depth:.62},this.scene);seat.parent=root;seat.position.set(0,.53,.72);seat.material=chair;
   const monitor=MeshBuilder.CreateBox('monitor',{width:.65,height:.42,depth:.07},this.scene);monitor.parent=root;monitor.position.set(0,1.2,-.12);const screen=new StandardMaterial('screen',this.scene);screen.diffuseColor=new Color3(.035,.07,.12);monitor.material=screen;
   this.desks.push(root);return root;
+ }
+ syncWorkers(count:number){
+  const target=Math.max(0,Math.min(Math.floor(count),this.desks.length));
+  while(this.workers.length>target){const worker=this.workers.pop()!;worker.dispose();}
+  while(this.workers.length<target){
+   const index=this.workers.length,desk=this.desks[index],worker=new TransformNode('worker-'+(index+1),this.scene);
+   worker.parent=desk;
+   const skin=new StandardMaterial('worker-skin-'+index,this.scene);skin.diffuseColor=new Color3(.78,.55,.39);
+   const shirt=new StandardMaterial('worker-shirt-'+index,this.scene);shirt.diffuseColor=[new Color3(.16,.48,.72),new Color3(.22,.58,.43),new Color3(.62,.36,.68),new Color3(.78,.48,.2)][index%4];
+   const hair=new StandardMaterial('worker-hair-'+index,this.scene);hair.diffuseColor=new Color3(.12,.1,.1);
+   const torso=MeshBuilder.CreateCylinder('worker-torso-'+index,{height:.48,diameterTop:.34,diameterBottom:.42,tessellation:8},this.scene);torso.parent=worker;torso.position.set(0,1.03,.65);torso.material=shirt;
+   const head=MeshBuilder.CreateSphere('worker-head-'+index,{diameter:.34,segments:10},this.scene);head.parent=worker;head.position.set(0,1.43,.55);head.material=skin;
+   const hairCap=MeshBuilder.CreateSphere('worker-hair-'+index,{diameter:.35,segments:8},this.scene);hairCap.parent=worker;hairCap.scaling.y=.48;hairCap.position.set(0,1.57,.55);hairCap.material=hair;
+   for(const side of [-1,1]){
+    const arm=MeshBuilder.CreateCapsule('worker-arm-'+index+'-'+side,{height:.48,radius:.075,tessellation:6},this.scene);arm.parent=worker;arm.rotation.x=Math.PI/2;arm.position.set(side*.22,1.05,.35);arm.material=shirt;
+   }
+   this.workers.push(worker);
+  }
+  this.engine.getRenderingCanvas()?.setAttribute('data-worker-model-count',String(this.workers.length));
  }
 }

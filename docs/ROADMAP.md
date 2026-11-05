@@ -1,6 +1,6 @@
 # Product Roadmap — Empire of Companies
 
-Last reviewed: 2026-11-05 — P3 progression screen added locally; awaiting CI
+Last reviewed: 2026-11-06 — P3 accessibility CI passed; P4 first procedural worker visual slice implemented locally
 
 ## Product direction
 A browser-first, 3D idle office/company management game. The player starts with a small office, hires workers, creates production capacity, earns money, upgrades operations, and expands into a multi-company empire.
@@ -32,8 +32,9 @@ Exit: a new player can complete the core loop, refresh, and retain valid progres
 Tasks: onboarding/tutorial; goals and milestones; levels; unlocks; feedback; responsive controls; accessibility; complete Persian/English UI.
 Exit: first-session flow is understandable and all core screens work in both languages and directions.
 
-### P4 — Content and visual identity
+### P4 — Content and visual identity (active — first worker slice)
 Tasks: procedural office kit; worker variants; equipment; company types; floor/room expansion; visual polish; asset licensing register.
+Current: procedural seated worker models are created for staffed desks; hiring adds a visible worker model and subtle idle motion. This is an initial slice, not completion of P4.
 Exit: a coherent content slice with documented asset provenance and acceptable performance.
 
 ### P5 — Account and settings
@@ -45,4 +46,4 @@ Tasks: automated tests; browser/device QA; performance budgets; PWA install/offl
 Exit: release checklist passes and known limitations are documented.
 
 ## Prioritization
-P1 reproducibility and P2 core gameplay are complete and verified. P3 progression/UX is now active. Keep each task small enough to verify in one session; defer worker art, deep business simulation and Android packaging until the progression slice is stable.
+P1 reproducibility and P2 core gameplay are complete and verified. P3 progression/UX remains active, and the first P4 procedural worker slice has started. Keep each task small enough to verify; defer deep business simulation and Android packaging until the browser experience is stable.
