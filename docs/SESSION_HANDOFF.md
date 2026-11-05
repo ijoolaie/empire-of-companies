@@ -28,7 +28,6 @@ Continue **Empire of Companies / امپراتور شرکت‌ها** in https://g
 - Development branch: feat/p2-core-game-loop.
 - Draft PR: #1 — https://github.com/ijoolaie/empire-of-companies/pull/1.
 - Code commit verified by CI: 2fecf6e6b0fe156979f71884ef5005b44c8164ef.
-- Documentation follow-up commit: 780db9dbc274897f308091483b8d858a9a19288b.
 - Local clone: C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies.
 - Node v22.23.2; npm 10.9.8.
 - package-lock.json committed; CI uses npm ci and npm cache.

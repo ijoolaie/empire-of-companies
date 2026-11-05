@@ -9,7 +9,6 @@ Last verified: 2026-11-05
 - Development branch: feat/p2-core-game-loop
 - PR #1: https://github.com/ijoolaie/empire-of-companies/pull/1 (Draft; not merged).
 - Latest code commit verified by CI: 2fecf6e6b0fe156979f71884ef5005b44c8164ef.
-- Documentation follow-up commit: 780db9dbc274897f308091483b8d858a9a19288b.
 - Local clone: C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies
 
 ## Implemented on the P2 branch
