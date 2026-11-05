@@ -1,7 +1,7 @@
 import {OfficeGame} from './game';
 import {t,type Lang} from './i18n';
 import {authConfigured,currentEmail,signIn,signOut,signUp} from './auth';
-import {buildDesk,createInitialState,hireWorker,incomePerSecond,parseGameState,serializeGameState,upgradeCost,upgradeOffice,LEGACY_SAVE_KEYS,SAVE_KEY} from './economy';
+import {buildDesk,hireWorker,incomePerSecond,parseGameState,serializeGameState,upgradeCost,upgradeOffice,LEGACY_SAVE_KEYS,SAVE_KEY} from './economy';
 import './style.css';
 
 const canvas=document.querySelector<HTMLCanvasElement>('#game')!,ui=document.querySelector<HTMLDivElement>('#ui')!;
@@ -36,6 +36,6 @@ async function handleSignOut(){try{await signOut();accountEmail=null;notify(lang
 
 game.onFloorTap=(x,z)=>{if(!buildMode)return false;if(!buildDesk(state,{x,z})){notify(state.cash<1000?t(lang,'notEnough'):(lang==='fa'?'این محل برای ساخت مناسب نیست.':'That spot is too close to another desk.'));return false;}buildMode=false;game.placing=false;persist();render();return true;};
 void currentEmail().then(email=>{accountEmail=email;render();}).catch(()=>{});
-window.setInterval(()=>{const now=Date.now();incomePerSecond(state);const elapsed=(now-lastTick)/1000;lastTick=now;if(elapsed>0){const earned=Math.floor(incomePerSecond(state)*Math.min(elapsed,8*60*60));state.cash+=earned;state.lifetimeEarned+=earned;}},1000);
+window.setInterval(()=>{const now=Date.now();const elapsed=(now-lastTick)/1000;lastTick=now;if(elapsed>0){const earned=Math.floor(incomePerSecond(state)*Math.min(elapsed,8*60*60));state.cash+=earned;state.lifetimeEarned+=earned;}},1000);
 window.setInterval(()=>{persist();render();},15000);
 persist();render();
