@@ -1,6 +1,6 @@
 # Project Status
 
-Last verified: 2026-11-05
+Last verified: 2026-11-05 (documentation and workflow bootstrap updated)
 
 ## Repository
 - GitHub: https://github.com/ijoolaie/empire-of-companies
@@ -29,7 +29,13 @@ Last verified: 2026-11-05
 Workflow run 41985209822 for commit 7d210c2f0362fb445b87fbf455a3a4f8439b5e64 failed before npm install/build. The exact failure was: setup-node could not find a dependency lock file because package-lock.json/yarn.lock was absent while npm cache was enabled. This is a workflow setup failure, not evidence of a TypeScript or application build failure.
 
 ## Current phase
-P0 — continuity documentation and reliable build baseline.
+P0 continuity documentation is committed. P1 reproducible build is underway.
+
+## Documentation commits
+Roadmap, status, decisions, development guide and session handoff are committed under docs/. README.md now links to them. The workflow no longer enables npm cache before a lockfile exists.
+
+## Latest CI observation
+Run 41986757841 was observed in progress after the workflow correction. Recheck its final result before calling P1 complete.
 
 ## Next action
-Remove npm cache configuration until a lockfile is committed, rerun CI, then generate and commit package-lock.json and move to a reproducible `npm ci` workflow. Resolve any actual install/build errors revealed after that.
+Inspect run 41986757841. If it reaches npm install/build, fix any actual errors. Then create and commit package-lock.json and switch CI to npm ci with caching. Verify the repository visibility setting because the workflow API payload reported `private: false`, despite the intended private-repository requirement.
