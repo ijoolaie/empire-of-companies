@@ -6,7 +6,7 @@ Last verified: 2026-11-06
 - GitHub: https://github.com/ijoolaie/empire-of-companies
 - Default branch: main; P2 merge: 06ebb5c.
 - Development branch: feat/p3-progression-ux.
-- Latest pushed feature commit before current work: 669f48c; CI run #36 (42107749624) passed for 2146410 and run #37 (42107889996) passed for 669f48c, including Chromium browser regression tests.
+- Latest pushed feature commit: 8c445bc (procedural seated lower-body models); local unit/build/browser checks pass. CI for this commit has not yet been confirmed.
 - PR #2: https://github.com/ijoolaie/empire-of-companies/pull/2 (open, Draft, not merged).
 - CI run #33 (42063106976) passed for bae936f, including Chromium browser tests.
 - Local clone: C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies.
@@ -42,7 +42,7 @@ Last verified: 2026-11-06
 - git diff --check: passed.
 - Babylon main chunk warning remains: about 6,025.15 kB minified / 1,321.96 kB gzip.
 - Initial worker model commit e506463 passed GitHub Actions run #35 (42106950970).
-- Follow-up commit 2146410 adds typing motion and chair-back detail; GitHub Actions run #36 (42107749624) is in progress.
+- Follow-up commit 2146410 passed GitHub Actions run #36 (42107749624).
 
 ## Open
 - Review worker model proportions/placement visually in a real browser session.
@@ -53,8 +53,6 @@ Last verified: 2026-11-06
 - PWA and Android packaging remain unimplemented.
 
 ## Next actions
-1. Review the worker model implementation and browser regression changes.
-2. Commit and push to feat/p3-progression-ux; verify CI before calling the slice CI-verified.
-3. Improve worker poses/work animation and profile scene complexity.
+1. Verify GitHub Actions for commit 8c445bc.`r`n2. Review worker proportions visually in a real browser; automated mesh-count tests do not prove visual quality.`r`n3. Continue worker animation/variants and scene profiling.
 4. Keep PR #2 Draft and unmerged unless explicitly requested.
 5. Keep game saves device-local; Supabase remains identity-only.

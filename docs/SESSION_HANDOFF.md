@@ -16,7 +16,7 @@ Continue Empire of Companies: https://github.com/ijoolaie/empire-of-companies
 
 ## Repository
 - Branch: feat/p3-progression-ux.
-- Latest pushed feature commit before current local changes: 669f48c — docs: record procedural worker progress. CI run #36 (42107749624) passed for 2146410 and CI run #37 (42107889996) passed for 669f48c.
+- Latest pushed feature commit: 8c445bc — feat: complete seated worker lower-body models. CI has not yet been confirmed for this commit.
 - PR #2: https://github.com/ijoolaie/empire-of-companies/pull/2.
 - CI run #33 (42063106976) passed for bae936f.
 - Local path: C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies.
@@ -31,15 +31,14 @@ P3 progression/usability remains active. P4 has started with an initial procedur
 ## Local verification
 - npm test: 14/14 passed.
 - npm run build: passed.
-- npm run test:browser: 8/8 passed, including initial worker count and second worker after hiring.
+- npm run test:browser: 8/8 passed, including initial/hired worker and leg/shoe mesh-count assertions.
 - git diff --check: passed.
 - Babylon main chunk warning: about 6,025.15 kB minified / 1,321.96 kB gzip.
 - CI run #35 (42106950970) passed for e506463.
-- CI run #36 (42107749624) is in progress for 2146410; local unit/build/browser tests passed.
+- CI run #36 (42107749624) passed for 2146410; run #37 (42107889996) passed for 669f48c.
 - Visual acceptance on a real browser display is still outstanding; automated checks do not prove model aesthetics.
 
-## Exact next task
-Review the worker model placement/proportions and diff. Then commit/push to feat/p3-progression-ux and verify GitHub Actions. Keep PR #2 Draft and unmerged.
+## Exact next task`r`nVerify GitHub Actions for 8c445bc, then review worker proportions/placement visually in a real browser. Keep PR #2 Draft and unmerged.
 
 ## Session update rule
 Update PROJECT_STATUS and SESSION_HANDOFF with verified facts after substantial work. Update ROADMAP/WBS when scope changes. Never claim a feature is complete solely because code was written.
