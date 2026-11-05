@@ -43,19 +43,24 @@ function finiteNonNegative(value: unknown, fallback: number): number {
   return typeof value === 'number' && Number.isFinite(value) && value >= 0 ? value : fallback;
 }
 
+function validDeskPosition(value: unknown): value is DeskPosition {
+  if (!value || typeof value !== 'object') return false;
+  const d = value as Record<string, unknown>;
+  return Number.isInteger(d.x) && Number.isInteger(d.z)
+    && (d.x as number) >= -4 && (d.x as number) <= 4
+    && (d.z as number) >= -3 && (d.z as number) <= 3;
+}
+
 export function parseGameState(raw: string | null, now = Date.now()): { state: GameState; offlineEarned: number } {
   const fresh = createInitialState(now);
   if (!raw) return { state: fresh, offlineEarned: 0 };
 
   try {
     const parsed: unknown = JSON.parse(raw);
-    if (!parsed || typeof parsed !== 'object') return { state: fresh, offlineEarned: 0 };
+    if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return { state: fresh, offlineEarned: 0 };
     const old = parsed as Record<string, unknown>;
     const desks = Array.isArray(old.desks)
-      ? old.desks.filter((d): d is Record<string, unknown> => !!d && typeof d === 'object')
-          .map(d => ({ x: Number(d.x), z: Number(d.z) }))
-          .filter(d => Number.isFinite(d.x) && Number.isFinite(d.z))
-          .slice(0, 200)
+      ? old.desks.filter(validDeskPosition).slice(0, 200).map(d => ({ x: d.x, z: d.z }))
       : fresh.desks;
     const state: GameState = {
       version: 3,
@@ -64,9 +69,8 @@ export function parseGameState(raw: string | null, now = Date.now()): { state: G
       level: Math.max(1, Math.min(100, Math.floor(finiteNonNegative(old.level, fresh.level)))),
       desks: desks.length ? desks : fresh.desks,
       lifetimeEarned: Math.floor(finiteNonNegative(old.lifetimeEarned, 0)),
-      lastSavedAt: finiteNonNegative(old.lastSavedAt, now)
+      lastSavedAt: Math.min(now, finiteNonNegative(old.lastSavedAt, now))
     };
-    // Keep workers within available desk capacity.
     state.workers = Math.min(state.workers, state.desks.length);
     const elapsed = Math.min(OFFLINE_CAP_SECONDS, Math.max(0, (now - state.lastSavedAt) / 1000));
     const offlineEarned = Math.floor(incomePerSecond(state) * elapsed);
@@ -80,7 +84,9 @@ export function parseGameState(raw: string | null, now = Date.now()): { state: G
 }
 
 export function earnForElapsed(state: GameState, elapsedSeconds: number): number {
-  const safeElapsed = Math.min(OFFLINE_CAP_SECONDS, Math.max(0, elapsedSeconds));
+  const safeElapsed = Number.isFinite(elapsedSeconds)
+    ? Math.min(OFFLINE_CAP_SECONDS, Math.max(0, elapsedSeconds))
+    : 0;
   const earned = Math.floor(incomePerSecond(state) * safeElapsed);
   state.cash += earned;
   state.lifetimeEarned += earned;
@@ -95,8 +101,9 @@ export function hireWorker(state: GameState): boolean {
 }
 
 export function buildDesk(state: GameState, position: DeskPosition): boolean {
-  if (state.cash < DESK_COST || state.desks.length >= 200) return false;
-  if (state.desks.some(d => Math.hypot(d.x - position.x, d.z - position.z) < 1.2)) return false;
+  if (state.cash < DESK_COST || state.desks.length >= 200 || !validDeskPosition(position)) return false;
+  const overlaps = state.desks.some(d => Math.abs(d.x - position.x) < 2 && Math.abs(d.z - position.z) < 2);
+  if (overlaps) return false;
   state.cash -= DESK_COST;
   state.desks.push({ x: position.x, z: position.z });
   return true;
