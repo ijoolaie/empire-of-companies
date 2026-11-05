@@ -1,6 +1,6 @@
 # Product Roadmap — Empire of Companies
 
-Last reviewed: 2026-11-06 — P3 accessibility CI passed; P4 first procedural worker visual slice implemented locally
+Last reviewed: 2026-11-06 — P3 accessibility suite passing; P4 worker lower-body orientation refined locally
 
 ## Product direction
 A browser-first, 3D idle office/company management game. The player starts with a small office, hires workers, creates production capacity, earns money, upgrades operations, and expands into a multi-company empire.
@@ -34,7 +34,7 @@ Exit: first-session flow is understandable and all core screens work in both lan
 
 ### P4 — Content and visual identity (active — first worker slice)
 Tasks: procedural office kit; worker variants; equipment; company types; floor/room expansion; visual polish; asset licensing register.
-Current: procedural seated worker models are created for staffed desks; hiring adds a visible worker model and subtle idle motion. This is an initial slice, not completion of P4.
+Current: procedural seated worker models are created for staffed desks; hiring adds a visible worker model and subtle idle/typing motion. Lower-body placement has been corrected toward the desk. This is an initial slice, not completion of P4.
 Exit: a coherent content slice with documented asset provenance and acceptable performance.
 
 ### P5 — Account and settings

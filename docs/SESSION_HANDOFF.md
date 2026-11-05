@@ -1,6 +1,6 @@
 # Session Handoff — Read First
 
-Last updated: 2026-11-06 — worker leg/shoe detail added locally; previous CI runs #36 and #37 passed
+Last updated: 2026-11-06 — corrected seated worker lower-body orientation locally; local tests pass
 
 ## Mission
 Continue Empire of Companies: https://github.com/ijoolaie/empire-of-companies
@@ -16,7 +16,7 @@ Continue Empire of Companies: https://github.com/ijoolaie/empire-of-companies
 
 ## Repository
 - Branch: feat/p3-progression-ux.
-- Latest pushed feature commit: 8c445bc — feat: complete seated worker lower-body models. CI has not yet been confirmed for this commit.
+- Latest pushed commit: 7019cdc (docs). Local uncommitted change corrects worker thighs/shins/shoes to face toward the desk.
 - PR #2: https://github.com/ijoolaie/empire-of-companies/pull/2.
 - CI run #33 (42063106976) passed for bae936f.
 - Local path: C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies.
@@ -25,7 +25,7 @@ Continue Empire of Companies: https://github.com/ijoolaie/empire-of-companies
 P3 progression/usability remains active. P4 has started with an initial procedural worker visual slice:
 - OfficeGame.syncWorkers(count) creates seated procedural worker models for staffed desks and removes excess worker nodes.
 - Hiring synchronizes the scene after the economy action succeeds.
-- Models use primitive Babylon meshes/materials, seated torso/arms, procedural thighs, lower legs and shoes, subtle body motion and typing/arm motion; desk chair backrests are added. No external assets or Blender.
+- Models use primitive Babylon meshes/materials, seated torso/arms, procedural thighs, lower legs and shoes, subtle body motion and typing/arm motion; desk chair backrests are added. Leg/shoe coordinates were corrected locally so legs extend toward the desk. No external assets or Blender.
 - Canvas data-worker-model-count and data-worker-leg-mesh-count are used by Playwright to verify initial/hired worker and leg/shoe mesh counts.
 
 ## Local verification
@@ -33,12 +33,12 @@ P3 progression/usability remains active. P4 has started with an initial procedur
 - npm run build: passed.
 - npm run test:browser: 8/8 passed, including initial/hired worker and leg/shoe mesh-count assertions.
 - git diff --check: passed.
-- Babylon main chunk warning: about 6,025.15 kB minified / 1,321.96 kB gzip.
+- Babylon main chunk warning: 6,026.40 kB minified / 1,322.29 kB gzip.
 - CI run #35 (42106950970) passed for e506463.
 - CI run #36 (42107749624) passed for 2146410; run #37 (42107889996) passed for 669f48c.
 - Visual acceptance on a real browser display is still outstanding; automated checks do not prove model aesthetics.
 
-## Exact next task`r`nVerify GitHub Actions for 8c445bc, then review worker proportions/placement visually in a real browser. Keep PR #2 Draft and unmerged.
+## Exact next task`r`nCommit/push the corrected seated leg placement and verify CI. A genuine visual review remains outstanding because no screenshot-capable browser surface was available in this session. Keep PR #2 Draft and unmerged.
 
 ## Session update rule
 Update PROJECT_STATUS and SESSION_HANDOFF with verified facts after substantial work. Update ROADMAP/WBS when scope changes. Never claim a feature is complete solely because code was written.

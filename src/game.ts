@@ -55,9 +55,9 @@ export class OfficeGame {
    const hairCap=MeshBuilder.CreateSphere('worker-hair-'+index,{diameter:.35,segments:8},this.scene);hairCap.parent=worker;hairCap.scaling.y=.48;hairCap.position.set(0,1.57,.55);hairCap.material=hair;
    // Seated legs: thighs extend toward the desk, with lower legs and shoes below the desktop.
    for(const side of [-1,1]){
-    const thigh=MeshBuilder.CreateCapsule('worker-thigh-'+index+'-'+side,{height:.48,radius:.105,tessellation:6},this.scene);thigh.parent=worker;thigh.rotation.x=Math.PI/2;thigh.position.set(side*.13,.69,.91);thigh.material=trousers;
-    const shin=MeshBuilder.CreateCapsule('worker-shin-'+index+'-'+side,{height:.42,radius:.078,tessellation:6},this.scene);shin.parent=worker;shin.position.set(side*.13,.43,1.12);shin.material=trousers;
-    const shoe=MeshBuilder.CreateBox('worker-shoe-'+index+'-'+side,{width:.19,height:.11,depth:.3},this.scene);shoe.parent=worker;shoe.position.set(side*.13,.24,1.23);shoe.material=shoes;
+    const thigh=MeshBuilder.CreateCapsule('worker-thigh-'+index+'-'+side,{height:.48,radius:.105,tessellation:6},this.scene);thigh.parent=worker;thigh.rotation.x=Math.PI/2;thigh.position.set(side*.13,.69,.48);thigh.material=trousers;
+    const shin=MeshBuilder.CreateCapsule('worker-shin-'+index+'-'+side,{height:.42,radius:.078,tessellation:6},this.scene);shin.parent=worker;shin.position.set(side*.13,.43,.24);shin.material=trousers;
+    const shoe=MeshBuilder.CreateBox('worker-shoe-'+index+'-'+side,{width:.19,height:.11,depth:.3},this.scene);shoe.parent=worker;shoe.position.set(side*.13,.24,.06);shoe.material=shoes;
    }
    const arms:any[]=[];
    for(const side of [-1,1]){
