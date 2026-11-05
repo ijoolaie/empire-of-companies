@@ -16,7 +16,8 @@ Continue Empire of Companies: https://github.com/ijoolaie/empire-of-companies
 
 ## Repository
 - Branch: feat/p3-progression-ux.
-- Latest pushed commit: 1991369 — fix: orient seated worker legs toward desk.
+- Latest remote commit: 70ff58f — docs: refresh session handoff after worker placement fix.
+- Current uncommitted local change: direct Babylon module imports in src/game.ts, reducing the largest bundle chunk; validate and commit/push next.
 - PR #2: https://github.com/ijoolaie/empire-of-companies/pull/2.
 - CI run #40 (42109392998) passed for 1991369, including Chromium browser tests.
 - Local path: C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies.
@@ -35,7 +36,8 @@ P3 progression/usability remains active. P4 has started with an initial procedur
 - npm run build: passed.
 - npm run test:browser: 8/8 passed.
 - git diff --check: passed.
-- Babylon main chunk warning: 6,026.40 kB minified / 1,322.29 kB gzip.
+- Previous Babylon/main chunk: 6,026.40 kB minified / 1,322.29 kB gzip.
+- Current build after direct module imports: largest app chunk 1,141.33 kB minified / 281.81 kB gzip; >500 kB warning remains.
 - CI run #36 (42107749624) passed for 2146410.
 - CI run #37 (42108774779) passed for 7019cdc.
 - CI run #38 (42108661210) passed for 8c445bc.
@@ -43,7 +45,7 @@ P3 progression/usability remains active. P4 has started with an initial procedur
 - Visual acceptance on a real browser display is still outstanding; automated checks do not prove model aesthetics.
 
 ## Exact next task
-Obtain a screenshot-capable browser review of worker proportions/placement. Then improve worker poses/variants, add meaningful visual regression coverage, and profile scene complexity. Keep PR #2 Draft and unmerged.
+Direct Babylon module imports are now in place and locally verified; run final checks, commit and push this optimization, then review CI. A screenshot-capable visual review of worker proportions/placement is still outstanding. Continue worker poses/variants and scene profiling only after visual review. Keep PR #2 Draft and unmerged.
 
 ## Session update rule
 Update PROJECT_STATUS and SESSION_HANDOFF with verified facts after substantial work. Update ROADMAP/WBS when scope changes. Never claim a feature is complete solely because code was written.

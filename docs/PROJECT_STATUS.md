@@ -6,7 +6,8 @@ Last verified: 2026-11-06
 - GitHub: https://github.com/ijoolaie/empire-of-companies
 - Default branch: main; P2 merge: 06ebb5c.
 - Development branch: feat/p3-progression-ux.
-- Latest pushed commit: 1991369 — fix: orient seated worker legs toward desk.
+- Latest pushed commit before this session: 70ff58f — docs: refresh session handoff after worker placement fix.
+- Current local change: replace the Babylon.js barrel import with direct module imports to reduce bundled code; pending commit/CI.
 - PR #2: https://github.com/ijoolaie/empire-of-companies/pull/2 (open, Draft, not merged).
 - GitHub Actions run #40 (42109392998) passed for 1991369, including Chromium browser regression tests.
 - Local clone: C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies.
@@ -34,13 +35,14 @@ Last verified: 2026-11-06
 - Canvas data attributes expose worker-model count and expected leg/shoe mesh count for browser regression checks.
 - No external assets or Blender dependency.
 - Work/walk animations, character variants, detailed poses, scene profiling and visual manual acceptance remain open.
+- Direct Babylon module imports replaced the root barrel import; Vite transformed 464 modules instead of 2,221 and reduced the largest application chunk substantially.
 
 ## Verification
 - npm test: 14 passed, 0 failed.
 - npm run build: passed.
 - npm run test:browser: 8 passed, 0 failed.
 - git diff --check: passed.
-- Babylon main chunk warning: 6,026.40 kB minified / 1,322.29 kB gzip.
+- Babylon/main application chunk after direct module imports: 1,141.33 kB minified / 281.81 kB gzip (about 81% smaller minified and 79% smaller gzip than the previous 6,026.40 / 1,322.29 kB bundle). The >500 kB warning remains.
 - CI run #36 (42107749624) passed for 2146410.
 - CI run #37 (42108774779) passed for 7019cdc.
 - CI run #38 (42108661210) passed for 8c445bc.

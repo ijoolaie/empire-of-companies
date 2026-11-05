@@ -1,6 +1,6 @@
 # Product Roadmap — Empire of Companies
 
-Last reviewed: 2026-11-06 — P3 accessibility suite passing; P4 worker lower-body orientation refined locally
+Last reviewed: 2026-11-06 — P3 accessibility suite passing; P4 worker lower-body orientation refined; Babylon imports optimized locally
 
 ## Product direction
 A browser-first, 3D idle office/company management game. The player starts with a small office, hires workers, creates production capacity, earns money, upgrades operations, and expands into a multi-company empire.

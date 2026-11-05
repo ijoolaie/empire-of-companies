@@ -1,4 +1,14 @@
-import {Engine,Scene,ArcRotateCamera,Vector3,HemisphericLight,DirectionalLight,MeshBuilder,StandardMaterial,Color3,Color4,TransformNode,PointerEventTypes} from '@babylonjs/core';
+import {Engine} from '@babylonjs/core/Engines/engine';
+import {Scene} from '@babylonjs/core/scene';
+import {ArcRotateCamera} from '@babylonjs/core/Cameras/arcRotateCamera';
+import {Vector3} from '@babylonjs/core/Maths/math.vector';
+import {HemisphericLight} from '@babylonjs/core/Lights/hemisphericLight';
+import {DirectionalLight} from '@babylonjs/core/Lights/directionalLight';
+import {MeshBuilder} from '@babylonjs/core/Meshes/meshBuilder';
+import {StandardMaterial} from '@babylonjs/core/Materials/standardMaterial';
+import {Color3,Color4} from '@babylonjs/core/Maths/math.color';
+import {TransformNode} from '@babylonjs/core/Meshes/transformNode';
+import {PointerEventTypes} from '@babylonjs/core/Events/pointerEvents';
 
 export class OfficeGame {
  engine:Engine; scene:Scene; camera:ArcRotateCamera; floor:any; desks:TransformNode[]=[]; workers:TransformNode[]=[]; workerArms:Array<[any,any]>=[]; placing=false; onFloorTap?:(x:number,z:number)=>boolean;
