@@ -87,7 +87,7 @@ A browser-first, bilingual 3D idle management game. The player starts with one s
 3.1 Add a short first-run tutorial with skippable steps. (Implemented; covered by Playwright browser regression.)
 3.2 Add objectives and reward milestones. (Three initial milestones implemented with one-time cash/XP rewards; browser regression covers rewards and reload persistence.)
 3.3 Define XP/level progression and unlock requirements. (Player XP and level 2 threshold implemented; further unlocks remain.)
-3.4 Add a progression screen explaining next unlocks.  
+3.4 Add a progression screen explaining next unlocks. (Implemented locally: XP summary, ordered milestone path, future unlock roadmap at levels 3/5/10; future features clearly marked planned. Playwright tests added; CI pending.)
 3.5 Add contextual hints, confirmation dialogs and error messages.  
 3.6 Improve HUD hierarchy and responsive layouts for desktop/tablet/mobile. (320x568 browser layout regression is automated; broader sizes remain.)
 3.7 Ensure all interactive actions are keyboard reachable where practical.  

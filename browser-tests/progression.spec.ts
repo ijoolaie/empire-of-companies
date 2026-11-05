@@ -98,3 +98,46 @@ test('320x568 viewport has no horizontal overflow or toolbar-panel overlap', asy
   expect(metrics.documentWidth).toBe(metrics.viewportWidth);
   expect(metrics.panelBottom).toBeLessThanOrEqual(metrics.toolbarTop);
 });
+
+test('progression screen explains current milestones and planned future unlocks', async ({ page }) => {
+  const pageErrors = [];
+  page.on('pageerror', error => pageErrors.push(error.message));
+  await page.goto('/');
+  await page.locator('#progress').click();
+  const dialog = page.getByRole('dialog');
+  await expect(dialog).toBeVisible();
+  await expect(dialog).toContainText('Your milestone path');
+  await expect(dialog).toContainText('Build your first extra desk');
+  await expect(dialog).toContainText('Expand to a new floor');
+  await expect(dialog).toContainText('Create departments');
+  await expect(dialog).toContainText('Launch another company');
+  await expect(dialog.locator('.future-item em')).toHaveCount(3);
+  await expect(dialog).toContainText('not available in this build yet');
+  await page.keyboard.press('Escape');
+  await expect(dialog).toHaveCount(0);
+  expect(pageErrors).toEqual([]);
+});
+
+test('progression screen is localized and fits a narrow mobile viewport', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 568 });
+  await page.goto('/');
+  await page.locator('#progress').click();
+  const dialog = page.getByRole('dialog');
+  await expect(dialog).toBeVisible();
+  await expect(dialog).toContainText('Your milestone path');
+  const englishMetrics = await dialog.evaluate(el => ({
+    width: el.scrollWidth,
+    clientWidth: el.clientWidth,
+    sheetHeight: el.querySelector('.progress-sheet').getBoundingClientRect().height,
+    viewportHeight: window.innerHeight
+  }));
+  expect(englishMetrics.width).toBeLessThanOrEqual(englishMetrics.clientWidth);
+  expect(englishMetrics.sheetHeight).toBeLessThanOrEqual(englishMetrics.viewportHeight);
+
+  await page.keyboard.press('Escape');
+  await page.locator('#lang').click();
+  await page.locator('#progress').click();
+  await expect(dialog).toContainText('مسیر مأموریت‌ها');
+  await expect(dialog).toContainText('گسترش به طبقه جدید');
+  await expect(dialog).toContainText('در برنامه توسعه هستند');
+});
