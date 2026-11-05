@@ -35,7 +35,10 @@ P0 continuity documentation is committed. P1 reproducible build is underway.
 Roadmap, status, decisions, development guide and session handoff are committed under docs/. README.md now links to them. The workflow no longer enables npm cache before a lockfile exists.
 
 ## Latest CI observation
-Run 41986757841 was observed in progress after the workflow correction. Recheck its final result before calling P1 complete.
+Run 41986757841 completed successfully on commit 33249ef5c4b856a17f0ab31e103f247316864e01. Both npm install and npm run build passed in GitHub Actions (Node 22). This verifies the current repository build in CI; a local clean install and browser gameplay smoke test are still pending.
+
+## Repository privacy warning
+The GitHub repository API currently reports private=false and visibility=public. This conflicts with the product decision that the repository be private. The available GitHub connection cannot change repository visibility. Do not commit additional project details until the owner changes it to Private in GitHub Settings → General → Danger Zone → Change repository visibility (or explicitly approves keeping it public).
 
 ## Next action
 Inspect run 41986757841. If it reaches npm install/build, fix any actual errors. Then create and commit package-lock.json and switch CI to npm ci with caching. Verify the repository visibility setting because the workflow API payload reported `private: false`, despite the intended private-repository requirement.
