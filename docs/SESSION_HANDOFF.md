@@ -1,6 +1,6 @@
 # Session Handoff — Read First
 
-Last updated: 2026-11-05 — P2 economy implementation submitted; CI passed
+Last updated: 2026-11-05 — P2 automated economy/save tests pass in CI
 
 ## Mission
 Continue **Empire of Companies / امپراتور شرکت‌ها** in https://github.com/ijoolaie/empire-of-companies.
@@ -27,9 +27,11 @@ Continue **Empire of Companies / امپراتور شرکت‌ها** in https://g
 - Default branch: main.
 - Current branch: feat/p2-core-game-loop.
 - Current Draft PR: #1.
-- Latest P2 commit: 83abfd219b27b6852b222679f40f5e0c25397fe8.
-- Latest P2 workflow run: 41987694567 — completed successfully.
-- npm install and npm run build passed in that run.
+- Latest branch commit: 333d4cf6e7f6145f019b11c8d3389695a0b8cf4e.
+- Latest tested code commit: 5d310faace22ad1ed8366c95d2dd150cf85c3efa.
+- Latest P2 workflow run: 41988139202 — completed successfully.
+- npm install, npm run build and npm test all passed.
+- Ten deterministic economy/save tests are included.
 - package-lock.json is not committed; npm ci remains pending.
 - Browser gameplay smoke test is pending.
 
@@ -37,7 +39,7 @@ Continue **Empire of Companies / امپراتور شرکت‌ها** in https://g
 P2 — Playable core loop.
 
 ## Next exact task
-Review the P2 diff and add deterministic tests for economy/save logic. Then generate package-lock.json, switch CI to npm ci, and perform browser smoke tests before merging.
+Generate and commit package-lock.json using Node 22/npm, switch CI to npm ci with cache, and verify clean install/build/tests. Then run browser smoke test before merging PR #1.
 
 ## Session update rule
 At the end of each substantial session:
