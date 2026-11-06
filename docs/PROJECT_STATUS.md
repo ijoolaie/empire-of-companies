@@ -6,7 +6,7 @@ Last verified: 2026-11-06
 - GitHub: https://github.com/ijoolaie/empire-of-companies
 - Default branch: main; P2 merge: 06ebb5c.
 - Development branch: feat/p3-progression-ux.
-- Latest pushed branch head before current camera work: 8e06623; CI runs #69 (42183091200) and #70 (42183189353) passed. Current local camera/viewport changes: 22 unit tests, build, 14 browser tests.
+- Latest pushed branch head before render-loop cleanup: c4702eb; CI run #71 (42185532580) passed. Current local render-loop cleanup: 22 unit tests, production build, 14 browser tests and diff check passed.
 - A* arrival routing starts at a shared office entrance and avoids desk, planter, and structural wall footprints; eight navigation tests cover entrance routing, fixed obstacles, blocked entrance fallback, deterministic routing, office bounds, alternate entry lanes around a reserved worker route, and 84 edge-desk/entrance-lane combinations. Active worker routes are reserved for later hires; the 12th browser test verifies three rapid arrivals in two desk layouts and checks each gets a non-fallback path.
 - New hires walk from the open side of the office toward their assigned desk for 1.6 seconds, swing their arms/legs, then transition into seated typing. Restored employees remain seated on reload.
 - PR #2: https://github.com/ijoolaie/empire-of-companies/pull/2 (open, Draft, not merged).
@@ -58,7 +58,8 @@ Last verified: 2026-11-06
 
 ## Next actions
 1. Perform visual acceptance of alternate camera angles and additional device sizes; automated responsive checks now cover six viewport sizes, but alternate-angle screenshots have not been reviewed.
-2. CI runs #69 and #70 passed; edge-of-office routes have unit coverage across 84 combinations. Camera zoom limits and responsive viewport checks are covered locally. Complete visual acceptance for alternate angles; model an actual doorway only when the office scene gains a front wall/door mesh.
+2. CI run #71 passed for c4702eb. Render-loop allocation cleanup is locally verified; after push, verify its CI. Edge-of-office routes have unit coverage across 84 combinations. Camera zoom limits and responsive viewport checks are automated; alternate-angle visual acceptance remains open.
 3. Profile scene mesh/material counts and address the large Babylon bundle with measured changes.
 4. Keep PR #2 Draft and unmerged unless explicitly requested.
 5. Keep game saves device-local; Supabase remains identity-only.
+6. Profile worker/render-loop cost with measured frame-time and scene-count evidence before further optimization.

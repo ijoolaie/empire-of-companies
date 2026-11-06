@@ -1,6 +1,6 @@
 # Session Handoff — Read First
 
-Last updated: 2026-11-06 — CI #69 and #70 passed; camera beta/zoom limits added; local verification: 22 unit tests, build and 14 browser tests across six viewport sizes.
+Last updated: 2026-11-06 — CI #71 passed for c4702eb; render-loop allocation cleanup verified locally (22 unit, build, 14 browser tests).
 
 ## Mission
 Continue Empire of Companies: https://github.com/ijoolaie/empire-of-companies
@@ -16,7 +16,7 @@ Continue Empire of Companies: https://github.com/ijoolaie/empire-of-companies
 
 ## Repository
 - Branch: feat/p3-progression-ux.
-- Latest pushed branch head before current camera work: 8e06623; CI runs #69 (42183091200) and #70 (42183189353) passed, including browser regression.
+- Latest pushed branch head before render-loop cleanup: c4702eb; CI run #71 (42185532580) passed, including build, unit tests and all 14 browser regression tests.
 - Committed: shared-entrance A* routing with desk/planter/structural-wall obstacles, temporary active-worker corridor reservations, rapid-hire coverage across two desk layouts, cached route lengths, and 84 edge-of-office desk/lane regression combinations.
 - Local verification after camera constraints and viewport coverage: 22 unit tests, production build, 14 browser tests and diff check pass.
 - PR #2: https://github.com/ijoolaie/empire-of-companies/pull/2.
@@ -46,7 +46,7 @@ P3 progression/usability remains active. P4 has started with an initial procedur
 - Manual Chromium screenshots at 1280x720 and 375x667 confirm the seated worker is visible in the default view. The mobile panel hides XP/objective details but keeps the tutorial and progression dialog reachable; alternate camera angles remain to review.
 
 ## Exact next task
-CI runs #69 and #70 passed. Camera beta is constrained to 0.7–1.35 radians and zoom radius to 10–22; browser tests verify zoom clamping and responsive layout at six viewport sizes. Camera orbit/alternate-angle visual acceptance remains unverified; do not claim it. Keep PR #2 Draft and unmerged.
+CI run #71 (42185532580) passed for c4702eb. Latest local change reuses one frame timestamp, removes duplicate camera-state synchronization from the render loop, and uses Vector3.LerpToRef for walking workers to avoid a temporary Vector3 allocation per worker per frame. Local checks: 22 unit tests, production build, 14 browser tests and git diff --check all pass. Next: commit/push this optimization, verify its CI, then continue measured scene profiling and visual acceptance. Camera orbit/alternate-angle visual acceptance remains unverified; do not claim it. Keep PR #2 Draft and unmerged.
 
 ## Session update rule
 Update PROJECT_STATUS and SESSION_HANDOFF with verified facts after substantial work. Update ROADMAP/WBS when scope changes. Never claim a feature is complete solely because code was written.

@@ -38,26 +38,26 @@ export class OfficeGame {
   this.addDesk(-2,-1);this.addDesk(1,-1);
   this.scene.onPointerObservable.add(pi=>{if(pi.type===PointerEventTypes.POINTERPICK&&this.placing){const pick=this.scene.pick(this.scene.pointerX,this.scene.pointerY,m=>m===this.floor);if(pick?.hit&&pick.pickedPoint){const x=Math.round(pick.pickedPoint.x),z=Math.round(pick.pickedPoint.z);if(this.onFloorTap?.(x,z))this.addDesk(x,z);}}});
   this.scene.onBeforeRenderObservable.add(()=>{
-   syncCameraState();
-   const time=performance.now()*.001;
+   const now=performance.now();
+   const time=now*.001;
    let walkingCount=0;
    this.workers.forEach((worker,index)=>{
     worker.position.y=.08+Math.sin(time*2+index*.8)*.018;
-    const elapsed=(performance.now()-this.workerWalkStartedAt[index])/1000;
+    const elapsed=(now-this.workerWalkStartedAt[index])/1000;
     const progress=Math.min(1,Math.max(0,elapsed/1.6));
     if(progress<1){
      walkingCount++;
      const stride=Math.sin(time*10+index*.9);
      const eased=progress*progress*(3-2*progress);
-     const path=this.workerWalkPaths[index]??[Vector3.Zero()];
-     const lengths=this.workerWalkPathLengths[index]??[];
-     const totalLength=this.workerWalkPathTotalLengths[index]??0;
+     const path=this.workerWalkPaths[index];
+     const lengths=this.workerWalkPathLengths[index];
+     const totalLength=this.workerWalkPathTotalLengths[index];
      let remaining=eased*totalLength;
      let segment=0;
      while(segment<lengths.length-1&&remaining>lengths[segment]){remaining-=lengths[segment];segment++;}
      const from=path[segment]??Vector3.Zero(),to=path[segment+1]??from;
      const segmentProgress=lengths[segment]>0?Math.min(1,remaining/lengths[segment]):1;
-     worker.position.copyFrom(Vector3.Lerp(from,to,segmentProgress));
+     Vector3.LerpToRef(from,to,segmentProgress,worker.position);
      const legs=this.workerLegs[index],arms=this.workerArms[index];
      if(legs){legs[0].rotation.x=stride*.38;legs[1].rotation.x=-stride*.38;legs[0].position.z=.48+stride*.08;legs[1].position.z=.48-stride*.08;}
      if(arms){arms[0].rotation.x=Math.PI/2-stride*.28;arms[1].rotation.x=Math.PI/2+stride*.28;}
