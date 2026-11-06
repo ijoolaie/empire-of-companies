@@ -6,8 +6,8 @@ Last verified: 2026-11-06
 - GitHub: https://github.com/ijoolaie/empire-of-companies
 - Default branch: main; P2 merge: 06ebb5c.
 - Development branch: feat/p3-progression-ux.
-- Latest pushed implementation commit: f8ffa28 — fix: keep office scene visible on mobile.
-- Material reuse landed in 34a7150; camera correction in 31cc0a2; compact mobile panel and regression test in f8ffa28. CI for f8ffa28 is not yet confirmed.
+- Latest implementation commit: 84bb89f — feat: add alternating worker typing motion.
+- Mobile panel correction landed in f8ffa28; 84bb89f adds alternating arm taps and subtle arm lifts for seated workers. CI for 84bb89f is pending.
 - PR #2: https://github.com/ijoolaie/empire-of-companies/pull/2 (open, Draft, not merged).
 - GitHub Actions run #40 (42109392998) passed for 1991369, including Chromium browser regression tests.
 - Local clone: C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies.
@@ -35,14 +35,14 @@ Last verified: 2026-11-06
 - Canvas data attributes expose worker-model count, expected leg/shoe mesh count and scene material count for browser regression checks.
 - Desk materials are cached and reused; worker skin/hair/trousers/shoes share materials, and shirt material is cached per one of four palette variants. Browser coverage verifies the fifth worker reuses the first variant without allocating a new material.
 - No external assets or Blender dependency.
-- Work/walk animations, character variants, detailed poses, scene profiling and broader mobile/multi-angle visual acceptance remain open. Initial desktop default-view worker visibility is manually accepted.
+- Seated worker typing motion now alternates left/right arm taps with small vertical lifts; this is a procedural animation refinement, not a walking/work-state system. Walking, character variants, detailed poses, scene profiling and broader mobile/multi-angle visual acceptance remain open.
 - Direct Babylon module imports replaced the root barrel import; Vite transforms 464 modules instead of 2,221.
 - Material reuse now prevents per-worker duplication of shared skin/hair/trouser/shoe materials and desk furniture materials; only four shirt-color variants are allocated.
 
 ## Verification
 - npm test: 14 passed, 0 failed.
 - npm run build: passed.
-- npm run test:browser: 10 passed, 0 failed after default camera-angle and compact-mobile-panel corrections.
+- npm run test:browser: 10 passed, 0 failed after default camera-angle, compact-mobile-panel and alternating typing-motion changes.
 - git diff --check: passed.
 - Babylon/main application chunk after direct module imports: 1,141.33 kB minified / 281.81 kB gzip (about 81% smaller minified and 79% smaller gzip than the previous 6,026.40 / 1,322.29 kB bundle). The >500 kB warning remains.
 - CI run #36 (42107749624) passed for 2146410.

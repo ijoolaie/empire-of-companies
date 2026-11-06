@@ -16,9 +16,9 @@ Continue Empire of Companies: https://github.com/ijoolaie/empire-of-companies
 
 ## Repository
 - Branch: feat/p3-progression-ux.
-- Latest pushed implementation commit: f8ffa28 — fix: keep office scene visible on mobile.
-- Material reuse landed in 34a7150; camera correction in 31cc0a2; mobile compact-panel CSS and regression test in f8ffa28.
-- Local verification: 14 unit tests, build, 10 browser tests and diff check all pass. CI status for f8ffa28 is still unreported.
+- Latest implementation commit: 84bb89f — feat: add alternating worker typing motion.
+- Material reuse in 34a7150, camera correction in 31cc0a2, compact mobile panel in f8ffa28; 84bb89f adds alternating arm taps and small vertical lifts.
+- Local verification: 14 unit tests, build, 10 browser tests and diff check pass. CI for 84bb89f is pending.
 - PR #2: https://github.com/ijoolaie/empire-of-companies/pull/2.
 - CI run #40 (42109392998) passed for 1991369, including Chromium browser tests.
 - Local path: C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies.
@@ -46,7 +46,7 @@ P3 progression/usability remains active. P4 has started with an initial procedur
 - Manual Chromium screenshots at 1280x720 and 375x667 confirm the seated worker is visible in the default view. The mobile panel hides XP/objective details but keeps the tutorial and progression dialog reachable; alternate camera angles remain to review.
 
 ## Exact next task
-Direct Babylon module imports, material reuse, camera correction and compact mobile panel are pushed. Manual Chromium review confirms the worker is visible at 1280x720 and 375x667. Local checks: 14 unit tests, build and 10 browser tests pass. PR #2 body is updated and remains Draft. Next: review alternate camera angles and continue P4 worker work-state animation/variants. CI for latest remote head has not been reported. Keep PR #2 Draft and unmerged.
+Typing animation refinement is implemented locally in 84bb89f: the worker alternates left/right arm taps with small vertical lifts. Local checks pass (14 unit tests, build, 10 browser tests, diff check). Next: push the implementation and handoff docs, verify CI, then review alternate camera angles and plan a distinct walking/work-state system. Keep PR #2 Draft and unmerged.
 
 ## Session update rule
 Update PROJECT_STATUS and SESSION_HANDOFF with verified facts after substantial work. Update ROADMAP/WBS when scope changes. Never claim a feature is complete solely because code was written.
