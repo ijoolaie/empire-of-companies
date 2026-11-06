@@ -1,6 +1,6 @@
 # Session Handoff — Read First
 
-Last updated: 2026-11-06 — CI #67 passed; added edge-of-office navigation regression coverage for 84 desk/lane combinations; local verification: 22 unit tests, build and 12 browser tests.
+Last updated: 2026-11-06 — CI #69 and #70 passed; camera beta/zoom limits added; local verification: 22 unit tests, build and 14 browser tests across six viewport sizes.
 
 ## Mission
 Continue Empire of Companies: https://github.com/ijoolaie/empire-of-companies
@@ -16,9 +16,9 @@ Continue Empire of Companies: https://github.com/ijoolaie/empire-of-companies
 
 ## Repository
 - Branch: feat/p3-progression-ux.
-- Latest pushed branch head: ed92067 (edge-of-office navigation regression tests and handoff/status documentation); CI run #69 (42183091200) is in progress for this head.
+- Latest pushed branch head before current camera work: 8e06623; CI runs #69 (42183091200) and #70 (42183189353) passed, including browser regression.
 - Committed: shared-entrance A* routing with desk/planter/structural-wall obstacles, temporary active-worker corridor reservations, rapid-hire coverage across two desk layouts, cached route lengths, and 84 edge-of-office desk/lane regression combinations.
-- Local verification after edge-layout coverage: 22 unit tests, production build, 12 browser tests and diff check pass.
+- Local verification after camera constraints and viewport coverage: 22 unit tests, production build, 14 browser tests and diff check pass.
 - PR #2: https://github.com/ijoolaie/empire-of-companies/pull/2.
 - CI run #40 (42109392998) passed for 1991369, including Chromium browser tests.
 - Local path: C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies.
@@ -35,7 +35,7 @@ P3 progression/usability remains active. P4 has started with an initial procedur
 ## Local verification
 - npm test: 22/22 passed, including eight navigation-planner tests.
 - npm run build: passed.
-- npm run test:browser: 12/12 passed; rapid-hire regression verifies three concurrent arrivals in two desk layouts, valid waypoint paths, and their transition back to seated state.
+- npm run test:browser: 14/14 passed; includes three concurrent arrivals in two desk layouts, camera zoom clamping, and canvas/toolbar/camera-bound checks at 320x568, 375x667, 768x1024, 1024x768, 1366x768 and 1920x1080.
 - git diff --check: passed.
 - Previous Babylon/main chunk: 6,026.40 kB minified / 1,322.29 kB gzip.
 - Current build after direct module imports: largest app chunk 1,145.60 kB minified / 283.55 kB gzip; >500 kB warning remains.
@@ -46,7 +46,7 @@ P3 progression/usability remains active. P4 has started with an initial procedur
 - Manual Chromium screenshots at 1280x720 and 375x667 confirm the seated worker is visible in the default view. The mobile panel hides XP/objective details but keeps the tutorial and progression dialog reachable; alternate camera angles remain to review.
 
 ## Exact next task
-CI run #67 passed for ad9d934. Edge-of-office routing is covered by 84 desk/lane combinations; CI run #69 is currently validating branch head ed92067. After CI completes, review alternate camera angles and additional device sizes. Keep PR #2 Draft and unmerged.
+CI runs #69 and #70 passed. Camera beta is constrained to 0.7–1.35 radians and zoom radius to 10–22; browser tests verify zoom clamping and responsive layout at six viewport sizes. Camera orbit/alternate-angle visual acceptance remains unverified; do not claim it. Keep PR #2 Draft and unmerged.
 
 ## Session update rule
 Update PROJECT_STATUS and SESSION_HANDOFF with verified facts after substantial work. Update ROADMAP/WBS when scope changes. Never claim a feature is complete solely because code was written.

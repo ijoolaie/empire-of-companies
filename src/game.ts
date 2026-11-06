@@ -17,7 +17,11 @@ export class OfficeGame {
   this.engine=new Engine(canvas,true,{preserveDrawingBuffer:false,stencil:true,adaptToDeviceRatio:true});
   this.scene=new Scene(this.engine);this.scene.clearColor=new Color4(.72,.83,.91,1);
   this.camera=new ArcRotateCamera('camera',Math.PI/4,1.05,15,new Vector3(0,0,0),this.scene);
-  this.camera.lowerRadiusLimit=10;this.camera.upperRadiusLimit=22;this.camera.wheelPrecision=45;this.camera.panningSensibility=90;this.camera.attachControl(canvas,true);
+  this.camera.lowerRadiusLimit=10;this.camera.upperRadiusLimit=22;this.camera.lowerBetaLimit=.7;this.camera.upperBetaLimit=1.35;this.camera.wheelPrecision=45;this.camera.panningSensibility=90;
+  const syncCameraState=()=>{for(const [name,value] of [['alpha',this.camera.alpha.toFixed(3)],['beta',this.camera.beta.toFixed(3)],['radius',this.camera.radius.toFixed(2)]] as const){const key='data-camera-'+name;if(canvas.getAttribute(key)!==value)canvas.setAttribute(key,value);}};
+  canvas.setAttribute('data-camera-beta-min','0.7');canvas.setAttribute('data-camera-beta-max','1.35');canvas.setAttribute('data-camera-radius-min','10');canvas.setAttribute('data-camera-radius-max','22');
+  this.camera.onViewMatrixChangedObservable.add(syncCameraState);syncCameraState();
+  this.camera.attachControl(canvas,true);
   new HemisphericLight('ambient',new Vector3(0,1,0),this.scene).intensity=.85;
   const sun=new DirectionalLight('sun',new Vector3(-.5,-1,.4),this.scene);sun.position=new Vector3(8,12,-8);sun.intensity=.55;
   const mat=(name:string,c:Color3)=>this.getMaterial(name,c);
@@ -34,6 +38,7 @@ export class OfficeGame {
   this.addDesk(-2,-1);this.addDesk(1,-1);
   this.scene.onPointerObservable.add(pi=>{if(pi.type===PointerEventTypes.POINTERPICK&&this.placing){const pick=this.scene.pick(this.scene.pointerX,this.scene.pointerY,m=>m===this.floor);if(pick?.hit&&pick.pickedPoint){const x=Math.round(pick.pickedPoint.x),z=Math.round(pick.pickedPoint.z);if(this.onFloorTap?.(x,z))this.addDesk(x,z);}}});
   this.scene.onBeforeRenderObservable.add(()=>{
+   syncCameraState();
    const time=performance.now()*.001;
    let walkingCount=0;
    this.workers.forEach((worker,index)=>{

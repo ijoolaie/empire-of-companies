@@ -256,6 +256,77 @@ test('progression dialog fits common mobile, tablet and desktop viewport widths'
   }
 });
 
+test('office camera zoom stays within safe viewing limits', async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 667 });
+  await page.goto('/');
+  const canvas = page.locator('#game');
+  const betaMin = Number(await canvas.getAttribute('data-camera-beta-min'));
+  const betaMax = Number(await canvas.getAttribute('data-camera-beta-max'));
+  const radiusMin = Number(await canvas.getAttribute('data-camera-radius-min'));
+  const radiusMax = Number(await canvas.getAttribute('data-camera-radius-max'));
+  const initialRadius = Number(await canvas.getAttribute('data-camera-radius'));
+
+  await page.mouse.move(300, 330);
+  await page.mouse.wheel(0, -500);
+  await expect.poll(async () => Number(await canvas.getAttribute('data-camera-radius'))).not.toBe(initialRadius);
+  await expect.poll(async () => Number(await canvas.getAttribute('data-camera-radius'))).toBeLessThanOrEqual(radiusMax);
+  await page.mouse.wheel(0, 5000);
+  await expect.poll(async () => Number(await canvas.getAttribute('data-camera-radius'))).toBeGreaterThanOrEqual(radiusMin);
+
+  const beta = Number(await canvas.getAttribute('data-camera-beta'));
+  const radius = Number(await canvas.getAttribute('data-camera-radius'));
+  expect(beta).toBeGreaterThanOrEqual(betaMin);
+  expect(beta).toBeLessThanOrEqual(betaMax);
+  expect(radius).toBeGreaterThanOrEqual(radiusMin);
+  expect(radius).toBeLessThanOrEqual(radiusMax);
+});
+
+test('office canvas and action toolbar fit narrow, tablet and wide viewports', async ({ page }) => {
+  for (const viewport of [
+    { width: 320, height: 568 },
+    { width: 375, height: 667 },
+    { width: 768, height: 1024 },
+    { width: 1024, height: 768 },
+    { width: 1366, height: 768 },
+    { width: 1920, height: 1080 }
+  ]) {
+    await page.setViewportSize(viewport);
+    await page.goto('/');
+    const metrics = await page.evaluate(() => {
+      const canvas = document.querySelector('#game').getBoundingClientRect();
+      const toolbar = document.querySelector('.toolbar').getBoundingClientRect();
+      return {
+        viewportWidth: document.documentElement.clientWidth,
+        viewportHeight: document.documentElement.clientHeight,
+        documentWidth: document.documentElement.scrollWidth,
+        canvasWidth: canvas.width,
+        canvasHeight: canvas.height,
+        toolbarLeft: toolbar.left,
+        toolbarRight: toolbar.right,
+        toolbarTop: toolbar.top,
+        toolbarBottom: toolbar.bottom,
+        cameraBeta: Number(document.querySelector('#game').getAttribute('data-camera-beta')),
+        cameraBetaMin: Number(document.querySelector('#game').getAttribute('data-camera-beta-min')),
+        cameraBetaMax: Number(document.querySelector('#game').getAttribute('data-camera-beta-max')),
+        cameraRadius: Number(document.querySelector('#game').getAttribute('data-camera-radius')),
+        cameraRadiusMin: Number(document.querySelector('#game').getAttribute('data-camera-radius-min')),
+        cameraRadiusMax: Number(document.querySelector('#game').getAttribute('data-camera-radius-max'))
+      };
+    });
+    expect(metrics.documentWidth).toBe(metrics.viewportWidth);
+    expect(metrics.canvasWidth).toBe(metrics.viewportWidth);
+    expect(metrics.canvasHeight).toBe(metrics.viewportHeight);
+    expect(metrics.toolbarLeft).toBeGreaterThanOrEqual(0);
+    expect(metrics.toolbarRight).toBeLessThanOrEqual(metrics.viewportWidth);
+    expect(metrics.toolbarTop).toBeGreaterThanOrEqual(0);
+    expect(metrics.toolbarBottom).toBeLessThanOrEqual(metrics.viewportHeight);
+    expect(metrics.cameraBeta).toBeGreaterThanOrEqual(metrics.cameraBetaMin);
+    expect(metrics.cameraBeta).toBeLessThanOrEqual(metrics.cameraBetaMax);
+    expect(metrics.cameraRadius).toBeGreaterThanOrEqual(metrics.cameraRadiusMin);
+    expect(metrics.cameraRadius).toBeLessThanOrEqual(metrics.cameraRadiusMax);
+  }
+});
+
 test('three rapid arrivals find valid paths in alternate desk layouts', async ({ browser }) => {
   const layouts = [
     [

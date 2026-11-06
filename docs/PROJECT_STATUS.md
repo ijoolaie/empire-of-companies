@@ -6,7 +6,7 @@ Last verified: 2026-11-06
 - GitHub: https://github.com/ijoolaie/empire-of-companies
 - Default branch: main; P2 merge: 06ebb5c.
 - Development branch: feat/p3-progression-ux.
-- Latest pushed branch head: ed92067 (edge-of-office navigation regression tests and handoff/status documentation); CI run #69 (42183091200) is in progress. Local verification: 22 unit tests, build, 12 browser tests.
+- Latest pushed branch head before current camera work: 8e06623; CI runs #69 (42183091200) and #70 (42183189353) passed. Current local camera/viewport changes: 22 unit tests, build, 14 browser tests.
 - A* arrival routing starts at a shared office entrance and avoids desk, planter, and structural wall footprints; eight navigation tests cover entrance routing, fixed obstacles, blocked entrance fallback, deterministic routing, office bounds, alternate entry lanes around a reserved worker route, and 84 edge-desk/entrance-lane combinations. Active worker routes are reserved for later hires; the 12th browser test verifies three rapid arrivals in two desk layouts and checks each gets a non-fallback path.
 - New hires walk from the open side of the office toward their assigned desk for 1.6 seconds, swing their arms/legs, then transition into seated typing. Restored employees remain seated on reload.
 - PR #2: https://github.com/ijoolaie/empire-of-companies/pull/2 (open, Draft, not merged).
@@ -43,7 +43,7 @@ Last verified: 2026-11-06
 ## Verification
 - npm test: 22 passed, 0 failed (includes 8 navigation-planner tests; new edge-layout test checks 84 desk/lane combinations).
 - npm run build: passed.
-- npm run test:browser: 12 passed, 0 failed; rapid-hire regression performs three consecutive hires before any arrival completes, verifies 1/2/3 active walkers, verifies valid waypoint paths in two desk layouts, then verifies all settle and the save contains four workers.
+- npm run test:browser: 14 passed, 0 failed; includes rapid-hire routing, camera zoom clamping, and six viewport sizes (320x568 through 1920x1080) for canvas, toolbar and camera bounds.
 - git diff --check: passed.
 - Babylon/main application chunk after direct module imports: about 1,142.55 kB minified / 282.20 kB gzip (about 81% smaller minified and 79% smaller gzip than the previous 6,026.40 / 1,322.29 kB bundle). The >500 kB warning remains.
 - GitHub Actions run #62 (42178572610) passed for 9a3eab4; run #64 (42179352858) passed for 195f2c5; run #66 (42180394613) passed for 08e2cfa; CI run #67 (42181556728) passed for ad9d934, including build, unit tests, Chromium and all 12 browser tests.
@@ -52,13 +52,13 @@ Last verified: 2026-11-06
 ## Open
 - Manual Chromium visual review completed at 1280x720 and 375x667: default camera angle now shows the seated worker; compact mobile panel keeps the worker/office visible while tutorial and progression remain reachable. Alternate camera angles and other device sizes remain open.
 - Continue P3 screen-reader, HUD hierarchy and responsive UX work.
-- Continue P4 worker work-state animation, variants, furniture details and performance profiling.
+- Continue P4 worker work-state animation, variants, furniture details and performance profiling. Camera beta is constrained to 0.7–1.35 radians and zoom radius to 10–22; zoom clamping is automated. Interactive orbit and alternate-angle visual acceptance remain unverified.
 - Supabase Auth lifecycle remains unverified.
 - PWA and Android packaging remain unimplemented.
 
 ## Next actions
-1. Review alternate camera angles and additional device sizes; desktop and 375x667 default views now show the seated worker.
-2. CI run #67 passed for the path-length caching optimization; edge-of-office routes now have unit coverage across 84 combinations. CI run #69 is validating the latest test/documentation head. Then review alternate camera angles and additional device sizes. Model an actual doorway only when the office scene gains a front wall/door mesh.
+1. Perform visual acceptance of alternate camera angles and additional device sizes; automated responsive checks now cover six viewport sizes, but alternate-angle screenshots have not been reviewed.
+2. CI runs #69 and #70 passed; edge-of-office routes have unit coverage across 84 combinations. Camera zoom limits and responsive viewport checks are covered locally. Complete visual acceptance for alternate angles; model an actual doorway only when the office scene gains a front wall/door mesh.
 3. Profile scene mesh/material counts and address the large Babylon bundle with measured changes.
 4. Keep PR #2 Draft and unmerged unless explicitly requested.
 5. Keep game saves device-local; Supabase remains identity-only.
