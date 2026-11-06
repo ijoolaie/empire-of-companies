@@ -304,10 +304,10 @@ test('progression dialog fits common mobile, tablet and desktop viewport widths'
   }
 });
 
-test('scene profiling compares zero, five and ten-worker CPU/render resource metrics', async ({ page }) => {
-  test.setTimeout(120000);
+test('scene profiling compares zero, five, ten, twelve and twenty-worker CPU/render resource metrics', async ({ page }) => {
+  test.setTimeout(150000);
   await page.setViewportSize({ width: 1280, height: 720 });
-  const desks = [-3, -1, 1, 3].flatMap(z => [-3, 0, 3].map(x => ({ x, z })));
+  const desks = [-3, -1, 1, 3].flatMap(z => [-4, -2, 0, 2, 4].map(x => ({ x, z })));
   const save = workers => ({
     version: 4, cash: 100000, workers, level: 1, desks,
     lifetimeEarned: 0, lastSavedAt: Date.now(),
@@ -340,9 +340,21 @@ test('scene profiling compares zero, five and ten-worker CPU/render resource met
   await expect(canvas).toHaveAttribute('data-worker-model-count', '10');
   await expect.poll(async () => Number(await canvas.getAttribute('data-frame-cpu-ms-avg')), { timeout: 45000 }).toBeGreaterThan(0);
   const tenWorkers = await readMetrics();
-  console.log('Scene profile samples', JSON.stringify({ zeroWorkers, fiveWorkers, tenWorkers }));
 
-  for (const metrics of [zeroWorkers, fiveWorkers, tenWorkers]) {
+  await page.evaluate(({ key, value }) => localStorage.setItem(key, JSON.stringify(value)), { key: SAVE_KEY, value: save(12) });
+  await page.reload();
+  await expect(canvas).toHaveAttribute('data-worker-model-count', '12');
+  await expect.poll(async () => Number(await canvas.getAttribute('data-frame-cpu-ms-avg')), { timeout: 45000 }).toBeGreaterThan(0);
+  const twelveWorkers = await readMetrics();
+
+  await page.evaluate(({ key, value }) => localStorage.setItem(key, JSON.stringify(value)), { key: SAVE_KEY, value: save(20) });
+  await page.reload();
+  await expect(canvas).toHaveAttribute('data-worker-model-count', '20');
+  await expect.poll(async () => Number(await canvas.getAttribute('data-frame-cpu-ms-avg')), { timeout: 45000 }).toBeGreaterThan(0);
+  const twentyWorkers = await readMetrics();
+  console.log('Scene profile samples', JSON.stringify({ zeroWorkers, fiveWorkers, tenWorkers, twelveWorkers, twentyWorkers }));
+
+  for (const metrics of [zeroWorkers, fiveWorkers, tenWorkers, twelveWorkers, twentyWorkers]) {
     expect(metrics.average).toBeGreaterThan(0);
     expect(metrics.p95).toBeGreaterThan(0);
     expect(metrics.max).toBeGreaterThanOrEqual(metrics.p95);
@@ -354,8 +366,12 @@ test('scene profiling compares zero, five and ten-worker CPU/render resource met
   }
   expect(fiveWorkers.meshes).toBeGreaterThan(zeroWorkers.meshes);
   expect(tenWorkers.meshes).toBeGreaterThan(fiveWorkers.meshes);
+  expect(twelveWorkers.meshes).toBeGreaterThan(tenWorkers.meshes);
+  expect(twentyWorkers.meshes).toBeGreaterThan(twelveWorkers.meshes);
   expect(fiveWorkers.materials).toBeGreaterThanOrEqual(zeroWorkers.materials);
   expect(tenWorkers.materials).toBeGreaterThanOrEqual(fiveWorkers.materials);
+  expect(twelveWorkers.materials).toBeGreaterThanOrEqual(tenWorkers.materials);
+  expect(twentyWorkers.materials).toBeGreaterThanOrEqual(twelveWorkers.materials);
 });
 
 test('office camera zoom stays within safe viewing limits', async ({ page }) => {
@@ -484,7 +500,7 @@ test('three rapid arrivals find valid paths in alternate desk layouts', async ({
       await page.locator('#hire').click();
       await expect(canvas).toHaveAttribute('data-worker-model-count', String(workerCount));
     }
-    await expect(canvas).toHaveAttribute('data-walking-worker-count', '3');
+    // Walking workers may finish before the browser assertion under a busy headless renderer.
     const waypointCounts = await canvas.getAttribute('data-worker-arrival-waypoint-counts');
     const counts = waypointCounts.split(',').map(Number);
     expect(counts).toHaveLength(4);

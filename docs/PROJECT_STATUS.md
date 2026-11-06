@@ -7,7 +7,7 @@ Last verified: 2026-11-06
 - Default branch: `main`; latest merged baseline: `7914290` (PR #2).
 - Current work branch: `feat/p4-office-environment`.
 - Local workspace: `C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies`.
-- Latest pushed head: `acbd57378be9cc9a07f14a0e250f919e5db52c00` (`feat: refine procedural employee appearance`). Local branch is clean and synced with origin. PR #3 is open, Draft and unmerged.
+- Latest pushed head: `706207b68daffa4de87c274688ae6b8362940dd1` (`docs: record ten-employee performance baseline`). New local 20-worker stress-test slice is being validated. PR #3 is open, Draft and unmerged.
 
 ## Product decisions
 - Browser-first 3D office/company management game, Babylon.js + TypeScript + Vite.
@@ -36,12 +36,12 @@ Last verified: 2026-11-06
 - No external art assets introduced.
 
 ## Verification for this working branch
-- Latest local verification after the worker-detail slice: `npm test` 22/22; `npm run build` passed (466 modules; main JS 1,160.29 kB minified / 287.25 kB gzip; existing Vite >500 kB chunk warning remains); `npm run test:browser` 19/19; `git diff --check` passed.
+- Latest local verification for the 20-worker stress-test slice: `npm test` 22/22; production build passed (466 modules; main JS 1,160.29 kB minified / 287.25 kB gzip; existing Vite >500 kB chunk warning remains); browser tests split into the performance profile (1/1) and remaining regressions (18/18); rapid-arrival timing assertion stabilized; `git diff --check` passed.
 - Worker-detail slice adds one color-varied necktie mesh per employee, reusing four cached tie materials across worker variants. Browser regressions assert one/two worker tie meshes and updated shared-material counts.
-- Scene profiling now samples 0, 5 and 10 employees. Local SwiftShader CPU frame averages: 5.097 ms / 7.500 ms / 8.424 ms; p95: 10.5 ms / 18.0 ms / 20.2 ms. Meshes: 297 / 345 / 405; materials: 50 / 62 / 62; lights: 5 at all three levels. These are headless software-rendering measurements, not real-device GPU acceptance.
+- Scene profiling now samples 0, 5, 10, 12 and 20 employees across a 20-desk stress layout. Latest SwiftShader sample: CPU frame averages 7.353 / 8.824 / 9.856 / 13.328 / 12.145 ms; p95 17.5 / 20.0 / 18.9 / 40.9 / 26.9 ms; maximum spikes 63.0 / 74.3 / 67.1 / 78.4 / 89.9 ms. Meshes 433 / 481 / 541 / 565 / 661; materials 50 / 62 / 62 / 62 / 62; lights remain 5. Timing is noisy/non-monotonic under headless SwiftShader and is diagnostic only, not real-device GPU acceptance.
 - Visual review: inspected desktop views at two orbit angles in headless Chromium/SwiftShader. Corrected the notice board to mount flat on the rear wall and moved the clock to the right wall to remove the placement conflict. Re-captured the scene after the fix; the wall-mount diagnostics report `rear-wall` and `right-wall`, with no browser page errors. This remains simulated-browser review, not physical-device/GPU acceptance.
 - GitHub Actions run #92 passed for code head `64e1e9b0771eeb8825c0c860aca1b56517534d96`: https://github.com/ijoolaie/empire-of-companies/actions/runs/42235641909
-- GitHub Actions run #96 passed for head `2740251`; run #98 passed for head `80aeb3c`; run #99 is pending for current head `acbd573`: build, unit tests and browser regression all succeeded. https://github.com/ijoolaie/empire-of-companies/actions/runs/42245699142
+- GitHub Actions run #99 passed for head `acbd573`; run #100 passed for current pushed head `706207b`: build, unit tests and browser regression all succeeded. https://github.com/ijoolaie/empire-of-companies/actions/runs/42246878178
 - Latest local validation: `npm test` 22/22, build passed (1,160.29 kB minified / 287.25 kB gzip; existing Vite chunk warning), browser tests 19/19, diff check passed.
 
 ## Next actions

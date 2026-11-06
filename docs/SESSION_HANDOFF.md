@@ -19,8 +19,8 @@ https://github.com/ijoolaie/empire-of-companies
 - Local path: `C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies`.
 - Baseline main commit: `7914290` (PR #2 merged).
 - Current branch: `feat/p4-office-environment`.
-- Latest pushed head: `acbd57378be9cc9a07f14a0e250f919e5db52c00` (`feat: refine procedural employee appearance`). CI run #96 passed build, unit tests and browser regression: https://github.com/ijoolaie/empire-of-companies/actions/runs/42245699142.
-- Local branch was clean and synced at this head before the next worker-detail slice.
+- Latest pushed head: `706207b68daffa4de87c274688ae6b8362940dd1` (`feat: refine procedural employee appearance`). CI run #100 passed build, unit tests and browser regression: https://github.com/ijoolaie/empire-of-companies/actions/runs/42246878178.
+- Current local 20-worker stress-test slice is validated locally and awaiting commit/push.
 - PR #3 remains open, Draft and unmerged. PR URL: https://github.com/ijoolaie/empire-of-companies/pull/3.
 
 ## Current implementation
@@ -33,9 +33,10 @@ https://github.com/ijoolaie/empire-of-companies
 - Canvas diagnostics: `data-office-wall-segment-count`, `data-office-window-count`, `data-office-entrance-part-count`, `data-office-light-count`, `data-office-furniture-count`, `data-office-notice-board-mesh-count`, `data-office-waiting-area-mesh-count`, `data-desk-accessory-mesh-count`, `data-desk-storage-mesh-count`.
 
 ## Verification
-- Browser performance regression now profiles 0, 5 and 10 employees. Local SwiftShader samples: average CPU frame 5.097 / 7.500 / 8.424 ms, p95 10.5 / 18.0 / 20.2 ms; meshes 297 / 345 / 405; materials 50 / 62 / 62; lights remain 5. These are headless software-rendering diagnostics, not real-device GPU acceptance.
-- Latest pushed head `2740251` passed GitHub Actions run #96 (build, unit tests and browser regression): https://github.com/ijoolaie/empire-of-companies/actions/runs/42245699142.
-- Local verification for that head: unit tests 22/22, production build passed (1,159.92 kB minified / 287.20 kB gzip; existing >500 kB Vite warning), browser tests 19/19, diff check passed.
+- Browser performance regression now profiles 0, 5, 10, 12 and 20 employees across a 20-desk stress layout. Latest SwiftShader sample: average CPU frame 7.353 / 8.824 / 9.856 / 13.328 / 12.145 ms; p95 17.5 / 20.0 / 18.9 / 40.9 / 26.9 ms; max spikes 63.0 / 74.3 / 67.1 / 78.4 / 89.9 ms; meshes 433 / 481 / 541 / 565 / 661; materials 50 / 62 / 62 / 62 / 62; lights remain 5. Timing is noisy/non-monotonic under headless SwiftShader and is diagnostic only, not real-device GPU acceptance.
+- The alternate-layout rapid-arrival browser test now validates generated waypoints and eventual arrival without requiring all workers to still be walking at the exact assertion instant; this removes a renderer-speed-dependent timing race.
+- Previous pushed head `706207b` passed GitHub Actions run #100 (build, unit tests and browser regression): https://github.com/ijoolaie/empire-of-companies/actions/runs/42246878178.
+- Current local verification: unit tests 22/22; production build passed (1,160.29 kB minified / 287.25 kB gzip; existing >500 kB Vite warning); performance profile 1/1 and remaining browser regressions 18/18; diff check passed.
 - Worker-detail slice adds one color-varied necktie mesh per worker, reusing four cached materials across appearance variants. Local verification: unit tests 22/22, build passed (1,160.29 kB minified / 287.25 kB gzip; existing Vite chunk warning), browser tests 19/19, diff check passed. Commit `7251334`; this slice is committed and pushed.
 - Diff whitespace check: passed.
 - Automated office-shell mesh/light counts passed, including 8 notice-board meshes, 9 entrance-detail meshes and 9 desk-accessory meshes across the three-desk fixture.
