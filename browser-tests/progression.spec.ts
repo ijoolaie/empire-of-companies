@@ -53,6 +53,7 @@ test('progression rewards are granted once and persist after reload', async ({ p
   await page.locator('#hire').click();
   await expect(page.locator('#game')).toHaveAttribute('data-worker-model-count', '2');
   await expect(page.locator('#game')).toHaveAttribute('data-walking-worker-count', '1');
+  await expect.poll(async () => Number(await page.locator('#game').getAttribute('data-worker-shin-swing'))).toBeGreaterThan(0);
   await expect(page.locator('#game')).toHaveAttribute('data-worker-leg-mesh-count', '12');
   await expect(page.locator('#game')).toHaveAttribute('data-walking-worker-count', '0', { timeout: 4000 });
   await expect(page.locator('#game')).toHaveAttribute('data-scene-material-count', String(Number(materialCountBeforeHire) + 1));

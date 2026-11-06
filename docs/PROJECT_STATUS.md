@@ -8,7 +8,7 @@ Last verified: 2026-11-06
 - Development branch: feat/p3-progression-ux.
 - Latest code/test head: bf23b0f; CI run #75 (42195870111) passed for a4f2889 and CI run #76 (42196373889) passed for bf23b0f. A subsequent documentation-only commit records these results. Optional profiling is enabled only with `?profile=1`; local verification: 22 unit tests, production build, 16 browser tests and diff check.
 - A* arrival routing starts at a shared office entrance and avoids desk, planter, and structural wall footprints; eight navigation tests cover entrance routing, fixed obstacles, blocked entrance fallback, deterministic routing, office bounds, alternate entry lanes around a reserved worker route, and 84 edge-desk/entrance-lane combinations. Active worker routes are reserved for later hires; the 12th browser test verifies three rapid arrivals in two desk layouts and checks each gets a non-fallback path.
-- New hires walk from the open side of the office toward their assigned desk for 1.6 seconds, swing their arms/legs, then transition into seated typing. Restored employees remain seated on reload.
+- New hires walk from the open side of the office toward their assigned desk for 1.6 seconds, swing their arms/legs, then transition into seated typing. Both thighs and lower legs now counter-swing during the arrival; lower-leg swing is exposed through a canvas diagnostic attribute and browser-tested. Restored employees remain seated on reload.
 - PR #2: https://github.com/ijoolaie/empire-of-companies/pull/2 (open, Draft, not merged).
 - GitHub Actions run #61 (42177670283) passed for 07551af; run #62 (42178572610) passed for 9a3eab4.
 - Local clone: C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies.

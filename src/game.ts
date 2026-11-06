@@ -12,7 +12,7 @@ import {PointerEventTypes} from '@babylonjs/core/Events/pointerEvents';
 import {planWorkerArrivalPath} from './navigation';
 
 export class OfficeGame {
- engine:Engine; scene:Scene; camera:ArcRotateCamera; floor:any; desks:TransformNode[]=[]; workers:TransformNode[]=[]; workerArms:Array<[any,any]>=[]; workerLegs:Array<[any,any]>=[]; workerWalkStartedAt:number[]=[]; workerWalkPaths:Vector3[][]=[]; workerWalkPathLengths:number[][]=[]; workerWalkPathTotalLengths:number[]=[]; materials:Record<string,StandardMaterial>={}; placing=false; onFloorTap?:(x:number,z:number)=>boolean;
+ engine:Engine; scene:Scene; camera:ArcRotateCamera; floor:any; desks:TransformNode[]=[]; workers:TransformNode[]=[]; workerArms:Array<[any,any]>=[]; workerLegs:Array<[any,any]>=[]; workerShins:Array<[any,any]>=[]; workerWalkStartedAt:number[]=[]; workerWalkPaths:Vector3[][]=[]; workerWalkPathLengths:number[][]=[]; workerWalkPathTotalLengths:number[]=[]; materials:Record<string,StandardMaterial>={}; placing=false; onFloorTap?:(x:number,z:number)=>boolean;
  constructor(canvas:HTMLCanvasElement){
   this.engine=new Engine(canvas,true,{preserveDrawingBuffer:false,stencil:true,adaptToDeviceRatio:true});
   this.scene=new Scene(this.engine);this.scene.clearColor=new Color4(.72,.83,.91,1);
@@ -44,7 +44,7 @@ export class OfficeGame {
    const now=performance.now();
    if(profileEnabled)frameStartedAt=now;
    const time=now*.001;
-   let walkingCount=0;
+   let walkingCount=0,shinSwing=0;
    this.workers.forEach((worker,index)=>{
     worker.position.y=.08+Math.sin(time*2+index*.8)*.018;
     const elapsed=(now-this.workerWalkStartedAt[index])/1000;
@@ -62,14 +62,16 @@ export class OfficeGame {
      const from=path[segment]??Vector3.Zero(),to=path[segment+1]??from;
      const segmentProgress=lengths[segment]>0?Math.min(1,remaining/lengths[segment]):1;
      Vector3.LerpToRef(from,to,segmentProgress,worker.position);
-     const legs=this.workerLegs[index],arms=this.workerArms[index];
+     const legs=this.workerLegs[index],shins=this.workerShins[index],arms=this.workerArms[index];
      if(legs){legs[0].rotation.x=stride*.38;legs[1].rotation.x=-stride*.38;legs[0].position.z=.48+stride*.08;legs[1].position.z=.48-stride*.08;}
+     if(shins){shins[0].rotation.x=-stride*.24;shins[1].rotation.x=stride*.24;shinSwing=Math.max(shinSwing,Math.abs(stride*.24));}
      if(arms){arms[0].rotation.x=Math.PI/2-stride*.28;arms[1].rotation.x=Math.PI/2+stride*.28;}
      return;
     }
     worker.position.x=0;worker.position.z=0;
-    const legs=this.workerLegs[index],arms=this.workerArms[index];
+    const legs=this.workerLegs[index],shins=this.workerShins[index],arms=this.workerArms[index];
     if(legs){legs[0].rotation.x=Math.PI/2;legs[1].rotation.x=Math.PI/2;legs[0].position.z=.48;legs[1].position.z=.48;}
+    if(shins){shins[0].rotation.x=0;shins[1].rotation.x=0;}
     if(arms){
      const leftTap=Math.max(0,Math.sin(time*8+index*1.7));
      const rightTap=Math.max(0,Math.sin(time*8+index*1.7+Math.PI));
@@ -79,6 +81,7 @@ export class OfficeGame {
     }
    });
    this.engine.getRenderingCanvas()?.setAttribute('data-walking-worker-count',String(walkingCount));
+   this.engine.getRenderingCanvas()?.setAttribute('data-worker-shin-swing',shinSwing.toFixed(3));
   });
   if(profileEnabled)this.scene.onAfterRenderObservable.add(()=>{
    const duration=Math.max(0,performance.now()-frameStartedAt);
@@ -112,7 +115,7 @@ export class OfficeGame {
  }
  syncWorkers(count:number,animateNewWorkers=true){
   const target=Math.max(0,Math.min(Math.floor(count),this.desks.length));
-  while(this.workers.length>target){const worker=this.workers.pop()!;this.workerArms.pop();this.workerLegs.pop();this.workerWalkStartedAt.pop();this.workerWalkPaths.pop();this.workerWalkPathLengths.pop();this.workerWalkPathTotalLengths.pop();worker.dispose();}
+  while(this.workers.length>target){const worker=this.workers.pop()!;this.workerArms.pop();this.workerLegs.pop();this.workerShins.pop();this.workerWalkStartedAt.pop();this.workerWalkPaths.pop();this.workerWalkPathLengths.pop();this.workerWalkPathTotalLengths.pop();worker.dispose();}
   while(this.workers.length<target){
    const index=this.workers.length,desk=this.desks[index],worker=new TransformNode('worker-'+(index+1),this.scene);
    worker.parent=desk;
@@ -161,10 +164,10 @@ export class OfficeGame {
    const head=MeshBuilder.CreateSphere('worker-head-'+index,{diameter:.34,segments:10},this.scene);head.parent=worker;head.position.set(0,1.43,.55);head.material=skin;
    const hairCap=MeshBuilder.CreateSphere('worker-hair-'+index,{diameter:.35,segments:8},this.scene);hairCap.parent=worker;hairCap.scaling.y=.48;hairCap.position.set(0,1.57,.55);hairCap.material=hair;
    // Seated legs: thighs extend toward the desk, with lower legs and shoes below the desktop.
-   const thighs:any[]=[];
+   const thighs:any[]=[],shins:any[]=[];
    for(const side of [-1,1]){
     const thigh=MeshBuilder.CreateCapsule('worker-thigh-'+index+'-'+side,{height:.48,radius:.105,tessellation:6},this.scene);thigh.parent=worker;thigh.rotation.x=0;thigh.position.set(side*.13,.69,.48);thigh.material=trousers;thighs.push(thigh);
-    const shin=MeshBuilder.CreateCapsule('worker-shin-'+index+'-'+side,{height:.42,radius:.078,tessellation:6},this.scene);shin.parent=worker;shin.position.set(side*.13,.43,.24);shin.material=trousers;
+    const shin=MeshBuilder.CreateCapsule('worker-shin-'+index+'-'+side,{height:.42,radius:.078,tessellation:6},this.scene);shin.parent=worker;shin.position.set(side*.13,.43,.24);shin.material=trousers;shins.push(shin);
     const shoe=MeshBuilder.CreateBox('worker-shoe-'+index+'-'+side,{width:.19,height:.11,depth:.3},this.scene);shoe.parent=worker;shoe.position.set(side*.13,.24,.06);shoe.material=shoes;
    }
    const arms:any[]=[];
@@ -173,6 +176,7 @@ export class OfficeGame {
    }
    this.workerArms.push([arms[0],arms[1]]);
    this.workerLegs.push([thighs[0],thighs[1]]);
+   this.workerShins.push([shins[0],shins[1]]);
    this.workers.push(worker);
   }
   this.engine.getRenderingCanvas()?.setAttribute('data-worker-model-count',String(this.workers.length));
