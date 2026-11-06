@@ -256,19 +256,18 @@ test('progression dialog fits common mobile, tablet and desktop viewport widths'
   }
 });
 
-test('scene profiling publishes bounded rolling CPU frame and scene metrics', async ({ page }) => {
+test('scene profiling compares zero-worker and five-worker CPU/render resource metrics', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 720 });
-  await seedSave(page, {
-    version: 4, cash: 100000, workers: 5, level: 1,
-    desks: [{ x: -2, z: -1 }, { x: 1, z: -1 }, { x: 4, z: 2 }, { x: -4, z: 2 }, { x: 0, z: 3 }],
+  const desks = [{ x: -2, z: -1 }, { x: 1, z: -1 }, { x: 4, z: 2 }, { x: -4, z: 2 }, { x: 0, z: 3 }];
+  const save = workers => ({
+    version: 4, cash: 100000, workers, level: 1, desks,
     lifetimeEarned: 0, lastSavedAt: Date.now(),
     playerXp: 0, completedObjectives: [], tutorialDismissed: true
   });
+  await seedSave(page, save(0));
   await page.goto('/');
   const canvas = page.locator('#game');
-
-  await expect.poll(async () => Number(await canvas.getAttribute('data-frame-cpu-ms-avg')), { timeout: 15000 }).toBeGreaterThan(0);
-  const metrics = await canvas.evaluate(el => ({
+  const readMetrics = () => canvas.evaluate(el => ({
     average: Number(el.getAttribute('data-frame-cpu-ms-avg')),
     p95: Number(el.getAttribute('data-frame-cpu-ms-p95')),
     max: Number(el.getAttribute('data-frame-cpu-ms-max')),
@@ -278,15 +277,27 @@ test('scene profiling publishes bounded rolling CPU frame and scene metrics', as
     lights: Number(el.getAttribute('data-scene-light-count'))
   }));
 
-  expect(metrics.average).toBeGreaterThan(0);
-  expect(metrics.p95).toBeGreaterThan(0);
-  expect(metrics.max).toBeGreaterThan(0);
-  expect(metrics.max).toBeGreaterThanOrEqual(metrics.p95);
-  expect(metrics.meshes).toBeGreaterThan(0);
-  expect(metrics.activeMeshes).toBeGreaterThan(0);
-  expect(metrics.activeMeshes).toBeLessThanOrEqual(metrics.meshes);
-  expect(metrics.materials).toBeGreaterThan(0);
-  expect(metrics.lights).toBeGreaterThan(0);
+  await expect.poll(async () => Number(await canvas.getAttribute('data-frame-cpu-ms-avg')), { timeout: 15000 }).toBeGreaterThan(0);
+  const zeroWorkers = await readMetrics();
+
+  await page.evaluate(({ key, value }) => localStorage.setItem(key, JSON.stringify(value)), { key: SAVE_KEY, value: save(5) });
+  await page.reload();
+  await expect(canvas).toHaveAttribute('data-worker-model-count', '5');
+  await expect.poll(async () => Number(await canvas.getAttribute('data-frame-cpu-ms-avg')), { timeout: 15000 }).toBeGreaterThan(0);
+  const fiveWorkers = await readMetrics();
+
+  for (const metrics of [zeroWorkers, fiveWorkers]) {
+    expect(metrics.average).toBeGreaterThan(0);
+    expect(metrics.p95).toBeGreaterThan(0);
+    expect(metrics.max).toBeGreaterThanOrEqual(metrics.p95);
+    expect(metrics.meshes).toBeGreaterThan(0);
+    expect(metrics.activeMeshes).toBeGreaterThan(0);
+    expect(metrics.activeMeshes).toBeLessThanOrEqual(metrics.meshes);
+    expect(metrics.materials).toBeGreaterThan(0);
+    expect(metrics.lights).toBeGreaterThan(0);
+  }
+  expect(fiveWorkers.meshes).toBeGreaterThan(zeroWorkers.meshes);
+  expect(fiveWorkers.materials).toBeGreaterThanOrEqual(zeroWorkers.materials);
 });
 
 test('office camera zoom stays within safe viewing limits', async ({ page }) => {
