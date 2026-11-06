@@ -7,7 +7,7 @@ Last verified: 2026-11-06
 - Default branch: `main`; latest merged baseline: `7914290` (PR #2).
 - Current work branch: `feat/p4-office-environment`.
 - Local workspace: `C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies`.
-- Latest pushed head: `706207b68daffa4de87c274688ae6b8362940dd1` (`docs: record ten-employee performance baseline`). New local 20-worker stress-test slice is being validated. PR #3 is open, Draft and unmerged.
+- Latest pushed head before current optimization: `a90528be7cc1eeff8291607837e75474b990ec4e` (`test: profile office scenes with twenty employees`). CI run #101 passed build, unit tests and browser regression: https://github.com/ijoolaie/empire-of-companies/actions/runs/42251912036. Static office and desk transforms are now frozen locally; this optimization is undergoing validation. PR #3 remains open, Draft and unmerged.
 
 ## Product decisions
 - Browser-first 3D office/company management game, Babylon.js + TypeScript + Vite.

@@ -120,6 +120,8 @@ export class OfficeGame {
   const leaf=mat('plant-leaf',new Color3(.18,.42,.29)),potMat=mat('planter',new Color3(.76,.65,.48));
   for(const [x,z] of [[-4,3],[4,-2]]){const pot=MeshBuilder.CreateCylinder('pot',{height:.55,diameter:.55},this.scene);pot.position.set(x,.34,z);pot.material=potMat;for(let i=0;i<5;i++){const l=MeshBuilder.CreateSphere('leaf',{diameter:.48,segments:6},this.scene);l.scaling.set(.65,1.6,.65);l.position.set(x+Math.cos(i*1.25)*.22,.82,z+Math.sin(i*1.25)*.22);l.material=leaf;}}
   this.addDesk(-2,-1);this.addDesk(1,-1);
+  // Office architecture and furniture are static; freeze their world matrices so Babylon can skip per-frame recomputation.
+  this.scene.meshes.forEach(mesh=>mesh.freezeWorldMatrix());
   this.scene.onPointerObservable.add(pi=>{if(pi.type===PointerEventTypes.POINTERPICK&&this.placing){const pick=this.scene.pick(this.scene.pointerX,this.scene.pointerY,m=>m===this.floor);if(pick?.hit&&pick.pickedPoint){const x=Math.round(pick.pickedPoint.x),z=Math.round(pick.pickedPoint.z);if(this.onFloorTap?.(x,z))this.addDesk(x,z);}}});
   const profileEnabled=window.location.search.includes('profile=1');
   const frameDurations=new Array<number>(120).fill(0);
@@ -223,6 +225,8 @@ export class OfficeGame {
   const drawerMat=this.getMaterial('desk-drawer',new Color3(.56,.62,.66));
   const drawer=MeshBuilder.CreateBox('desk-drawer-unit',{width:.32,height:.48,depth:.52},this.scene);drawer.parent=root;drawer.position.set(-.43,.42,-.02);drawer.material=drawerMat;
   const drawerHandle=MeshBuilder.CreateBox('desk-drawer-handle',{width:.12,height:.025,depth:.035},this.scene);drawerHandle.parent=root;drawerHandle.position.set(-.43,.53,.26);drawerHandle.material=deskAccent;
+  root.freezeWorldMatrix();
+  root.getChildMeshes().forEach(mesh=>mesh.freezeWorldMatrix());
   this.desks.push(root);
   this.engine.getRenderingCanvas()?.setAttribute('data-desk-detail-mesh-count',String(this.desks.length*4));
   this.engine.getRenderingCanvas()?.setAttribute('data-desk-accessory-mesh-count',String(this.desks.length*3));
