@@ -34,7 +34,18 @@ export class OfficeGame {
   this.scene.onPointerObservable.add(pi=>{if(pi.type===PointerEventTypes.POINTERPICK&&this.placing){const pick=this.scene.pick(this.scene.pointerX,this.scene.pointerY,m=>m===this.floor);if(pick?.hit&&pick.pickedPoint){const x=Math.round(pick.pickedPoint.x),z=Math.round(pick.pickedPoint.z);if(this.onFloorTap?.(x,z))this.addDesk(x,z);}}});
   this.scene.onBeforeRenderObservable.add(()=>{
    const time=performance.now()*.001;
-   this.workers.forEach((worker,index)=>{worker.position.y=.08+Math.sin(time*2+index*.8)*.018;const arms=this.workerArms[index];if(arms){arms[0].rotation.z=Math.sin(time*5+index)*.08;arms[1].rotation.z=-Math.sin(time*5+index)*.08;}});
+   this.workers.forEach((worker,index)=>{
+    worker.position.y=.08+Math.sin(time*2+index*.8)*.018;
+    const arms=this.workerArms[index];
+    if(arms){
+     const leftTap=Math.max(0,Math.sin(time*8+index*1.7));
+     const rightTap=Math.max(0,Math.sin(time*8+index*1.7+Math.PI));
+     arms[0].rotation.z=-.04-leftTap*.14;
+     arms[1].rotation.z=.04+rightTap*.14;
+     arms[0].position.y=1.02+leftTap*.045;
+     arms[1].position.y=1.02+rightTap*.045;
+    }
+   });
   });
   this.engine.runRenderLoop(()=>this.scene.render());window.addEventListener('resize',()=>this.engine.resize());
  }
