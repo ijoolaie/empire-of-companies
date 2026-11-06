@@ -125,10 +125,14 @@ export class OfficeGame {
   this.scene.onPointerObservable.add(pi=>{if(pi.type===PointerEventTypes.POINTERPICK&&this.placing){const pick=this.scene.pick(this.scene.pointerX,this.scene.pointerY,m=>m===this.floor);if(pick?.hit&&pick.pickedPoint){const x=Math.round(pick.pickedPoint.x),z=Math.round(pick.pickedPoint.z);if(this.onFloorTap?.(x,z))this.addDesk(x,z);}}});
   const profileEnabled=window.location.search.includes('profile=1');
   const frameDurations=new Array<number>(120).fill(0);
-  let frameSampleCount=0,frameSampleCursor=0,frameStartedAt=0;
+  let frameSampleCount=0,frameSampleCursor=0,frameStartedAt=0,lastWorkerUpdateAt=0;
+  const workerUpdateIntervalMs=1000/30;
+  canvas.setAttribute('data-worker-animation-update-hz','30');
   this.scene.onBeforeRenderObservable.add(()=>{
    const now=performance.now();
    if(profileEnabled)frameStartedAt=now;
+   if(now-lastWorkerUpdateAt<workerUpdateIntervalMs)return;
+   lastWorkerUpdateAt=now;
    const time=now*.001;
    let walkingCount=0,shinSwing=0;
    this.workers.forEach((worker,index)=>{

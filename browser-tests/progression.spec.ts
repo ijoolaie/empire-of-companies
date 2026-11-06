@@ -144,6 +144,7 @@ test('seated workers cycle through distinct typing, reviewing and thinking poses
   const canvas = page.locator('#game');
   await expect(canvas).toHaveAttribute('data-worker-model-count', '3');
   await expect(canvas).toHaveAttribute('data-worker-idle-pose-types', 'typing,reviewing,thinking');
+  await expect(canvas).toHaveAttribute('data-worker-animation-update-hz', '30');
   await expect(canvas).toHaveAttribute('data-walking-worker-count', '0');
 });
 test('rapid consecutive hires reserve separate entrance corridors', async ({ page }) => {
