@@ -304,10 +304,10 @@ test('progression dialog fits common mobile, tablet and desktop viewport widths'
   }
 });
 
-test('scene profiling compares zero-worker and five-worker CPU/render resource metrics', async ({ page }) => {
-  test.setTimeout(90000);
+test('scene profiling compares zero, five and ten-worker CPU/render resource metrics', async ({ page }) => {
+  test.setTimeout(120000);
   await page.setViewportSize({ width: 1280, height: 720 });
-  const desks = [{ x: -2, z: -1 }, { x: 1, z: -1 }, { x: 4, z: 2 }, { x: -4, z: 2 }, { x: 0, z: 3 }];
+  const desks = [-3, -1, 1, 3].flatMap(z => [-3, 0, 3].map(x => ({ x, z })));
   const save = workers => ({
     version: 4, cash: 100000, workers, level: 1, desks,
     lifetimeEarned: 0, lastSavedAt: Date.now(),
@@ -335,7 +335,14 @@ test('scene profiling compares zero-worker and five-worker CPU/render resource m
   await expect.poll(async () => Number(await canvas.getAttribute('data-frame-cpu-ms-avg')), { timeout: 45000 }).toBeGreaterThan(0);
   const fiveWorkers = await readMetrics();
 
-  for (const metrics of [zeroWorkers, fiveWorkers]) {
+  await page.evaluate(({ key, value }) => localStorage.setItem(key, JSON.stringify(value)), { key: SAVE_KEY, value: save(10) });
+  await page.reload();
+  await expect(canvas).toHaveAttribute('data-worker-model-count', '10');
+  await expect.poll(async () => Number(await canvas.getAttribute('data-frame-cpu-ms-avg')), { timeout: 45000 }).toBeGreaterThan(0);
+  const tenWorkers = await readMetrics();
+  console.log('Scene profile samples', JSON.stringify({ zeroWorkers, fiveWorkers, tenWorkers }));
+
+  for (const metrics of [zeroWorkers, fiveWorkers, tenWorkers]) {
     expect(metrics.average).toBeGreaterThan(0);
     expect(metrics.p95).toBeGreaterThan(0);
     expect(metrics.max).toBeGreaterThanOrEqual(metrics.p95);
@@ -346,7 +353,9 @@ test('scene profiling compares zero-worker and five-worker CPU/render resource m
     expect(metrics.lights).toBeGreaterThan(0);
   }
   expect(fiveWorkers.meshes).toBeGreaterThan(zeroWorkers.meshes);
+  expect(tenWorkers.meshes).toBeGreaterThan(fiveWorkers.meshes);
   expect(fiveWorkers.materials).toBeGreaterThanOrEqual(zeroWorkers.materials);
+  expect(tenWorkers.materials).toBeGreaterThanOrEqual(fiveWorkers.materials);
 });
 
 test('office camera zoom stays within safe viewing limits', async ({ page }) => {
