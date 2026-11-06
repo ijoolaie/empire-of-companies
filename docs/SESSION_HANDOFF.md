@@ -16,9 +16,9 @@ Continue Empire of Companies: https://github.com/ijoolaie/empire-of-companies
 
 ## Repository
 - Branch: feat/p3-progression-ux.
-- Latest pushed head before current local changes: da55dfd; CI run #54 (42169636226) passed.
-- Current local changes: smoothstep easing and alternating curved approach for the 1.6-second new-hire walk; regression asserts restored workers have walking count 0.
-- Local verification: 14 unit tests, build, 10 browser tests and diff check pass.
+- Latest previously pushed head: 7a1c861; CI run #55 (42170042512) passed.
+- Current local changes: deterministic local arrival routes are selected around nearby desk footprints; 3 pure navigation tests added.
+- Local verification: 17 unit tests, build, 10 browser tests and diff check pass.
 - PR #2: https://github.com/ijoolaie/empire-of-companies/pull/2.
 - CI run #40 (42109392998) passed for 1991369, including Chromium browser tests.
 - Local path: C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies.
@@ -46,7 +46,13 @@ P3 progression/usability remains active. P4 has started with an initial procedur
 - Manual Chromium screenshots at 1280x720 and 375x667 confirm the seated worker is visible in the default view. The mobile panel hides XP/objective details but keeps the tutorial and progression dialog reachable; alternate camera angles remain to review.
 
 ## Exact next task
-New-hire arrival walk is pushed in 0c6f4bf; current local refinement adds eased/curved approach. Local checks pass (14 unit tests, build, 10 browser tests, diff check). Next: commit/push the refinement, verify CI, then implement obstacle-aware paths and multi-worker route coordination. Keep PR #2 Draft and unmerged. Keep PR #2 Draft and unmerged.
+New-hire arrival walk and curved easing are pushed. Current local refinement adds a deterministic desk-obstacle-aware route heuristic. Local checks pass (17 unit tests, build, 10 browser tests, diff check). Next: commit/push this change and verify CI, then extend routing to walls/doors and coordinate multiple workers. Keep PR #2 Draft and unmerged. Keep PR #2 Draft and unmerged.
 
 ## Session update rule
 Update PROJECT_STATUS and SESSION_HANDOFF with verified facts after substantial work. Update ROADMAP/WBS when scope changes. Never claim a feature is complete solely because code was written.
+
+## Latest navigation refinement
+- Added src/navigation.ts: tests two lateral approach routes against nearby desk footprints and selects a clear route when one is available.
+- Worker animation now follows the selected waypoint path while retaining eased timing and alternating limb swing.
+- Three unit tests cover direct-lane obstruction, nearby desk layouts and deterministic route selection.
+- Limitation: this is a bounded desk-footprint heuristic, not full pathfinding; walls, doors, dynamic obstacles and worker-worker collision avoidance remain future work.
