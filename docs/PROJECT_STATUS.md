@@ -20,7 +20,7 @@ Last verified: 2026-11-06
 - P0/P1: complete.
 - P2: playable core loop complete and merged.
 - P3: progression, onboarding, responsive UX and accessibility slice implemented and merged.
-- P4: active; procedural workers, arrival, desk equipment, office shell, furniture details, entrance identity accents, static-transform freezing and 30 Hz worker animation updates are implemented. Full local browser regression and CI #104 pass; real-device headed desktop/mobile visual and GPU review remain open.
+- P4: active; procedural workers, arrival, desk equipment, office shell, furniture details, entrance identity accents, static-transform freezing, 30 Hz worker animation updates and merged static shoe geometry are implemented. Full local browser regression passes; CI for the latest changes is pending. Real-device headed desktop/mobile visual and GPU review remain open.
 - P5: Supabase Auth lifecycle not yet verified.
 - P6: quality/release, PWA and Android packaging remain.
 
@@ -38,6 +38,7 @@ Last verified: 2026-11-06
 ## Verification for this working branch
 - Latest local verification at head `b9d14b9`: `npm test` 22/22; `npm run build` passed (466 modules; main JS approximately 1,160.52 kB minified / 287.35 kB gzip; existing Vite >500 kB chunk warning remains); full Playwright browser regression 19/19 passed, including the 20-worker profile and 30 Hz animation cadence assertion; `git diff --check` passed.
 - GitHub Actions run #104 for `b9d14b9` passed every step: dependency installation, production build, unit tests, Chromium installation and all browser regression tests: https://github.com/ijoolaie/empire-of-companies/actions/runs/42257724436.
+- Latest worker-mesh optimization merges the two static shoe meshes into one per employee; the animated thighs/shins remain independent. Local `npm test` 22/22, build and Playwright 19/19 pass. In the 20-worker browser fixture, scene meshes fell from 661 to 641 (20 fewer, one per employee); CPU timing remains noisy and no performance gain is claimed from this single browser sample.
 - Worker-detail slice adds one color-varied necktie mesh per employee, reusing four cached tie materials across worker variants. Browser regressions assert one/two worker tie meshes and updated shared-material counts.
 - Scene profiling now samples 0, 5, 10, 12 and 20 employees across a 20-desk stress layout. Latest SwiftShader sample: CPU frame averages 7.353 / 8.824 / 9.856 / 13.328 / 12.145 ms; p95 17.5 / 20.0 / 18.9 / 40.9 / 26.9 ms; maximum spikes 63.0 / 74.3 / 67.1 / 78.4 / 89.9 ms. Meshes 433 / 481 / 541 / 565 / 661; materials 50 / 62 / 62 / 62 / 62; lights remain 5. Timing is noisy/non-monotonic under headless SwiftShader and is diagnostic only, not real-device GPU acceptance.
 - Visual review: inspected desktop views at two orbit angles in headless Chromium/SwiftShader. Corrected the notice board to mount flat on the rear wall and moved the clock to the right wall to remove the placement conflict. Re-captured the scene after the fix; the wall-mount diagnostics report `rear-wall` and `right-wall`, with no browser page errors. This remains simulated-browser review, not physical-device/GPU acceptance.

@@ -6,6 +6,7 @@ import {HemisphericLight} from '@babylonjs/core/Lights/hemisphericLight';
 import {DirectionalLight} from '@babylonjs/core/Lights/directionalLight';
 import {PointLight} from '@babylonjs/core/Lights/pointLight';
 import {MeshBuilder} from '@babylonjs/core/Meshes/meshBuilder';
+import {Mesh} from '@babylonjs/core/Meshes/mesh';
 import {StandardMaterial} from '@babylonjs/core/Materials/standardMaterial';
 import {Color3,Color4} from '@babylonjs/core/Maths/math.color';
 import {TransformNode} from '@babylonjs/core/Meshes/transformNode';
@@ -294,12 +295,14 @@ export class OfficeGame {
    const head=MeshBuilder.CreateSphere('worker-head-'+index,{diameter:.34,segments:10},this.scene);head.parent=worker;head.position.set(0,1.43,.55);head.material=skin;this.workerHeads.push(head);
    const hairCap=MeshBuilder.CreateSphere('worker-hair-'+index,{diameter:.35,segments:8},this.scene);hairCap.parent=worker;hairCap.scaling.y=[.42,.5,.58,.46][variant];hairCap.scaling.x=[1,.96,1.04,.92][variant];hairCap.position.set(0,1.57,.55);hairCap.material=hair;
    // Seated legs: thighs extend toward the desk, with lower legs and shoes below the desktop.
-   const thighs:any[]=[],shins:any[]=[];
+   const thighs:any[]=[],shins:any[]=[],shoeMeshes:any[]=[];
    for(const side of [-1,1]){
     const thigh=MeshBuilder.CreateCapsule('worker-thigh-'+index+'-'+side,{height:.48,radius:.105,tessellation:6},this.scene);thigh.parent=worker;thigh.rotation.x=0;thigh.position.set(side*.13,.69,.48);thigh.material=trousers;thighs.push(thigh);
     const shin=MeshBuilder.CreateCapsule('worker-shin-'+index+'-'+side,{height:.42,radius:.078,tessellation:6},this.scene);shin.parent=worker;shin.position.set(side*.13,.43,.24);shin.material=trousers;shins.push(shin);
-    const shoe=MeshBuilder.CreateBox('worker-shoe-'+index+'-'+side,{width:.19,height:.11,depth:.3},this.scene);shoe.parent=worker;shoe.position.set(side*.13,.24,.06);shoe.material=shoes;
+    const shoe=MeshBuilder.CreateBox('worker-shoe-'+index+'-'+side,{width:.19,height:.11,depth:.3},this.scene);shoe.position.set(side*.13,.24,.06);shoe.material=shoes;shoeMeshes.push(shoe);
    }
+   // Combine the two static shoes into one worker-local mesh; animated leg meshes remain separate.
+   const shoePair=Mesh.MergeMeshes(shoeMeshes,true,true);if(shoePair){shoePair.name='worker-shoes-'+index;shoePair.parent=worker;shoePair.material=shoes;}
    const arms:any[]=[];
    for(const side of [-1,1]){
     const arm=MeshBuilder.CreateCapsule('worker-arm-'+index+'-'+side,{height:.48,radius:.075,tessellation:6},this.scene);arm.parent=worker;arm.rotation.x=Math.PI/2;arm.position.set(side*.22,1.05,.35);arm.material=shirt;arms.push(arm);
@@ -313,7 +316,7 @@ export class OfficeGame {
   this.engine.getRenderingCanvas()?.setAttribute('data-worker-appearance-variant-count',String(new Set(this.workers.map((_,index)=>index%4)).size));
   this.engine.getRenderingCanvas()?.setAttribute('data-worker-idle-pose-types',['typing','reviewing','thinking'].filter((_,pose)=>this.workers.some((__,index)=>index%3===pose)).join(','));
   this.engine.getRenderingCanvas()?.setAttribute('data-worker-arrival-waypoint-counts',this.workerWalkPaths.map(path=>String(path.length)).join(','));
-  this.engine.getRenderingCanvas()?.setAttribute('data-worker-leg-mesh-count',String(this.workers.length*6));
+  this.engine.getRenderingCanvas()?.setAttribute('data-worker-leg-mesh-count',String(this.workers.length*5));
   this.engine.getRenderingCanvas()?.setAttribute('data-worker-necktie-mesh-count',String(this.workers.length));
   this.engine.getRenderingCanvas()?.setAttribute('data-scene-material-count',String(this.scene.materials.length));
  }
