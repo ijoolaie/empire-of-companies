@@ -1,6 +1,6 @@
 # Product Roadmap — Empire of Companies
 
-Last reviewed: 2026-11-05
+Last reviewed: 2026-11-06 — P3 mobile panel compacted and progression remains accessible; P4 worker visible in desktop/mobile default views; Babylon imports/material reuse optimized
 
 ## Product direction
 A browser-first, 3D idle office/company management game. The player starts with a small office, hires workers, creates production capacity, earns money, upgrades operations, and expands into a multi-company empire.
@@ -20,20 +20,21 @@ A browser-first, 3D idle office/company management game. The player starts with 
 Deliverables: roadmap, architecture/decisions, current status, session handoff, reliable build workflow.
 Exit: repository documents the current truth; CI reaches a successful build.
 
-### P1 — Reproducible development build (in progress)
+### P1 — Reproducible development build (complete)
 Tasks: establish Node version, dependency lockfile, clean npm ci workflow; verify TypeScript/Vite build.
 Exit: clean install and npm run build pass locally and in GitHub Actions.
 
-### P2 — Playable core loop (active)
+### P2 — Playable core loop (complete)
 Tasks: typed game state and economy; timed income; build desks; hire workers; upgrades; local save/load; bounded offline earnings.
 Exit: a new player can complete the core loop, refresh, and retain valid progress without cloud storage; income and costs are deterministic and testable.
 
-### P3 — Game progression and UX
+### P3 — Game progression and UX (active)
 Tasks: onboarding/tutorial; goals and milestones; levels; unlocks; feedback; responsive controls; accessibility; complete Persian/English UI.
 Exit: first-session flow is understandable and all core screens work in both languages and directions.
 
-### P4 — Content and visual identity
+### P4 — Content and visual identity (active — first worker slice)
 Tasks: procedural office kit; worker variants; equipment; company types; floor/room expansion; visual polish; asset licensing register.
+Current: procedural seated worker models are created for staffed desks; hiring adds a visible worker model and subtle idle/typing motion. Lower-body placement is oriented toward the desk. Babylon materials are reused across desks and workers with four shirt palette variants. Manual Chromium review fixed default-view worker occlusion by changing camera alpha; the worker is visible at 1280x720 and 375x667. The mobile info panel collapses XP/objective details while keeping tutorial and progression access. This is an initial slice, not completion of P4.
 Exit: a coherent content slice with documented asset provenance and acceptable performance.
 
 ### P5 — Account and settings
@@ -45,4 +46,4 @@ Tasks: automated tests; browser/device QA; performance budgets; PWA install/offl
 Exit: release checklist passes and known limitations are documented.
 
 ## Prioritization
-P1 reproducibility and P2 gameplay proceed in small verifiable increments. Do not expand content or build Android packaging before a stable P2 loop. Keep each task small enough to verify in one session.
+P1 reproducibility and P2 core gameplay are complete and verified. P3 progression/UX remains active, and the first P4 procedural worker slice has started. Keep each task small enough to verify; defer deep business simulation and Android packaging until the browser experience is stable.

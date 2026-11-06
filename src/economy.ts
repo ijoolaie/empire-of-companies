@@ -1,17 +1,20 @@
 export interface DeskPosition { x: number; z: number }
 
 export interface GameState {
-  version: 3;
+  version: 4;
   cash: number;
   workers: number;
   level: number;
   desks: DeskPosition[];
   lifetimeEarned: number;
   lastSavedAt: number;
+  playerXp: number;
+  completedObjectives: string[];
+  tutorialDismissed: boolean;
 }
 
-export const SAVE_KEY = 'eoc-save-v3';
-export const LEGACY_SAVE_KEYS = ['eoc-save-v2', 'eoc-save'];
+export const SAVE_KEY = 'eoc-save-v4';
+export const LEGACY_SAVE_KEYS = ['eoc-save-v3', 'eoc-save-v2', 'eoc-save'];
 export const DESK_COST = 1_000;
 export const HIRE_COST = 2_500;
 export const UPGRADE_BASE_COST = 5_000;
@@ -29,13 +32,16 @@ export function upgradeCost(state: Pick<GameState, 'level'>): number {
 
 export function createInitialState(now = Date.now()): GameState {
   return {
-    version: 3,
+    version: 4,
     cash: STARTING_CASH,
     workers: 1,
     level: 1,
     desks: STARTING_DESKS.map(d => ({ ...d })),
     lifetimeEarned: 0,
-    lastSavedAt: now
+    lastSavedAt: now,
+    playerXp: 0,
+    completedObjectives: [],
+    tutorialDismissed: false
   };
 }
 
@@ -62,14 +68,20 @@ export function parseGameState(raw: string | null, now = Date.now()): { state: G
     const desks = Array.isArray(old.desks)
       ? old.desks.filter(validDeskPosition).slice(0, 200).map(d => ({ x: d.x, z: d.z }))
       : fresh.desks;
+    const completedObjectives = Array.isArray(old.completedObjectives)
+      ? old.completedObjectives.filter((id): id is string => typeof id === 'string' && id.length <= 64).slice(0, 100)
+      : [];
     const state: GameState = {
-      version: 3,
+      version: 4,
       cash: Math.floor(finiteNonNegative(old.cash, fresh.cash)),
       workers: Math.max(1, Math.min(200, Math.floor(finiteNonNegative(old.workers, fresh.workers)))),
       level: Math.max(1, Math.min(100, Math.floor(finiteNonNegative(old.level, fresh.level)))),
       desks: desks.length ? desks : fresh.desks,
       lifetimeEarned: Math.floor(finiteNonNegative(old.lifetimeEarned, 0)),
-      lastSavedAt: Math.min(now, finiteNonNegative(old.lastSavedAt, now))
+      lastSavedAt: Math.min(now, finiteNonNegative(old.lastSavedAt, now)),
+      playerXp: Math.floor(finiteNonNegative(old.playerXp, 0)),
+      completedObjectives: [...new Set(completedObjectives)],
+      tutorialDismissed: old.tutorialDismissed === true
     };
     state.workers = Math.min(state.workers, state.desks.length);
     const elapsed = Math.min(OFFLINE_CAP_SECONDS, Math.max(0, (now - state.lastSavedAt) / 1000));
@@ -119,5 +131,5 @@ export function upgradeOffice(state: GameState): boolean {
 
 export function serializeGameState(state: GameState, now = Date.now()): string {
   state.lastSavedAt = now;
-  return JSON.stringify({ ...state, version: 3 });
+  return JSON.stringify({ ...state, version: 4 });
 }

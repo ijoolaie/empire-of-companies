@@ -1,6 +1,6 @@
 # Work Breakdown Structure — Empire of Companies
 
-Last reviewed: 2026-11-05
+Last reviewed: 2026-11-06 — P3 accessibility CI verified; P4 procedural worker slice added locally
 Owner: Product / engineering
 Status: Living plan; task status is only changed after observable verification.
 
@@ -30,7 +30,7 @@ A browser-first, bilingual 3D idle management game. The player starts with one s
 **Exit:** decisions and current state are documented; baseline CI build has passed.
 
 ## Phase 1 — Reproducible engineering foundation
-**Status: in progress**
+**Status: complete**
 
 1.1 Pin supported Node major version in project docs and CI.  
 1.2 Generate and commit package-lock.json using the project npm version.  
@@ -44,7 +44,7 @@ A browser-first, bilingual 3D idle management game. The player starts with one s
 **Exit:** a fresh clone installs deterministically and build/tests pass locally and in CI.
 
 ## Phase 2 — Playable core loop
-**Status: active; initial economy implementation submitted in PR #1, browser QA pending**
+**Status: complete; PR #1 merged after local interactive browser acceptance**
 
 ### 2A. Game state and persistence
 2.1 Define a versioned GameState schema.  
@@ -65,10 +65,10 @@ A browser-first, bilingual 3D idle management game. The player starts with one s
 2.14 Add deterministic unit tests for income, costs, hiring, building and upgrades. (Implemented: 10 tests; CI run 41988139202 passed.)
 
 ### 2C. First playable actions
-2.15 Place a desk on valid floor cells. (Basic bounds and overlap validation implemented; browser placement QA pending.)  
+2.15 Place a desk on valid floor cells. (Bounds, overlap and interactive browser placement verified.)
 2.16 Reject overlap, wall, blocked and out-of-bounds placements.  
 2.17 Hire only when an unstaffed desk and enough cash exist.  
-2.18 Show staff assignment on the 3D desk/worker.  
+2.18 Show staff assignment on the 3D desk/worker. (Deferred to Phase 4 worker visuals.)
 2.19 Upgrade office and expose the exact effect and cost.  
 2.20 Provide clear success/failure feedback and prevent double-click exploits.
 
@@ -82,14 +82,14 @@ A browser-first, bilingual 3D idle management game. The player starts with one s
 **Exit:** a new player can complete the loop, refresh/reopen, and retain valid local progress; economy tests pass; browser smoke test passes.
 
 ## Phase 3 — Progression, onboarding and usability
-**Status: planned**
+**Status: in progress**
 
-3.1 Add a short first-run tutorial with skippable steps.  
-3.2 Add objectives and reward milestones.  
-3.3 Define XP/level progression and unlock requirements.  
-3.4 Add a progression screen explaining next unlocks.  
+3.1 Add a short first-run tutorial with skippable steps. (Implemented; covered by Playwright browser regression.)
+3.2 Add objectives and reward milestones. (Three initial milestones implemented with one-time cash/XP rewards; browser regression covers rewards and reload persistence.)
+3.3 Define XP/level progression and unlock requirements. (Player XP and level 2 threshold implemented; further unlocks remain.)
+3.4 Add a progression screen explaining next unlocks. (Implemented and CI-verified in run #33; XP summary, ordered milestone path and future unlock roadmap at levels 3/5/10. Future features clearly marked planned.)
 3.5 Add contextual hints, confirmation dialogs and error messages.  
-3.6 Improve HUD hierarchy and responsive layouts for desktop/tablet/mobile.  
+3.6 Improve HUD hierarchy and responsive layouts for desktop/tablet/mobile. (320x568 browser layout regression is automated; broader sizes remain.)
 3.7 Ensure all interactive actions are keyboard reachable where practical.  
 3.8 Add sound settings and restrained UI feedback (sound can be deferred).  
 3.9 Complete Persian and English copy; audit RTL/LTR, numbers, currency and layout.  
@@ -98,12 +98,12 @@ A browser-first, bilingual 3D idle management game. The player starts with one s
 **Exit:** first-time users can understand the goal and complete the first progression milestone on supported screen sizes and both locales.
 
 ## Phase 4 — 3D content and company identity
-**Status: planned**
+**Status: in progress — initial procedural worker slice**
 
 4.1 Define visual direction, palette, scale and camera conventions.  
 4.2 Build reusable procedural furniture: desk, chair, monitor, lamp, cabinet, plant.  
-4.3 Build worker character variants using procedural meshes or licensed assets.  
-4.4 Add idle/work/walk animations or simple readable motion.  
+4.3 Build worker character variants using procedural meshes or licensed assets. (Initial procedural seated worker model added; variants remain.)
+4.4 Add idle/work/walk animations or simple readable motion. (Subtle body and typing/arm motion added; walk state remains.)
 4.5 Add room modules, walls, doors, windows and floor materials.  
 4.6 Add departments with distinct furniture and production roles.  
 4.7 Add additional company types with different production loops.  
@@ -200,12 +200,12 @@ A browser-first, bilingual 3D idle management game. The player starts with one s
 
 ## Current execution order (do not skip ahead)
 
-1. Generate package-lock.json and switch CI to npm ci.
-2. Run clean-install CI and confirm build plus the 10 economy/save tests.
-3. Run browser smoke test: build desk, hire, earn, upgrade, refresh and reopen.
-4. Fix gameplay defects and merge PR #1 only after browser verification.
-5. Continue remaining P2 edge cases and first-session validation.
-6. Start P3 only when P2 exit criteria are met.
+1. Continue P3 usability: screen-reader review, HUD hierarchy, responsive layouts and settings.
+2. Keep save migration, progression and browser regression tests green.
+3. Continue P4 procedural workers and furniture; add work-state animation and visual variants.
+4. Verify worker-to-desk assignment and rendering across supported browsers.
+5. Profile scene meshes/materials and rendering performance before expanding content.
+6. Defer Supabase Auth lifecycle to Phase 6.
 
 ## Definition of done for every task
 
