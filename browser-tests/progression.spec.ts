@@ -256,6 +256,39 @@ test('progression dialog fits common mobile, tablet and desktop viewport widths'
   }
 });
 
+test('scene profiling publishes bounded rolling CPU frame and scene metrics', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 720 });
+  await seedSave(page, {
+    version: 4, cash: 100000, workers: 5, level: 1,
+    desks: [{ x: -2, z: -1 }, { x: 1, z: -1 }, { x: 4, z: 2 }, { x: -4, z: 2 }, { x: 0, z: 3 }],
+    lifetimeEarned: 0, lastSavedAt: Date.now(),
+    playerXp: 0, completedObjectives: [], tutorialDismissed: true
+  });
+  await page.goto('/');
+  const canvas = page.locator('#game');
+
+  await expect.poll(async () => Number(await canvas.getAttribute('data-frame-cpu-ms-avg')), { timeout: 15000 }).toBeGreaterThan(0);
+  const metrics = await canvas.evaluate(el => ({
+    average: Number(el.getAttribute('data-frame-cpu-ms-avg')),
+    p95: Number(el.getAttribute('data-frame-cpu-ms-p95')),
+    max: Number(el.getAttribute('data-frame-cpu-ms-max')),
+    meshes: Number(el.getAttribute('data-scene-mesh-count')),
+    activeMeshes: Number(el.getAttribute('data-scene-active-mesh-count')),
+    materials: Number(el.getAttribute('data-scene-material-count')),
+    lights: Number(el.getAttribute('data-scene-light-count'))
+  }));
+
+  expect(metrics.average).toBeGreaterThan(0);
+  expect(metrics.p95).toBeGreaterThan(0);
+  expect(metrics.max).toBeGreaterThan(0);
+  expect(metrics.max).toBeGreaterThanOrEqual(metrics.p95);
+  expect(metrics.meshes).toBeGreaterThan(0);
+  expect(metrics.activeMeshes).toBeGreaterThan(0);
+  expect(metrics.activeMeshes).toBeLessThanOrEqual(metrics.meshes);
+  expect(metrics.materials).toBeGreaterThan(0);
+  expect(metrics.lights).toBeGreaterThan(0);
+});
+
 test('office camera zoom stays within safe viewing limits', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 667 });
   await page.goto('/');

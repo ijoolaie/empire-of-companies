@@ -6,7 +6,7 @@ Last verified: 2026-11-06
 - GitHub: https://github.com/ijoolaie/empire-of-companies
 - Default branch: main; P2 merge: 06ebb5c.
 - Development branch: feat/p3-progression-ux.
-- Latest pushed head: 3c6d180; CI run #72 (42186991889) passed for prior head b29e0b1. CI run #73 (42188157426) is running for 3c6d180. Local verification at 3c6d180: 22 unit tests, production build, 15 browser tests and diff check.
+- Latest pushed head before profiling: 8bd61d0; CI run #73 (42188157426) passed for 3c6d180. Local profiling instrumentation is currently uncommitted; latest local verification: 22 unit tests, production build, 16 browser tests and diff check.
 - A* arrival routing starts at a shared office entrance and avoids desk, planter, and structural wall footprints; eight navigation tests cover entrance routing, fixed obstacles, blocked entrance fallback, deterministic routing, office bounds, alternate entry lanes around a reserved worker route, and 84 edge-desk/entrance-lane combinations. Active worker routes are reserved for later hires; the 12th browser test verifies three rapid arrivals in two desk layouts and checks each gets a non-fallback path.
 - New hires walk from the open side of the office toward their assigned desk for 1.6 seconds, swing their arms/legs, then transition into seated typing. Restored employees remain seated on reload.
 - PR #2: https://github.com/ijoolaie/empire-of-companies/pull/2 (open, Draft, not merged).
@@ -33,17 +33,17 @@ Last verified: 2026-11-06
 - Hiring calls syncWorkers and creates the additional worker model at the next available desk; only newly hired workers animate their arrival, while restored workers load directly into their seated state.
 - Workers have skin/shirt/hair meshes, torso/arm poses, procedural thighs, lower legs and shoes; lower-body positions are oriented toward the desk. New hires perform a short arrival walk with alternating leg/arm swing, then settle into subtle idle and typing motion.
 - Desk furniture includes a chair backrest.
-- Canvas data attributes expose worker-model count, expected leg/shoe mesh count and scene material count for browser regression checks.
+- Canvas data attributes expose worker-model count, leg/shoe mesh count, material count and rolling CPU render timing (average/p95/max over 120 frames), plus scene mesh/active-mesh/material/light counts. A five-worker headless Chromium sample measured 3.479 ms average, 9.8 ms p95 and 27.0 ms max CPU render duration; scene had 115 meshes (all active), 18 materials and 2 lights. This is a single headless sample, not a target-device benchmark.
 - Desk materials are cached and reused; worker skin/hair/trousers/shoes share materials, and shirt material is cached per one of four palette variants. Browser coverage verifies the fifth worker reuses the first variant without allocating a new material.
 - No external assets or Blender dependency.
-- Arrival now uses deterministic bounded A* from a shared entrance to each assigned desk, avoiding desk footprints, the two planter footprints, and the structural back/side wall footprints while remaining inside office bounds. The office has no modeled door mesh or doorway state; navigation is still static and uses temporary corridor reservations to separate new hires while an earlier worker is still walking; it does not replan dynamically after movement starts. Worker route segment lengths are now cached at hire time instead of recalculated each render. Character variants, detailed poses, scene profiling and broader mobile/multi-angle visual acceptance remain open.
+- Arrival uses deterministic bounded A* from a shared entrance to each assigned desk, avoiding desk, planter and structural wall footprints. Active routes are temporarily reserved for later hires; there is no dynamic replanning or modeled door yet. Worker route lengths are cached at hire time. Character variants, detailed poses and broader mobile/multi-angle visual acceptance remain open.
 - Direct Babylon module imports replaced the root barrel import; Vite transforms 464 modules instead of 2,221.
 - Material reuse now prevents per-worker duplication of shared skin/hair/trouser/shoe materials and desk furniture materials; only four shirt-color variants are allocated.
 
 ## Verification
 - npm test: 22 passed, 0 failed (includes 8 navigation-planner tests; new edge-layout test checks 84 desk/lane combinations).
 - npm run build: passed.
-- npm run test:browser: 14 passed, 0 failed; includes rapid-hire routing, camera zoom clamping, and six viewport sizes (320x568 through 1920x1080) for canvas, toolbar and camera bounds.
+- npm run test:browser: 16 passed, 0 failed; includes rapid-hire routing, camera zoom clamping and pointer-drag orbit, six viewport sizes, and rolling CPU frame/scene profiling with five workers.
 - git diff --check: passed.
 - Babylon/main application chunk after direct module imports: about 1,142.55 kB minified / 282.20 kB gzip (about 81% smaller minified and 79% smaller gzip than the previous 6,026.40 / 1,322.29 kB bundle). The >500 kB warning remains.
 - GitHub Actions run #62 (42178572610) passed for 9a3eab4; run #64 (42179352858) passed for 195f2c5; run #66 (42180394613) passed for 08e2cfa; CI run #67 (42181556728) passed for ad9d934, including build, unit tests, Chromium and all 12 browser tests.
@@ -58,7 +58,7 @@ Last verified: 2026-11-06
 
 ## Next actions
 1. Perform visual acceptance of alternate camera angles and additional device sizes; automated responsive checks now cover six viewport sizes, but alternate-angle screenshots have not been reviewed.
-2. CI run #72 passed for b29e0b1. Render-loop allocation cleanup and camera pointer-drag interaction are verified locally; 15 browser tests pass. Edge-of-office routes have unit coverage across 84 combinations. Alternate-angle visual acceptance remains open.
+2. CI run #73 passed for 3c6d180. New rolling frame-time and scene-count instrumentation is locally verified; push and verify CI. Edge-of-office routes have unit coverage across 84 combinations. Alternate-angle visual acceptance remains open.
 3. Profile scene mesh/material counts and address the large Babylon bundle with measured changes.
 4. Keep PR #2 Draft and unmerged unless explicitly requested.
 5. Keep game saves device-local; Supabase remains identity-only.

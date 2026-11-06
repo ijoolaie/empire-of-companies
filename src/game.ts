@@ -37,8 +37,11 @@ export class OfficeGame {
   for(const [x,z] of [[-4,3],[4,-2]]){const pot=MeshBuilder.CreateCylinder('pot',{height:.55,diameter:.55},this.scene);pot.position.set(x,.34,z);pot.material=potMat;for(let i=0;i<5;i++){const l=MeshBuilder.CreateSphere('leaf',{diameter:.48,segments:6},this.scene);l.scaling.set(.65,1.6,.65);l.position.set(x+Math.cos(i*1.25)*.22,.82,z+Math.sin(i*1.25)*.22);l.material=leaf;}}
   this.addDesk(-2,-1);this.addDesk(1,-1);
   this.scene.onPointerObservable.add(pi=>{if(pi.type===PointerEventTypes.POINTERPICK&&this.placing){const pick=this.scene.pick(this.scene.pointerX,this.scene.pointerY,m=>m===this.floor);if(pick?.hit&&pick.pickedPoint){const x=Math.round(pick.pickedPoint.x),z=Math.round(pick.pickedPoint.z);if(this.onFloorTap?.(x,z))this.addDesk(x,z);}}});
+  const frameDurations=new Array<number>(120).fill(0);
+  let frameSampleCount=0,frameSampleCursor=0,frameStartedAt=0;
   this.scene.onBeforeRenderObservable.add(()=>{
    const now=performance.now();
+   frameStartedAt=now;
    const time=now*.001;
    let walkingCount=0;
    this.workers.forEach((worker,index)=>{
@@ -75,6 +78,23 @@ export class OfficeGame {
     }
    });
    this.engine.getRenderingCanvas()?.setAttribute('data-walking-worker-count',String(walkingCount));
+  });
+  this.scene.onAfterRenderObservable.add(()=>{
+   const duration=Math.max(0,performance.now()-frameStartedAt);
+   frameDurations[frameSampleCursor]=duration;
+   frameSampleCursor=(frameSampleCursor+1)%frameDurations.length;
+   frameSampleCount=Math.min(frameSampleCount+1,frameDurations.length);
+   if(frameSampleCount<frameDurations.length||frameSampleCursor!==0)return;
+   const sorted=frameDurations.slice().sort((a,b)=>a-b);
+   const average=frameDurations.reduce((sum,value)=>sum+value,0)/frameDurations.length;
+   const canvas=this.engine.getRenderingCanvas();
+   canvas?.setAttribute('data-frame-cpu-ms-avg',average.toFixed(3));
+   canvas?.setAttribute('data-frame-cpu-ms-p95',sorted[Math.floor((sorted.length-1)*.95)].toFixed(3));
+   canvas?.setAttribute('data-frame-cpu-ms-max',sorted[sorted.length-1].toFixed(3));
+   canvas?.setAttribute('data-scene-mesh-count',String(this.scene.meshes.length));
+   canvas?.setAttribute('data-scene-active-mesh-count',String(this.scene.getActiveMeshes().length));
+   canvas?.setAttribute('data-scene-material-count',String(this.scene.materials.length));
+   canvas?.setAttribute('data-scene-light-count',String(this.scene.lights.length));
   });
   this.engine.runRenderLoop(()=>this.scene.render());window.addEventListener('resize',()=>this.engine.resize());
  }

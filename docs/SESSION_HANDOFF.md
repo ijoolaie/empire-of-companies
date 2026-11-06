@@ -1,6 +1,6 @@
 # Session Handoff — Read First
 
-Last updated: 2026-11-06 — CI #72 passed for b29e0b1; camera pointer-drag test added; latest head 3c6d180 has 22 unit and 15 browser tests passing locally, CI #73 running.
+Last updated: 2026-11-06 — CI #73 passed for 3c6d180; local scene profiling instrumentation added and sampled with five workers (22 unit tests, build, 16 browser tests).
 
 ## Mission
 Continue Empire of Companies: https://github.com/ijoolaie/empire-of-companies
@@ -16,9 +16,9 @@ Continue Empire of Companies: https://github.com/ijoolaie/empire-of-companies
 
 ## Repository
 - Branch: feat/p3-progression-ux.
-- Latest pushed branch head: 3c6d180; CI run #72 (42186991889) passed for b29e0b1. CI run #73 (42188157426) is running for 3c6d180.
+- Latest pushed branch head before profiling: 8bd61d0; CI run #73 (42188157426) passed for code/test commit 3c6d180. Current scene profiling instrumentation is local and awaits full-suite verification and push.
 - Committed: shared-entrance A* routing with desk/planter/structural-wall obstacles, temporary active-worker corridor reservations, rapid-hire coverage across two desk layouts, cached route lengths, and 84 edge-of-office desk/lane regression combinations.
-- Local verification after camera constraints and viewport coverage: 22 unit tests, production build, 14 browser tests and diff check pass.
+- Local verification after profiling instrumentation: 22 unit tests, production build, 16 browser tests and diff check pass.
 - PR #2: https://github.com/ijoolaie/empire-of-companies/pull/2.
 - CI run #40 (42109392998) passed for 1991369, including Chromium browser tests.
 - Local path: C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies.
@@ -35,7 +35,7 @@ P3 progression/usability remains active. P4 has started with an initial procedur
 ## Local verification
 - npm test: 22/22 passed, including eight navigation-planner tests.
 - npm run build: passed.
-- npm run test:browser: 15/15 passed; includes three concurrent arrivals in two desk layouts, camera zoom clamping and pointer-drag orbit, and canvas/toolbar/camera-bound checks at 320x568, 375x667, 768x1024, 1024x768, 1366x768 and 1920x1080.
+- npm run test:browser: 16/16 passed; includes three concurrent arrivals in two desk layouts, camera zoom clamping and pointer-drag orbit, responsive checks at six viewport sizes, and rolling scene profiling with five workers.
 - git diff --check: passed.
 - Previous Babylon/main chunk: 6,026.40 kB minified / 1,322.29 kB gzip.
 - Current build after direct module imports: largest app chunk 1,145.60 kB minified / 283.55 kB gzip; >500 kB warning remains.
@@ -46,7 +46,7 @@ P3 progression/usability remains active. P4 has started with an initial procedur
 - Manual Chromium screenshots at 1280x720 and 375x667 confirm the seated worker is visible in the default view. The mobile panel hides XP/objective details but keeps the tutorial and progression dialog reachable; alternate camera angles remain to review.
 
 ## Exact next task
-CI run #71 (42185532580) passed for c4702eb; CI run #72 (42186991889) passed for b29e0b1. The render-loop cleanup reuses one frame timestamp, removes duplicate camera-state synchronization, and uses Vector3.LerpToRef to avoid a temporary vector allocation per walking worker per frame. A new Playwright pointer-drag test now verifies camera orbit changes alpha while beta and zoom remain bounded. Local checks: 22 unit tests, production build, 15 browser tests and git diff --check all pass. Camera pointer-drag interaction is now automated; alternate-angle visual/screenshot acceptance remains unverified. Keep PR #2 Draft and unmerged.
+CI run #73 (42188157426) passed for 3c6d180; CI run #74 for the new profiling commit is pending after push. Render-loop CPU timing is now sampled in fixed 120-frame windows and published as average/p95/max CPU frame duration, together with scene mesh/active-mesh/material/light counts. A five-worker headless Chromium sample measured 3.479 ms average, 9.8 ms p95 and 27.0 ms max CPU render duration, with 115 meshes (all active), 18 materials and 2 lights. This is one headless-browser sample, not a device performance guarantee. Local checks: 22 unit tests, production build, 16 browser tests and git diff --check pass. Next: commit/push profiling instrumentation, verify CI, then compare zero-worker and five-worker baselines and decide whether mesh/material consolidation is worthwhile. Alternate-angle visual/screenshot acceptance remains unverified. Keep PR #2 Draft and unmerged.
 
 ## Session update rule
 Update PROJECT_STATUS and SESSION_HANDOFF with verified facts after substantial work. Update ROADMAP/WBS when scope changes. Never claim a feature is complete solely because code was written.
