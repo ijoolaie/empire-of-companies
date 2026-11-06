@@ -7,7 +7,7 @@ Last verified: 2026-11-06
 - Default branch: `main`; latest merged baseline: `7914290` (PR #2).
 - Current work branch: `feat/p4-office-environment`.
 - Local workspace: `C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies`.
-- Current change is not yet committed or pushed; CI has not run for it.
+- Current change is committed and pushed as `92a05fa`; PR #3 is open as Draft.
 
 ## Product decisions
 - Browser-first 3D office/company management game, Babylon.js + TypeScript + Vite.
@@ -20,7 +20,7 @@ Last verified: 2026-11-06
 - P0/P1: complete.
 - P2: playable core loop complete and merged.
 - P3: progression, onboarding, responsive UX and accessibility slice implemented and merged.
-- P4: active; procedural workers, arrival, desk equipment and first office-shell pass implemented. Visual acceptance across alternate camera angles is still open.
+- P4: active; procedural workers, arrival, desk equipment and office-shell pass implemented. Headless visual review completed at desktop/mobile sizes and alternate camera angles; no geometry breakage or entrance obstruction found in the reviewed views. Real-device GPU review remains open.
 - P5: Supabase Auth lifecycle not yet verified.
 - P6: quality/release, PWA and Android packaging remain.
 
@@ -39,11 +39,11 @@ Last verified: 2026-11-06
 - `npm run build`: passed (466 modules); main JS 1,154.46 kB minified / 285.72 kB gzip. Existing Vite >500 kB chunk warning remains.
 - `npm run test:browser`: 19 passed, 0 failed, including the new office-shell regression.
 - `git diff --check`: passed.
-- Automated scene-composition checks passed; this is not a substitute for manual visual review of screenshots or alternate camera angles.
-- GitHub Actions has not yet run for this branch.
+- Visual review: captured and inspected 900×600 desktop and 390×844 mobile views, plus alternate orbit views at both sizes using headless Chromium/SwiftShader. Walls, entrance, window framing and lighting rendered coherently; no obvious mesh clipping or browser page errors observed. This is simulated-browser review, not a physical-device/GPU acceptance test.
+- GitHub Actions run #86 completed successfully, including build, unit tests, Chromium setup and browser regression tests.
 
 ## Next actions
-1. Capture and inspect desktop/mobile screenshots and at least one alternate camera angle; adjust geometry if the entrance/walls occlude the office or workers.
-2. Commit and push this slice, open a PR, and verify GitHub Actions.
-3. Continue P4 with richer office furniture and environmental polish only after visual acceptance.
+1. PR #3 is open as Draft; review the diff and keep it unmerged until explicitly approved.
+2. Continue P4 with richer office furniture and environmental polish; validate each slice at desktop/mobile sizes and alternate camera angles.
+3. Add real-device GPU/browser review when a physical test environment is available.
 4. Keep business simulation, Supabase Auth, PWA and Android work in their planned phases.

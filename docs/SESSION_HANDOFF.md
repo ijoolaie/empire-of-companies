@@ -19,7 +19,8 @@ https://github.com/ijoolaie/empire-of-companies
 - Local path: `C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies`.
 - Baseline main commit: `7914290` (PR #2 merged).
 - Current branch: `feat/p4-office-environment`.
-- Latest changes are local and uncommitted/unpushed. No PR or CI run exists for this slice yet.
+- Latest commit: `92a05fa` (`feat: build out procedural office environment`), pushed to `origin/feat/p4-office-environment`.
+- PR #3: open, Draft, mergeable; CI run #86 passed. PR URL: https://github.com/ijoolaie/empire-of-companies/pull/3.
 
 ## Current implementation
 - Core economy, desk placement, hiring, upgrades, local persistence and bounded offline earnings.
@@ -36,12 +37,11 @@ https://github.com/ijoolaie/empire-of-companies
 - Browser tests: 19/19 passed.
 - Diff whitespace check: passed.
 - Automated office-shell mesh/light counts passed.
-- Manual visual acceptance is not complete. Do not claim the new environment looks correct from alternate angles until screenshots are captured and inspected.
-- GitHub Actions has not yet run on this branch.
+- Visual review completed from headless Chromium/SwiftShader captures: desktop 900×600, mobile 390×844, and alternate orbit views at both sizes. No obvious geometry clipping or entrance blockage was seen; browser page errors were absent. This does not replace real-device GPU review.
+- GitHub Actions run #86 completed successfully, including the browser regression suite.
 
 ## Exact next steps
-1. Review screenshots at desktop and mobile sizes plus an alternate camera angle.
-2. Fix any visual occlusion or lighting issues found.
-3. Re-run unit tests, build, browser tests and diff check.
-4. Commit and push `feat/p4-office-environment`, open a PR and inspect its CI.
-5. Do not merge without explicit approval.
+1. Review PR #3; it is intentionally Draft and must not be merged without explicit approval.
+2. Continue P4 with richer office furniture and environmental polish, maintaining desktop/mobile and alternate-angle checks.
+3. Schedule real-device GPU review when a physical test environment is available.
+4. Keep business simulation, Supabase Auth, PWA and Android work in their planned phases.
