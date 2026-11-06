@@ -7,7 +7,7 @@ Last verified: 2026-11-06
 - Default branch: `main`; latest merged baseline: `7914290` (PR #2).
 - Current work branch: `feat/p4-office-environment`.
 - Local workspace: `C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies`.
-- Current PR head before this furniture slice: `be605f0`; the new furniture slice is being validated locally. PR #3 is open as Draft.
+- Latest committed head: `628bd45`; desk-accessory slice is locally validated and awaiting commit/push. PR #3 is open as Draft.
 
 ## Product decisions
 - Browser-first 3D office/company management game, Babylon.js + TypeScript + Vite.
@@ -30,18 +30,18 @@ Last verified: 2026-11-06
 - Added window mullions and sills to the three rear glass panes.
 - Added three ceiling light panels, three warm point fill lights and wall baseboards.
 - Reused cached materials for architectural trim and finish surfaces.
-- Added a compact bookcase with shelves and books, a wall clock, and framed wall art; these remain outside the central worker approach lane.
+- Added a compact bookcase with shelves and books, a wall clock, framed wall art, and desk-level paper, mug and pen accessories. Bookcase is registered as a worker-path obstacle; desk accessories are attached to each desk.
 - Added canvas diagnostics for wall segments, windows, entrance parts and scene light count.
-- Added Playwright regressions asserting 5 wall segments, 3 windows, 5 entrance parts, 5 total lights and 3 office detail features, with no browser page errors.
+- Added Playwright regressions asserting 5 wall segments, 3 windows, 5 entrance parts, 5 total lights, 3 office detail features and 9 desk accessory meshes in the 3-desk regression fixture, with no browser page errors.
 - No external art assets introduced.
 
 ## Verification for this working branch
 - `npm test`: 22 passed, 0 failed.
-- `npm run build`: passed (466 modules); latest main JS 1,155.97 kB minified / 286.18 kB gzip. Existing Vite >500 kB chunk warning remains.
+- `npm run build`: passed (466 modules); latest main JS 1,156.68 kB minified / 286.34 kB gzip. Existing Vite >500 kB chunk warning remains.
 - `npm run test:browser`: 19 passed, 0 failed, including the new office-shell regression.
 - `git diff --check`: passed.
 - Visual review: captured and inspected 900×600 desktop and 390×844 mobile views, plus alternate orbit views at both sizes using headless Chromium/SwiftShader. Walls, entrance, window framing and lighting rendered coherently; no obvious mesh clipping or browser page errors observed. This is simulated-browser review, not a physical-device/GPU acceptance test.
-- GitHub Actions run #86 passed. Run #87 exposed two timing-sensitive browser-test limits; waits were increased (worker arrival 12s; profiler sampling 45s, test timeout 90s). Latest prior head `be605f0` passed GitHub Actions run #88. The current furniture slice passes local unit tests 22/22, production build and browser tests 19/19; CI for this new slice has not yet run.
+- GitHub Actions run #86 passed. Run #87 exposed two timing-sensitive browser-test limits; waits were increased (worker arrival 12s; profiler sampling 45s, test timeout 90s). Latest prior head `be605f0` passed GitHub Actions run #88. CI run #89 passed for head `628bd45`. The current desk-accessory slice passes local unit tests 22/22, production build and browser tests 19/19; CI for this slice has not yet run.
 
 ## Next actions
 1. PR #3 is open as Draft; review the diff and keep it unmerged until explicitly approved.

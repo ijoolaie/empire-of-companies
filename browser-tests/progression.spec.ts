@@ -43,6 +43,7 @@ test('progression rewards are granted once and persist after reload', async ({ p
   await seedSave(page, seeded);
   await page.goto('/');
   await expect(page.locator('#game')).toHaveAttribute('data-worker-model-count', '1');
+  await expect(page.locator('#game')).toHaveAttribute('data-desk-accessory-mesh-count', '9');
   await expect(page.locator('#game')).toHaveAttribute('data-worker-leg-mesh-count', '6');
   const materialCountBeforeHire = await page.locator('#game').getAttribute('data-scene-material-count');
 

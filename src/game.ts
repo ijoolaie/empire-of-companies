@@ -179,9 +179,14 @@ export class OfficeGame {
   const monitorStand=MeshBuilder.CreateBox('monitor-stand',{width:.09,height:.16,depth:.08},this.scene);monitorStand.parent=root;monitorStand.position.set(0,1.0,-.12);monitorStand.material=deskAccent;
   const monitorBase=MeshBuilder.CreateBox('monitor-base',{width:.34,height:.035,depth:.2},this.scene);monitorBase.parent=root;monitorBase.position.set(0,.94,-.12);monitorBase.material=deskAccent;
   const keyboard=MeshBuilder.CreateBox('keyboard',{width:.58,height:.045,depth:.19},this.scene);keyboard.parent=root;keyboard.position.set(0,.94,.27);keyboard.material=peripherals;
-  const mouse=MeshBuilder.CreateSphere('mouse',{diameter:.13,segments:8},this.scene);mouse.parent=root;mouse.scaling.set(1,.32,1.45);mouse.position.set(.48,.96,.27);mouse.material=peripherals;
+  const mouse=MeshBuilder.CreateSphere('mouse',{diameter:.13,segments:8},this.scene);mouse.parent=root;mouse.scaling.set(1,.32,1.45);mouse.position.set(.48,.96,.27);mouse.material=peripherals;  const paper=this.getMaterial('desk-paper',new Color3(.88,.86,.78));
+  const paperStack=MeshBuilder.CreateBox('desk-paper-stack',{width:.28,height:.035,depth:.2},this.scene);paperStack.parent=root;paperStack.position.set(-.48,.94,.12);paperStack.material=paper;
+  const mugMat=this.getMaterial('desk-mug',new Color3(.72,.78,.8));
+  const mug=MeshBuilder.CreateCylinder('desk-mug',{height:.16,diameter:.13,tessellation:12},this.scene);mug.parent=root;mug.position.set(.53,1.02,-.16);mug.material=mugMat;
+  const pen=MeshBuilder.CreateCylinder('desk-pen',{height:.2,diameter:.025,tessellation:8},this.scene);pen.parent=root;pen.rotation.z=.16;pen.position.set(-.48,1.04,.12);pen.material=peripherals;
   this.desks.push(root);
   this.engine.getRenderingCanvas()?.setAttribute('data-desk-detail-mesh-count',String(this.desks.length*4));
+  this.engine.getRenderingCanvas()?.setAttribute('data-desk-accessory-mesh-count',String(this.desks.length*3));
   return root;
  }
  syncWorkers(count:number,animateNewWorkers=true){
