@@ -16,7 +16,7 @@ Continue Empire of Companies: https://github.com/ijoolaie/empire-of-companies
 
 ## Repository
 - Branch: feat/p3-progression-ux.
-- Latest pushed implementation head: 534577e; CI run #58 (42174797995) is in progress.
+- Latest pushed implementation head: 534577e; CI run #58 (42174797995) passed for implementation commit 534577e; current branch head d09adfa is a documentation-only follow-up.
 - Committed and pushed: bounded A* arrival routing around desk footprints and office bounds; 2 additional navigation tests.
 - Local verification: 19 unit tests, production build, 10 browser tests and diff check pass.
 - PR #2: https://github.com/ijoolaie/empire-of-companies/pull/2.
