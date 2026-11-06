@@ -12,7 +12,7 @@ import {PointerEventTypes} from '@babylonjs/core/Events/pointerEvents';
 import {planWorkerArrivalPath} from './navigation';
 
 export class OfficeGame {
- engine:Engine; scene:Scene; camera:ArcRotateCamera; floor:any; desks:TransformNode[]=[]; workers:TransformNode[]=[]; workerArms:Array<[any,any]>=[]; workerLegs:Array<[any,any]>=[]; workerWalkStartedAt:number[]=[]; workerWalkPaths:Vector3[][]=[]; materials:Record<string,StandardMaterial>={}; placing=false; onFloorTap?:(x:number,z:number)=>boolean;
+ engine:Engine; scene:Scene; camera:ArcRotateCamera; floor:any; desks:TransformNode[]=[]; workers:TransformNode[]=[]; workerArms:Array<[any,any]>=[]; workerLegs:Array<[any,any]>=[]; workerWalkStartedAt:number[]=[]; workerWalkPaths:Vector3[][]=[]; workerWalkPathLengths:number[][]=[]; workerWalkPathTotalLengths:number[]=[]; materials:Record<string,StandardMaterial>={}; placing=false; onFloorTap?:(x:number,z:number)=>boolean;
  constructor(canvas:HTMLCanvasElement){
   this.engine=new Engine(canvas,true,{preserveDrawingBuffer:false,stencil:true,adaptToDeviceRatio:true});
   this.scene=new Scene(this.engine);this.scene.clearColor=new Color4(.72,.83,.91,1);
@@ -45,8 +45,8 @@ export class OfficeGame {
      const stride=Math.sin(time*10+index*.9);
      const eased=progress*progress*(3-2*progress);
      const path=this.workerWalkPaths[index]??[Vector3.Zero()];
-     const lengths=path.slice(1).map((point,segment)=>Vector3.Distance(path[segment],point));
-     const totalLength=lengths.reduce((sum,length)=>sum+length,0);
+     const lengths=this.workerWalkPathLengths[index]??[];
+     const totalLength=this.workerWalkPathTotalLengths[index]??0;
      let remaining=eased*totalLength;
      let segment=0;
      while(segment<lengths.length-1&&remaining>lengths[segment]){remaining-=lengths[segment];segment++;}
@@ -86,7 +86,7 @@ export class OfficeGame {
  }
  syncWorkers(count:number,animateNewWorkers=true){
   const target=Math.max(0,Math.min(Math.floor(count),this.desks.length));
-  while(this.workers.length>target){const worker=this.workers.pop()!;this.workerArms.pop();this.workerLegs.pop();this.workerWalkStartedAt.pop();this.workerWalkPaths.pop();worker.dispose();}
+  while(this.workers.length>target){const worker=this.workers.pop()!;this.workerArms.pop();this.workerLegs.pop();this.workerWalkStartedAt.pop();this.workerWalkPaths.pop();this.workerWalkPathLengths.pop();this.workerWalkPathTotalLengths.pop();worker.dispose();}
   while(this.workers.length<target){
    const index=this.workers.length,desk=this.desks[index],worker=new TransformNode('worker-'+(index+1),this.scene);
    worker.parent=desk;
@@ -119,7 +119,12 @@ export class OfficeGame {
      if(candidate.length>1){path=candidate;break;}
     }
    }
-   const vectorPath=path.map(point=>new Vector3(point.x,point.y,point.z));this.workerWalkPaths.push(vectorPath);worker.position.copyFrom(vectorPath[0]);this.workerWalkStartedAt.push(performance.now()-(animateNewWorkers?0:1600));
+   const vectorPath=path.map(point=>new Vector3(point.x,point.y,point.z));
+   const segmentLengths=vectorPath.slice(1).map((point,segment)=>Vector3.Distance(vectorPath[segment],point));
+   this.workerWalkPaths.push(vectorPath);
+   this.workerWalkPathLengths.push(segmentLengths);
+   this.workerWalkPathTotalLengths.push(segmentLengths.reduce((sum,length)=>sum+length,0));
+   worker.position.copyFrom(vectorPath[0]);this.workerWalkStartedAt.push(performance.now()-(animateNewWorkers?0:1600));
    const skin=this.getMaterial('worker-skin',new Color3(.78,.55,.39));
    const shirtColors=[new Color3(.16,.48,.72),new Color3(.22,.58,.43),new Color3(.62,.36,.68),new Color3(.78,.48,.2)];
    const shirt=this.getMaterial('worker-shirt-'+(index%shirtColors.length),shirtColors[index%shirtColors.length]);
