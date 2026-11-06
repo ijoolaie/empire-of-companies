@@ -46,10 +46,7 @@ Last verified: 2026-11-06
 - npm run test:browser: 11 passed, 0 failed; includes a rapid consecutive-hire regression verifying two workers can walk concurrently using separate reserved entrance corridors.
 - git diff --check: passed.
 - Babylon/main application chunk after direct module imports: about 1,142.55 kB minified / 282.20 kB gzip (about 81% smaller minified and 79% smaller gzip than the previous 6,026.40 / 1,322.29 kB bundle). The >500 kB warning remains.
-- CI run #36 (42107749624) passed for 2146410.
-- CI run #37 (42108774779) passed for 7019cdc.
-- CI run #38 (42108661210) passed for 8c445bc.
-- CI run #40 (42109392998) passed for historical commit 1991369. Head 7a1c861 passed CI run #55 (42170042512); head 87c3939 is under CI run #56 (42174090774).
+- GitHub Actions run #62 (42178572610) passed for 9a3eab4, including install, build, unit tests, Chromium install and browser regression.
 - Automated tests verify model synchronization and mesh counts; manual Chromium review separately verified that the worker is visible in the 1280x720 default camera view after the angle correction.
 
 ## Open

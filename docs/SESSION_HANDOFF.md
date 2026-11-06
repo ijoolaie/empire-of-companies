@@ -52,7 +52,8 @@ Commit and push the rapid consecutive-hire Playwright regression and updated han
 Update PROJECT_STATUS and SESSION_HANDOFF with verified facts after substantial work. Update ROADMAP/WBS when scope changes. Never claim a feature is complete solely because code was written.
 
 ## Latest navigation refinement
-- Added src/navigation.ts: tests two lateral approach routes against nearby desk footprints and selects a clear route when one is available.
-- Worker animation now follows the selected waypoint path while retaining eased timing and alternating limb swing.
-- Three unit tests cover direct-lane obstruction, nearby desk layouts and deterministic route selection.
-- Limitation: the office has an open front and no modeled door mesh/state; structural walls are represented as fixed navigation footprints and floor bounds. Dynamic replanning and worker-worker collision avoidance remain future work.
+- `src/navigation.ts` uses bounded deterministic A* from a shared entrance to each assigned desk, avoiding desk, planter and structural wall footprints.
+- Each active arrival path is converted to temporary obstacle corridors; subsequent hires try alternate entrance lanes to avoid overlapping earlier routes.
+- Seven unit tests cover entrance routing, obstacle avoidance, deterministic results, office bounds, blocked entrance fallback and alternate lane routing.
+- Browser regression now hires three workers in rapid succession, verifies three concurrent walking states, waits for all to settle, and checks persisted worker count.
+- Limitation: the office has an open front and no modeled door mesh/state; reservations are static for the 1.6-second walk and do not dynamically replan after movement starts.
