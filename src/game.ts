@@ -154,15 +154,18 @@ export class OfficeGame {
    this.workerWalkPathLengths.push(segmentLengths);
    this.workerWalkPathTotalLengths.push(segmentLengths.reduce((sum,length)=>sum+length,0));
    worker.position.copyFrom(vectorPath[0]);this.workerWalkStartedAt.push(performance.now()-(animateNewWorkers?0:1600));
-   const skin=this.getMaterial('worker-skin',new Color3(.78,.55,.39));
+   const skinColors=[new Color3(.78,.55,.39),new Color3(.56,.34,.23),new Color3(.91,.71,.55),new Color3(.38,.23,.17)];
+   const hairColors=[new Color3(.12,.1,.1),new Color3(.32,.17,.08),new Color3(.55,.34,.16),new Color3(.72,.68,.58)];
    const shirtColors=[new Color3(.16,.48,.72),new Color3(.22,.58,.43),new Color3(.62,.36,.68),new Color3(.78,.48,.2)];
-   const shirt=this.getMaterial('worker-shirt-'+(index%shirtColors.length),shirtColors[index%shirtColors.length]);
-   const hair=this.getMaterial('worker-hair',new Color3(.12,.1,.1));
+   const variant=index%shirtColors.length;
+   const skin=this.getMaterial('worker-skin-'+(index%skinColors.length),skinColors[index%skinColors.length]);
+   const shirt=this.getMaterial('worker-shirt-'+variant,shirtColors[variant]);
+   const hair=this.getMaterial('worker-hair-'+(index%hairColors.length),hairColors[index%hairColors.length]);
    const trousers=this.getMaterial('worker-trousers',new Color3(.12,.19,.27));
    const shoes=this.getMaterial('worker-shoes',new Color3(.055,.065,.075));
    const torso=MeshBuilder.CreateCylinder('worker-torso-'+index,{height:.48,diameterTop:.34,diameterBottom:.42,tessellation:8},this.scene);torso.parent=worker;torso.position.set(0,1.03,.65);torso.material=shirt;
    const head=MeshBuilder.CreateSphere('worker-head-'+index,{diameter:.34,segments:10},this.scene);head.parent=worker;head.position.set(0,1.43,.55);head.material=skin;
-   const hairCap=MeshBuilder.CreateSphere('worker-hair-'+index,{diameter:.35,segments:8},this.scene);hairCap.parent=worker;hairCap.scaling.y=.48;hairCap.position.set(0,1.57,.55);hairCap.material=hair;
+   const hairCap=MeshBuilder.CreateSphere('worker-hair-'+index,{diameter:.35,segments:8},this.scene);hairCap.parent=worker;hairCap.scaling.y=[.42,.5,.58,.46][variant];hairCap.scaling.x=[1,.96,1.04,.92][variant];hairCap.position.set(0,1.57,.55);hairCap.material=hair;
    // Seated legs: thighs extend toward the desk, with lower legs and shoes below the desktop.
    const thighs:any[]=[],shins:any[]=[];
    for(const side of [-1,1]){
@@ -180,6 +183,7 @@ export class OfficeGame {
    this.workers.push(worker);
   }
   this.engine.getRenderingCanvas()?.setAttribute('data-worker-model-count',String(this.workers.length));
+  this.engine.getRenderingCanvas()?.setAttribute('data-worker-appearance-variant-count',String(new Set(this.workers.map((_,index)=>index%4)).size));
   this.engine.getRenderingCanvas()?.setAttribute('data-worker-arrival-waypoint-counts',this.workerWalkPaths.map(path=>String(path.length)).join(','));
   this.engine.getRenderingCanvas()?.setAttribute('data-worker-leg-mesh-count',String(this.workers.length*6));
   this.engine.getRenderingCanvas()?.setAttribute('data-scene-material-count',String(this.scene.materials.length));

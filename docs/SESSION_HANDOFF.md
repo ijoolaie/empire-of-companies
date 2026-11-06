@@ -1,6 +1,6 @@
 # Session Handoff — Read First
 
-Last updated: 2026-11-06 — CI #77 (42196373889) passed for bf23b0f; CI #78 (42196845079) passed for 73a38d7; CI #79 (42196905537) passed for 91617f6. Worker lower-leg counter-swing is implemented and locally verified with 22 unit tests, production build and 16 browser tests.
+Last updated: 2026-11-06 — CI #80 (42210124980) passed for `57994bc`. Worker lower-leg counter-swing and deterministic four-way appearance variation (skin, hair, shirt and hair-cap proportions) are implemented. Latest local verification after appearance variation: 22 unit tests, production build and all 16 browser tests passed; the material-variant regression now verifies bounded palette reuse.
 
 ## Mission
 Continue Empire of Companies: https://github.com/ijoolaie/empire-of-companies
@@ -29,7 +29,7 @@ P3 progression/usability remains active. P4 has started with an initial procedur
 - Hiring synchronizes the scene after the economy action succeeds.
 - Models use primitive Babylon meshes/materials, torso/arms, procedural thighs, lower legs and shoes, subtle body motion and typing/arm motion; desk chair backrests are added. New hires walk from the office open side to their assigned desk with alternating arm/leg swing; both thighs and lower legs now counter-swing during arrival, then settle into seated typing. A browser assertion verifies lower-leg swing is non-zero while the worker is walking.
 - Lower-body coordinates were corrected so thighs, shins and shoes extend toward the desk rather than the rear of the chair.
-- Canvas data-worker-model-count, data-worker-leg-mesh-count and data-scene-material-count are used by Playwright. Desk materials are cached; worker materials are shared, with four shirt palette variants. Five-worker browser coverage verifies the fifth worker reuses variant one without increasing material count.
+- Canvas data-worker-model-count, data-worker-leg-mesh-count, data-worker-appearance-variant-count and data-scene-material-count are used by Playwright. Worker appearance deterministically cycles through four skin tones, four hair colors, four shirt colors and four hair-cap proportions. Shared trousers/shoes and desk materials remain cached; each new appearance variant adds only its skin, hair and shirt materials, and the four-variant palette is reused for later workers. Browser coverage verifies two hires have distinct appearance variants and five workers reuse the palette without unbounded material growth.
 - No external assets or Blender.
 
 ## Local verification
