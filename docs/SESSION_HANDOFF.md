@@ -19,7 +19,7 @@ https://github.com/ijoolaie/empire-of-companies
 - Local path: `C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies`.
 - Baseline main commit: `7914290` (PR #2 merged).
 - Current branch: `feat/p4-office-environment`.
-- Latest pushed head: `2740251e2767eedcfed2de2fa450e51cda7b9a81` (`feat: add under-desk office storage`). CI run #96 passed build, unit tests and browser regression: https://github.com/ijoolaie/empire-of-companies/actions/runs/42243505172.
+- Latest pushed head: `72513343dc169710dd140c8c234ec56dd9ccc7ef` (`feat: refine procedural employee appearance`). CI run #96 passed build, unit tests and browser regression: https://github.com/ijoolaie/empire-of-companies/actions/runs/42245316364.
 - Local branch was clean and synced at this head before the next worker-detail slice.
 - PR #3 remains open, Draft and unmerged. PR URL: https://github.com/ijoolaie/empire-of-companies/pull/3.
 
@@ -33,9 +33,9 @@ https://github.com/ijoolaie/empire-of-companies
 - Canvas diagnostics: `data-office-wall-segment-count`, `data-office-window-count`, `data-office-entrance-part-count`, `data-office-light-count`, `data-office-furniture-count`, `data-office-notice-board-mesh-count`, `data-office-waiting-area-mesh-count`, `data-desk-accessory-mesh-count`, `data-desk-storage-mesh-count`.
 
 ## Verification
-- Latest pushed head `2740251` passed GitHub Actions run #96 (build, unit tests and browser regression): https://github.com/ijoolaie/empire-of-companies/actions/runs/42243505172.
+- Latest pushed head `2740251` passed GitHub Actions run #96 (build, unit tests and browser regression): https://github.com/ijoolaie/empire-of-companies/actions/runs/42245316364.
 - Local verification for that head: unit tests 22/22, production build passed (1,159.92 kB minified / 287.20 kB gzip; existing >500 kB Vite warning), browser tests 19/19, diff check passed.
-- Worker-detail slice adds one color-varied necktie mesh per worker, reusing four cached materials across appearance variants. Local verification: unit tests 22/22, build passed (1,160.29 kB minified / 287.25 kB gzip; existing Vite chunk warning), browser tests 19/19, diff check passed. This slice is currently uncommitted.
+- Worker-detail slice adds one color-varied necktie mesh per worker, reusing four cached materials across appearance variants. Local verification: unit tests 22/22, build passed (1,160.29 kB minified / 287.25 kB gzip; existing Vite chunk warning), browser tests 19/19, diff check passed. Commit `7251334`; this slice is committed and pushed.
 - Diff whitespace check: passed.
 - Automated office-shell mesh/light counts passed, including 8 notice-board meshes, 9 entrance-detail meshes and 9 desk-accessory meshes across the three-desk fixture.
 - Visual review completed from headless Chromium/SwiftShader captures: desktop 900×600, mobile 390×844, and alternate orbit views at both sizes. No obvious geometry clipping or entrance blockage was seen; browser page errors were absent. This does not replace real-device GPU review.
