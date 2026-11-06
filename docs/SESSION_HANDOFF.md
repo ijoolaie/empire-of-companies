@@ -16,8 +16,8 @@ Continue Empire of Companies: https://github.com/ijoolaie/empire-of-companies
 
 ## Repository
 - Branch: feat/p3-progression-ux.
-- Latest pushed implementation head before the current uncommitted test change: ad9d934; CI run #67 (42181556728) passed, including Chromium and browser regression.
-- Committed: shared-entrance A* routing with desk/planter/structural-wall obstacles, temporary active-worker corridor reservations, rapid-hire coverage across two desk layouts, and cached route lengths.
+- Latest pushed branch head: ed92067 (edge-of-office navigation regression tests and handoff/status documentation); CI run #69 (42183091200) is in progress for this head.
+- Committed: shared-entrance A* routing with desk/planter/structural-wall obstacles, temporary active-worker corridor reservations, rapid-hire coverage across two desk layouts, cached route lengths, and 84 edge-of-office desk/lane regression combinations.
 - Local verification after edge-layout coverage: 22 unit tests, production build, 12 browser tests and diff check pass.
 - PR #2: https://github.com/ijoolaie/empire-of-companies/pull/2.
 - CI run #40 (42109392998) passed for 1991369, including Chromium browser tests.
@@ -46,7 +46,7 @@ P3 progression/usability remains active. P4 has started with an initial procedur
 - Manual Chromium screenshots at 1280x720 and 375x667 confirm the seated worker is visible in the default view. The mobile panel hides XP/objective details but keeps the tutorial and progression dialog reachable; alternate camera angles remain to review.
 
 ## Exact next task
-CI run #67 passed for ad9d934. Edge-of-office routing is now covered by 84 desk/lane combinations in a new unit test. Next review alternate camera angles and additional device sizes. Keep PR #2 Draft and unmerged.
+CI run #67 passed for ad9d934. Edge-of-office routing is covered by 84 desk/lane combinations; CI run #69 is currently validating branch head ed92067. After CI completes, review alternate camera angles and additional device sizes. Keep PR #2 Draft and unmerged.
 
 ## Session update rule
 Update PROJECT_STATUS and SESSION_HANDOFF with verified facts after substantial work. Update ROADMAP/WBS when scope changes. Never claim a feature is complete solely because code was written.

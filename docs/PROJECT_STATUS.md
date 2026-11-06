@@ -6,7 +6,7 @@ Last verified: 2026-11-06
 - GitHub: https://github.com/ijoolaie/empire-of-companies
 - Default branch: main; P2 merge: 06ebb5c.
 - Development branch: feat/p3-progression-ux.
-- Latest pushed implementation head before the current uncommitted test change: ad9d934; CI run #67 (42181556728) passed. Local verification after new edge-layout coverage: 22 unit tests, build, 12 browser tests.
+- Latest pushed branch head: ed92067 (edge-of-office navigation regression tests and handoff/status documentation); CI run #69 (42183091200) is in progress. Local verification: 22 unit tests, build, 12 browser tests.
 - A* arrival routing starts at a shared office entrance and avoids desk, planter, and structural wall footprints; eight navigation tests cover entrance routing, fixed obstacles, blocked entrance fallback, deterministic routing, office bounds, alternate entry lanes around a reserved worker route, and 84 edge-desk/entrance-lane combinations. Active worker routes are reserved for later hires; the 12th browser test verifies three rapid arrivals in two desk layouts and checks each gets a non-fallback path.
 - New hires walk from the open side of the office toward their assigned desk for 1.6 seconds, swing their arms/legs, then transition into seated typing. Restored employees remain seated on reload.
 - PR #2: https://github.com/ijoolaie/empire-of-companies/pull/2 (open, Draft, not merged).
@@ -58,7 +58,7 @@ Last verified: 2026-11-06
 
 ## Next actions
 1. Review alternate camera angles and additional device sizes; desktop and 375x667 default views now show the seated worker.
-2. CI run #67 passed for the path-length caching optimization; edge-of-office routes now have unit coverage across 84 combinations. Review alternate camera angles and additional device sizes. Model an actual doorway only when the office scene gains a front wall/door mesh.
+2. CI run #67 passed for the path-length caching optimization; edge-of-office routes now have unit coverage across 84 combinations. CI run #69 is validating the latest test/documentation head. Then review alternate camera angles and additional device sizes. Model an actual doorway only when the office scene gains a front wall/door mesh.
 3. Profile scene mesh/material counts and address the large Babylon bundle with measured changes.
 4. Keep PR #2 Draft and unmerged unless explicitly requested.
 5. Keep game saves device-local; Supabase remains identity-only.
