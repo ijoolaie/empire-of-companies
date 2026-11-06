@@ -101,15 +101,15 @@ export class OfficeGame {
       fixedObstacles.push({
        x:existingDesk.position.x+(from.x+to.x)/2,
        z:existingDesk.position.z+(from.z+to.z)/2,
-       halfWidth:Math.abs(dx)/2+.34,
-       halfDepth:Math.abs(dz)/2+.34
+       halfWidth:Math.abs(dx)/2+.22,
+       halfDepth:Math.abs(dz)/2+.22
       });
      }
     });
    }
    let path: Array<{x:number;y:number;z:number}>=[Vector3.Zero()];
    if(animateNewWorkers){
-    for(const entranceOffset of [0,-.8,.8,-1.6,1.6]){
+    for(const entranceOffset of [0,-.8,.8,-1.6,1.6,-2.4,2.4]){
      const candidate=planWorkerArrivalPath(
       {x:desk.position.x,z:desk.position.z},
       this.desks.map(item=>({x:item.position.x,z:item.position.z})),
@@ -145,6 +145,7 @@ export class OfficeGame {
    this.workers.push(worker);
   }
   this.engine.getRenderingCanvas()?.setAttribute('data-worker-model-count',String(this.workers.length));
+  this.engine.getRenderingCanvas()?.setAttribute('data-worker-arrival-waypoint-counts',this.workerWalkPaths.map(path=>String(path.length)).join(','));
   this.engine.getRenderingCanvas()?.setAttribute('data-worker-leg-mesh-count',String(this.workers.length*6));
   this.engine.getRenderingCanvas()?.setAttribute('data-scene-material-count',String(this.scene.materials.length));
  }

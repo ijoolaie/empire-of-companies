@@ -255,3 +255,43 @@ test('progression dialog fits common mobile, tablet and desktop viewport widths'
     await page.keyboard.press('Escape');
   }
 });
+
+test('three rapid arrivals find valid paths in alternate desk layouts', async ({ browser }) => {
+  const layouts = [
+    [
+      { x: -3, z: -2 }, { x: 0, z: -2 }, { x: 3, z: -2 },
+      { x: -3, z: 1 }, { x: 3, z: 1 }
+    ],
+    [
+      { x: -3, z: -2 }, { x: 0, z: -2 }, { x: 3, z: 0 },
+      { x: -3, z: 1 }, { x: 1, z: 2 }
+    ]
+  ];
+
+  for (const desks of layouts) {
+    const context = await browser.newContext();
+    const page = await context.newPage();
+    const pageErrors = [];
+    page.on('pageerror', error => pageErrors.push(error.message));
+    await seedSave(page, {
+      version: 4, cash: 100000, workers: 1, level: 1,
+      desks, lifetimeEarned: 0, lastSavedAt: Date.now(),
+      playerXp: 0, completedObjectives: [], tutorialDismissed: true
+    });
+    await page.goto('/');
+    const canvas = page.locator('#game');
+
+    for (let workerCount = 2; workerCount <= 4; workerCount++) {
+      await page.locator('#hire').click();
+      await expect(canvas).toHaveAttribute('data-worker-model-count', String(workerCount));
+    }
+    await expect(canvas).toHaveAttribute('data-walking-worker-count', '3');
+    const waypointCounts = await canvas.getAttribute('data-worker-arrival-waypoint-counts');
+    const counts = waypointCounts.split(',').map(Number);
+    expect(counts).toHaveLength(4);
+    expect(counts.slice(1).every(count => count > 1)).toBe(true);
+    await expect(canvas).toHaveAttribute('data-walking-worker-count', '0', { timeout: 5500 });
+    expect(pageErrors).toEqual([]);
+    await context.close();
+  }
+});
