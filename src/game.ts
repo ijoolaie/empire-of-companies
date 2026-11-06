@@ -73,22 +73,25 @@ export class OfficeGame {
   const bookColors=[new Color3(.62,.25,.2),new Color3(.2,.38,.52),new Color3(.78,.61,.3),new Color3(.24,.43,.34)];
   for(let i=0;i<8;i++){const book=MeshBuilder.CreateBox('bookcase-book',{width:.12,height:.24+(i%3)*.035,depth:.16},this.scene);book.position.set(4.18,.43+(i%2)*.32,-1.18+i*.18);book.material=mat('book-'+i,bookColors[i%bookColors.length]);}
   const clockFace=mat('wall-clock-face',new Color3(.94,.91,.82));
-  const clock=MeshBuilder.CreateCylinder('office-wall-clock',{diameter:.62,height:.08,tessellation:24},this.scene);clock.rotation.x=Math.PI/2;clock.position.set(3.25,1.72,-3.82);clock.material=clockFace;
-  const clockHand=MeshBuilder.CreateBox('wall-clock-hand',{width:.025,height:.22,depth:.025},this.scene);clockHand.position.set(3.25,1.78,-3.75);clockHand.material=trim;
+  // Mount the clock on the right wall, clear of the notice board on the rear wall.
+  const clock=MeshBuilder.CreateCylinder('office-wall-clock',{diameter:.62,height:.08,tessellation:24},this.scene);clock.rotation.z=Math.PI/2;clock.position.set(4.86,1.72,-2.25);clock.material=clockFace;
+  const clockHand=MeshBuilder.CreateBox('wall-clock-hand',{width:.025,height:.22,depth:.025},this.scene);clockHand.rotation.z=Math.PI/2;clockHand.position.set(4.78,1.78,-2.25);clockHand.material=trim;
   const artFrame=MeshBuilder.CreateBox('office-wall-art-frame',{width:.08,height:.92,depth:1.2},this.scene);artFrame.position.set(-4.86,1.55,-1.65);artFrame.material=trim;
   const artPanel=MeshBuilder.CreateBox('office-wall-art-panel',{width:.035,height:.78,depth:1.06},this.scene);artPanel.position.set(-4.8,1.55,-1.65);artPanel.material=mat('wall-art',new Color3(.3,.52,.58));
-  // A compact notice board fills the open back-wall bay beside the windows.
+  // Mount the notice board flat on the rear wall, in the clear bay to the right of the windows.
   const boardFrame=mat('notice-board-frame',new Color3(.36,.27,.2));
   const boardSurface=mat('notice-board-surface',new Color3(.57,.39,.27));
-  const noticeBoard=MeshBuilder.CreateBox('office-notice-board',{width:.09,height:1.02,depth:1.35},this.scene);noticeBoard.position.set(3.55,1.58,-3.86);noticeBoard.material=boardFrame;
-  const cork=MeshBuilder.CreateBox('notice-board-cork',{width:.035,height:.88,depth:1.21},this.scene);cork.position.set(3.49,1.58,-3.86);cork.material=boardSurface;
+  const noticeBoard=MeshBuilder.CreateBox('office-notice-board',{width:1.35,height:1.02,depth:.09},this.scene);noticeBoard.position.set(3.55,1.58,-3.86);noticeBoard.material=boardFrame;
+  const cork=MeshBuilder.CreateBox('notice-board-cork',{width:1.21,height:.88,depth:.035},this.scene);cork.position.set(3.55,1.58,-3.79);cork.material=boardSurface;
   const noteColors=[new Color3(.91,.86,.68),new Color3(.75,.84,.86),new Color3(.88,.76,.65)];
   for(let i=0;i<3;i++){
-   const z=-4.22+i*.36;
-   const note=MeshBuilder.CreateBox('notice-board-note',{width:.025,height:.31,depth:.27},this.scene);note.position.set(3.455,1.58+(i%2)*.08,z);note.material=mat('notice-note-'+i,noteColors[i]);
-   const pin=MeshBuilder.CreateSphere('notice-board-pin',{diameter:.07,segments:8},this.scene);pin.position.set(3.43,1.69+(i%2)*.08,z-.08);pin.material=mat('notice-pin-'+i,new Color3(.65,.24,.18));
+   const x=3.2+i*.35;
+   const note=MeshBuilder.CreateBox('notice-board-note',{width:.27,height:.31,depth:.025},this.scene);note.position.set(x,1.58+(i%2)*.08,-3.765);note.material=mat('notice-note-'+i,noteColors[i]);
+   const pin=MeshBuilder.CreateSphere('notice-board-pin',{diameter:.07,segments:8},this.scene);pin.position.set(x-.08,1.69+(i%2)*.08,-3.73);pin.material=mat('notice-pin-'+i,new Color3(.65,.24,.18));
   }
   canvas.setAttribute('data-office-notice-board-mesh-count','8');
+  canvas.setAttribute('data-office-notice-board-mounted','rear-wall');
+  canvas.setAttribute('data-office-clock-mounted','right-wall');
   canvas.setAttribute('data-office-furniture-count','4');
   const warmLight=new Color3(1,.88,.7);
   for(const [index,x,z] of [[0,-2.8,-.8],[1,2.8,-.8],[2,0,2.4]] as const){

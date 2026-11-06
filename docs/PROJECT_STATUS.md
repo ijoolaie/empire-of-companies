@@ -7,7 +7,7 @@ Last verified: 2026-11-06
 - Default branch: `main`; latest merged baseline: `7914290` (PR #2).
 - Current work branch: `feat/p4-office-environment`.
 - Local workspace: `C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies`.
-- Latest remote head: `64e1e9b` (`feat: add office notice board details`). PR #3 is open as Draft; latest CI run #92 is in progress.
+- Latest remote head: `805069f` (`docs: refresh office environment handoff`). Local branch has one additional unpushed commit, `7f97e5c` (`fix: align office wall decor`); push attempts failed because GitHub port 443 was unreachable. PR #3 remains open as Draft and unmerged; remote CI runs #92 and #93 passed.
 
 ## Product decisions
 - Browser-first 3D office/company management game, Babylon.js + TypeScript + Vite.
@@ -40,8 +40,9 @@ Last verified: 2026-11-06
 - `npm run build`: passed (466 modules; main JS 1,158.52 kB minified / 286.83 kB gzip). Existing Vite >500 kB chunk warning remains.
 - `npm run test:browser`: 19 passed, 0 failed, including office shell, desk accessories, notice board, entrance emblem and entry mat regressions.
 - `git diff --check`: passed.
-- Visual review: captured and inspected 900×600 desktop and 390×844 mobile views, plus alternate orbit views at both sizes using headless Chromium/SwiftShader. Walls, entrance, window framing and lighting rendered coherently; no obvious mesh clipping or browser page errors observed. This is simulated-browser review, not a physical-device/GPU acceptance test.
-- GitHub Actions run #92 for head `64e1e9b0771eeb8825c0c860aca1b56517534d96` is in progress. Build and unit-test steps passed; Chromium installation is in progress and browser regression has not run yet: https://github.com/ijoolaie/empire-of-companies/actions/runs/42235641909
+- Visual review: inspected desktop views at two orbit angles in headless Chromium/SwiftShader. Corrected the notice board to mount flat on the rear wall and moved the clock to the right wall to remove the placement conflict. Re-captured the scene after the fix; the wall-mount diagnostics report `rear-wall` and `right-wall`, with no browser page errors. This remains simulated-browser review, not physical-device/GPU acceptance.
+- GitHub Actions run #92 passed for code head `64e1e9b0771eeb8825c0c860aca1b56517534d96`: https://github.com/ijoolaie/empire-of-companies/actions/runs/42235641909
+- GitHub Actions run #93 passed for docs head `805069f4e4f2eda08aac5aac6959da74710aea10`: https://github.com/ijoolaie/empire-of-companies/actions/runs/42236137069
 
 ## Next actions
 1. PR #3 is open as Draft; review the diff and keep it unmerged until explicitly approved.

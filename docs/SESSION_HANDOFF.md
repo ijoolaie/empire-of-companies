@@ -19,8 +19,8 @@ https://github.com/ijoolaie/empire-of-companies
 - Local path: `C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies`.
 - Baseline main commit: `7914290` (PR #2 merged).
 - Current branch: `feat/p4-office-environment`.
-- Latest committed remote head: `64e1e9b0771eeb8825c0c860aca1b56517534d96` (`feat: add office notice board details`).
-- PR #3: open, Draft, mergeable; CI run #92 is in progress (build and unit tests passed; Chromium install is running). PR URL: https://github.com/ijoolaie/empire-of-companies/pull/3.
+- Latest remote head: `805069f4e4f2eda08aac5aac6959da74710aea10` (`docs: refresh office environment handoff`). Local branch is one commit ahead: `7f97e5c` (`fix: align office wall decor`); two push attempts failed because github.com:443 was unreachable.
+- PR #3 remote state: open, Draft, mergeable, unmerged; CI runs #92 and #93 passed. The local fix is not yet present in the PR. PR URL: https://github.com/ijoolaie/empire-of-companies/pull/3.
 
 ## Current implementation
 - Core economy, desk placement, hiring, upgrades, local persistence and bounded offline earnings.
