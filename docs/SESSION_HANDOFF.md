@@ -1,6 +1,6 @@
 # Session Handoff — Read First
 
-Last updated: 2026-11-06 — added reserved worker-route corridors and a rapid consecutive-hire browser regression; local verification: 21 unit tests, production build and 11 browser tests.
+Last updated: 2026-11-06 — expanded rapid-hire browser regression to three simultaneous arrivals; local verification: 21 unit tests, production build and 11 browser tests.
 
 ## Mission
 Continue Empire of Companies: https://github.com/ijoolaie/empire-of-companies
@@ -35,7 +35,7 @@ P3 progression/usability remains active. P4 has started with an initial procedur
 ## Local verification
 - npm test: 21/21 passed.
 - npm run build: passed.
-- npm run test:browser: 11/11 passed; includes two rapid hires walking concurrently and returning to seated state.
+- npm run test:browser: 11/11 passed; rapid-hire regression now verifies three concurrent arrivals and their transition back to seated state.
 - git diff --check: passed.
 - Previous Babylon/main chunk: 6,026.40 kB minified / 1,322.29 kB gzip.
 - Current build after direct module imports: largest app chunk 1,141.33 kB minified / 281.81 kB gzip; >500 kB warning remains.

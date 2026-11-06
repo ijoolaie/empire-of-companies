@@ -6,7 +6,7 @@ Last verified: 2026-11-06
 - GitHub: https://github.com/ijoolaie/empire-of-companies
 - Default branch: main; P2 merge: 06ebb5c.
 - Development branch: feat/p3-progression-ux.
-- Latest pushed implementation head: 9a3eab4. CI run #62 (42178572610) passed; rapid consecutive-hire browser regression is now added locally and awaiting commit/CI.
+- Latest pushed implementation head: 195f2c5. Local verification passes; CI run #64 (42179352858) is validating the three-consecutive-hire regression.
 - A* arrival routing starts at a shared office entrance and avoids desk, planter, and structural wall footprints; seven navigation tests cover entrance routing, fixed obstacles, blocked entrance fallback, deterministic routing, office bounds, and alternate entry lanes around a reserved worker route. Active worker routes are reserved for later hires; an 11th browser test covers two consecutive hires.
 - New hires walk from the open side of the office toward their assigned desk for 1.6 seconds, swing their arms/legs, then transition into seated typing. Restored employees remain seated on reload.
 - PR #2: https://github.com/ijoolaie/empire-of-companies/pull/2 (open, Draft, not merged).
@@ -43,10 +43,10 @@ Last verified: 2026-11-06
 ## Verification
 - npm test: 21 passed, 0 failed (includes 7 navigation-planner tests).
 - npm run build: passed.
-- npm run test:browser: 11 passed, 0 failed; includes a rapid consecutive-hire regression verifying two workers can walk concurrently using separate reserved entrance corridors.
+- npm run test:browser: 11 passed, 0 failed; rapid-hire regression now performs three consecutive hires before any arrival completes, verifies 1/2/3 active walkers, then verifies all settle and the save contains four workers.
 - git diff --check: passed.
 - Babylon/main application chunk after direct module imports: about 1,142.55 kB minified / 282.20 kB gzip (about 81% smaller minified and 79% smaller gzip than the previous 6,026.40 / 1,322.29 kB bundle). The >500 kB warning remains.
-- GitHub Actions run #62 (42178572610) passed for 9a3eab4, including install, build, unit tests, Chromium install and browser regression.
+- GitHub Actions run #62 (42178572610) passed for 9a3eab4. CI run #64 (42179352858) is in progress for 195f2c5.
 - Automated tests verify model synchronization and mesh counts; manual Chromium review separately verified that the worker is visible in the 1280x720 default camera view after the angle correction.
 
 ## Open
