@@ -92,7 +92,14 @@ export class OfficeGame {
   canvas.setAttribute('data-office-notice-board-mesh-count','8');
   canvas.setAttribute('data-office-notice-board-mounted','rear-wall');
   canvas.setAttribute('data-office-clock-mounted','right-wall');
-  canvas.setAttribute('data-office-furniture-count','4');
+  // A compact waiting bench sits against the left wall, outside the entrance lane.
+  const benchWood=mat('waiting-bench-wood',new Color3(.38,.29,.23));
+  const benchSeat=MeshBuilder.CreateBox('waiting-bench-seat',{width:.72,height:.14,depth:1.5},this.scene);benchSeat.position.set(-4.48,.52,1.1);benchSeat.material=benchWood;
+  const benchBack=MeshBuilder.CreateBox('waiting-bench-back',{width:.13,height:.58,depth:1.5},this.scene);benchBack.position.set(-4.79,.83,1.1);benchBack.material=benchWood;
+  const benchCushion=MeshBuilder.CreateBox('waiting-bench-cushion',{width:.62,height:.07,depth:1.34},this.scene);benchCushion.position.set(-4.43,.63,1.1);benchCushion.material=mat('waiting-bench-fabric',new Color3(.22,.36,.46));
+  for(const z of [.52,1.68]){const support=MeshBuilder.CreateBox('waiting-bench-support',{width:.12,height:.48,depth:.12},this.scene);support.position.set(-4.48,.28,z);support.material=benchWood;}
+  canvas.setAttribute('data-office-waiting-area-mesh-count','5');
+  canvas.setAttribute('data-office-furniture-count','5');
   const warmLight=new Color3(1,.88,.7);
   for(const [index,x,z] of [[0,-2.8,-.8],[1,2.8,-.8],[2,0,2.4]] as const){
    const lamp=new PointLight('office-fill-'+index,new Vector3(x,2.1,z),this.scene);lamp.diffuse=warmLight;lamp.intensity=.22;lamp.range=8;
@@ -224,7 +231,7 @@ export class OfficeGame {
   while(this.workers.length<target){
    const index=this.workers.length,desk=this.desks[index],worker=new TransformNode('worker-'+(index+1),this.scene);
    worker.parent=desk;
-   const fixedObstacles=[{x:-4,z:3,halfWidth:.48,halfDepth:.48},{x:4,z:-2,halfWidth:.48,halfDepth:.48},{x:4.48,z:-.55,halfWidth:.38,halfDepth:.95},{x:-5,z:0,halfWidth:.09,halfDepth:4},{x:0,z:-4,halfWidth:5,halfDepth:.09}];
+   const fixedObstacles=[{x:-4,z:3,halfWidth:.48,halfDepth:.48},{x:4,z:-2,halfWidth:.48,halfDepth:.48},{x:4.48,z:-.55,halfWidth:.38,halfDepth:.95},{x:-4.48,z:1.1,halfWidth:.48,halfDepth:.9},{x:-5,z:0,halfWidth:.09,halfDepth:4},{x:0,z:-4,halfWidth:5,halfDepth:.09}];
    if(animateNewWorkers){
     this.workers.forEach((existing,existingIndex)=>{
      if(performance.now()-this.workerWalkStartedAt[existingIndex]>=1600)return;

@@ -19,17 +19,17 @@ https://github.com/ijoolaie/empire-of-companies
 - Local path: `C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies`.
 - Baseline main commit: `7914290` (PR #2 merged).
 - Current branch: `feat/p4-office-environment`.
-- Latest local head: `91878c75dd8a815416e5072e3903d32fa5da6cbb` (`fix: align office wall decor`), one commit ahead of remote `805069f4e4f2eda08aac5aac6959da74710aea10`; this fix is not yet present in PR #3.
-- PR #3 remote state: open, Draft, mergeable, unmerged; CI runs #92 and #93 passed for the previous remote head. PR URL: https://github.com/ijoolaie/empire-of-companies/pull/3.
+- Latest previously pushed head: `90797b9815ee57a1452cd29dd1bda1fb828c37d5`. Current local work adds a five-mesh waiting bench and registers it as a worker-navigation obstacle; this slice is validated locally but not yet committed or pushed.
+- PR #3 remote state: open, Draft, mergeable, unmerged. CI run #94 passed for pushed head `90797b9`: https://github.com/ijoolaie/empire-of-companies/actions/runs/42240816207. PR URL: https://github.com/ijoolaie/empire-of-companies/pull/3.
 
 ## Current implementation
 - Core economy, desk placement, hiring, upgrades, local persistence and bounded offline earnings.
 - Progression schema v4, XP/levels, three ordered objectives, tutorial and accessible progression dialog.
 - Procedural seated workers with deterministic appearance variants, three idle poses and arrival walking.
 - Desk equipment: monitor stand/base, keyboard and mouse.
-- Office-shell slice: five wall segments, open 2.5-unit entrance, entrance trim/threshold/sign, three framed rear windows, three ceiling panels, three warm point lights and baseboards. Added bookcase/books, wall clock, framed wall art, cork notice board with three pinned notes, per-desk paper/mug/pen accessories, a three-bar entrance emblem and a near-flush entry mat with trim.
+- Office-shell slice: five wall segments, open 2.5-unit entrance, entrance trim/threshold/sign, three framed rear windows, three ceiling panels, three warm point lights and baseboards. Added bookcase/books, wall clock, framed wall art, cork notice board with three pinned notes, a five-mesh waiting bench against the left wall, per-desk paper/mug/pen accessories, a three-bar entrance emblem and a near-flush entry mat with trim.
 - Entrance remains open; no door mesh blocks the existing arrival corridor.
-- Canvas diagnostics: `data-office-wall-segment-count`, `data-office-window-count`, `data-office-entrance-part-count`, `data-office-light-count`, `data-office-furniture-count`, `data-office-notice-board-mesh-count`, `data-desk-accessory-mesh-count`.
+- Canvas diagnostics: `data-office-wall-segment-count`, `data-office-window-count`, `data-office-entrance-part-count`, `data-office-light-count`, `data-office-furniture-count`, `data-office-notice-board-mesh-count`, `data-office-waiting-area-mesh-count`, `data-desk-accessory-mesh-count`.
 
 ## Verification
 - Unit tests: 22/22 passed.
@@ -38,7 +38,8 @@ https://github.com/ijoolaie/empire-of-companies
 - Diff whitespace check: passed.
 - Automated office-shell mesh/light counts passed, including 8 notice-board meshes, 9 entrance-detail meshes and 9 desk-accessory meshes across the three-desk fixture.
 - Visual review completed from headless Chromium/SwiftShader captures: desktop 900×600, mobile 390×844, and alternate orbit views at both sizes. No obvious geometry clipping or entrance blockage was seen; browser page errors were absent. This does not replace real-device GPU review.
-- GitHub Actions run #92 for `64e1e9b` is in progress. Build and unit-test steps passed; Chromium installation is in progress and browser regression remains pending: https://github.com/ijoolaie/empire-of-companies/actions/runs/42235641909
+- GitHub Actions run #94 for pushed head `90797b9` passed all steps including browser regression: https://github.com/ijoolaie/empire-of-companies/actions/runs/42240816207.
+- Waiting-bench local validation: unit tests 22/22, build passed, browser tests 19/19, diff check passed. The local build bundle is 1,159.47 kB minified / 287.11 kB gzip; existing Vite chunk warning remains.
 
 ## Exact next steps
 1. Review PR #3; it is intentionally Draft and must not be merged without explicit approval.
