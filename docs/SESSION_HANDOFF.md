@@ -18,7 +18,7 @@ Continue Empire of Companies: https://github.com/ijoolaie/empire-of-companies
 - Branch: feat/p3-progression-ux.
 - Latest pushed implementation commit: 31cc0a2 — fix: show seated workers in default camera view.
 - Material reuse landed in 34a7150; 31cc0a2 changes default camera alpha from -PI/4 to +PI/4 after screenshot review showed the worker was occluded.
-- Local verification after camera correction: 14 unit tests, build, 9 browser tests, diff check all pass. CI status for 31cc0a2 is still unreported.
+- Local verification after camera correction: 14 unit tests, build, 9 browser tests, diff check all passed. Mobile compact-panel change is current local work; build and 10 browser tests pass. CI status for 31cc0a2 is still unreported.
 - PR #2: https://github.com/ijoolaie/empire-of-companies/pull/2.
 - CI run #40 (42109392998) passed for 1991369, including Chromium browser tests.
 - Local path: C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies.
@@ -35,7 +35,7 @@ P3 progression/usability remains active. P4 has started with an initial procedur
 ## Local verification
 - npm test: 14/14 passed.
 - npm run build: passed.
-- npm run test:browser: 9/9 passed.
+- npm run test:browser: 10/10 passed.
 - git diff --check: passed.
 - Previous Babylon/main chunk: 6,026.40 kB minified / 1,322.29 kB gzip.
 - Current build after direct module imports: largest app chunk 1,141.33 kB minified / 281.81 kB gzip; >500 kB warning remains.
@@ -43,10 +43,10 @@ P3 progression/usability remains active. P4 has started with an initial procedur
 - CI run #37 (42108774779) passed for 7019cdc.
 - CI run #38 (42108661210) passed for 8c445bc.
 - CI run #40 (42109392998) passed for 1991369.
-- Manual Chromium screenshots found that the default 1280x720 camera view initially hid the worker behind the desk/monitor. Changing camera alpha to +PI/4 makes the seated worker visible; desktop default-view acceptance is complete, while mobile/alternate-angle review remains open.
+- Manual Chromium screenshots at 1280x720 and 375x667 confirm the seated worker is visible in the default view. The mobile panel hides XP/objective details but keeps the tutorial and progression dialog reachable; alternate camera angles remain to review.
 
 ## Exact next task
-Direct Babylon module imports, material reuse and the default camera-angle correction are pushed. The worker is visible at 1280x720; local verification: 14 unit tests, build and 9 browser tests pass. PR #2 body is updated and remains Draft. Next: review mobile/alternate camera composition, then continue P4 worker work-state animation and variants. CI for the latest documentation head has not been reported. Keep PR #2 Draft and unmerged.
+Direct Babylon module imports, material reuse and the default camera-angle correction are pushed. Current local work makes the office panel compact on mobile while keeping tutorial and progression reachable. Manual Chromium review confirms the worker is visible at 1280x720 and 375x667. Local checks: 14 unit tests, build and 10 browser tests pass. Next: commit/push mobile UX change and update PR; then review alternate camera angles and continue P4 worker animation/variants. CI for latest remote head has not been reported. Keep PR #2 Draft and unmerged.
 
 ## Session update rule
 Update PROJECT_STATUS and SESSION_HANDOFF with verified facts after substantial work. Update ROADMAP/WBS when scope changes. Never claim a feature is complete solely because code was written.

@@ -124,6 +124,20 @@ test('320x568 viewport has no horizontal overflow or toolbar-panel overlap', asy
   expect(metrics.panelBottom).toBeLessThanOrEqual(metrics.toolbarTop);
 });
 
+test('mobile office panel stays compact while tutorial and progression remain reachable', async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 667 });
+  await page.goto('/');
+  const panel = page.locator('.panel');
+  await expect(panel).toBeVisible();
+  await expect(panel.locator('.tutorial')).toBeVisible();
+  await expect(panel.locator('.objectives')).toBeHidden();
+  const panelMetrics = await panel.evaluate(el => ({ width: el.getBoundingClientRect().width, height: el.getBoundingClientRect().height }));
+  expect(panelMetrics.width).toBeLessThanOrEqual(210);
+  expect(panelMetrics.height).toBeLessThan(300);
+  await page.locator('#progress').click();
+  await expect(page.getByRole('dialog')).toBeVisible();
+});
+
 test('progression screen explains current milestones and planned future unlocks', async ({ page }) => {
   const pageErrors = [];
   page.on('pageerror', error => pageErrors.push(error.message));

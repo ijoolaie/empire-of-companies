@@ -15,7 +15,7 @@ Last verified: 2026-11-06
 ## Phase status
 - P0/P1 complete.
 - P2 playable core loop complete and merged.
-- P3 progression/onboarding/UX active.
+- P3 progression/onboarding/UX active; mobile office panel now collapses nonessential XP/objective details while preserving tutorial controls and progression access.
 - P4 3D content active at an initial procedural-worker slice; not complete.
 
 ## P3 implemented and verified
@@ -42,7 +42,7 @@ Last verified: 2026-11-06
 ## Verification
 - npm test: 14 passed, 0 failed.
 - npm run build: passed.
-- npm run test:browser: 9 passed, 0 failed after the default camera-angle correction.
+- npm run test:browser: 10 passed, 0 failed after default camera-angle and compact-mobile-panel corrections.
 - git diff --check: passed.
 - Babylon/main application chunk after direct module imports: 1,141.33 kB minified / 281.81 kB gzip (about 81% smaller minified and 79% smaller gzip than the previous 6,026.40 / 1,322.29 kB bundle). The >500 kB warning remains.
 - CI run #36 (42107749624) passed for 2146410.
@@ -52,14 +52,14 @@ Last verified: 2026-11-06
 - Automated tests verify model synchronization and mesh counts; manual Chromium review separately verified that the worker is visible in the 1280x720 default camera view after the angle correction.
 
 ## Open
-- Initial manual visual acceptance completed in Chromium at 1280x720: default camera angle had hidden the worker behind desk/monitor; camera alpha changed from -PI/4 to +PI/4, and the seated worker is now visible in the default view. Review other camera angles and mobile scene composition remains open.
+- Manual Chromium visual review completed at 1280x720 and 375x667: default camera angle now shows the seated worker; compact mobile panel keeps the worker/office visible while tutorial and progression remain reachable. Alternate camera angles and other device sizes remain open.
 - Continue P3 screen-reader, HUD hierarchy and responsive UX work.
 - Continue P4 worker work-state animation, variants, furniture details and performance profiling.
 - Supabase Auth lifecycle remains unverified.
 - PWA and Android packaging remain unimplemented.
 
 ## Next actions
-1. Review worker visibility/composition at mobile sizes and alternate camera angles; the 1280x720 default view now shows the seated worker.
+1. Review alternate camera angles and additional device sizes; desktop and 375x667 default views now show the seated worker.
 2. Improve worker poses/variants and add meaningful visual regression coverage where feasible.
 3. Profile scene mesh/material counts and address the large Babylon bundle with measured changes.
 4. Keep PR #2 Draft and unmerged unless explicitly requested.
