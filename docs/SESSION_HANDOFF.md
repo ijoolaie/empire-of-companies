@@ -16,9 +16,9 @@ Continue Empire of Companies: https://github.com/ijoolaie/empire-of-companies
 
 ## Repository
 - Branch: feat/p3-progression-ux.
-- Latest pushed head: 36a7e81; CI run #57 (42174139853) passed.
-- Local uncommitted change: bounded A* arrival routing around desk footprints and office bounds; 2 additional navigation tests.
-- Local verification after the A* change: 19 unit tests, production build, 10 browser tests and diff check pass.
+- Latest pushed implementation head: 534577e; CI run #58 (42174797995) is in progress.
+- Committed and pushed: bounded A* arrival routing around desk footprints and office bounds; 2 additional navigation tests.
+- Local verification: 19 unit tests, production build, 10 browser tests and diff check pass.
 - PR #2: https://github.com/ijoolaie/empire-of-companies/pull/2.
 - CI run #40 (42109392998) passed for 1991369, including Chromium browser tests.
 - Local path: C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies.

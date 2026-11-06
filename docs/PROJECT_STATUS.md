@@ -6,8 +6,8 @@ Last verified: 2026-11-06
 - GitHub: https://github.com/ijoolaie/empire-of-companies
 - Default branch: main; P2 merge: 06ebb5c.
 - Development branch: feat/p3-progression-ux.
-- Latest pushed head: 36a7e81. CI run #57 (42174139853) passed; local A* routing refinement is prepared for commit.
-- Desk-obstacle-aware A* arrival routing is implemented locally: bounded grid search around desk footprints, office-edge bounds, and deterministic tie-breaking. Two additional navigation tests cover blocked lateral lanes and edge-desk bounds.
+- Latest pushed implementation head: 534577e. CI run #58 (42174797995) is validating the A* routing change.
+- Desk-obstacle-aware A* arrival routing is committed and pushed: bounded grid search around desk footprints, office-edge bounds, and deterministic tie-breaking. Two additional navigation tests cover blocked lateral lanes and edge-desk bounds.
 - New hires walk from the open side of the office toward their assigned desk for 1.6 seconds, swing their arms/legs, then transition into seated typing. Restored employees remain seated on reload.
 - PR #2: https://github.com/ijoolaie/empire-of-companies/pull/2 (open, Draft, not merged).
 - GitHub Actions run #55 (42170042512) passed for prior head 7a1c861; run #56 (42174090774) is validating 87c3939.
