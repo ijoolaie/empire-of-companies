@@ -1,6 +1,6 @@
 # Session Handoff — Read First
 
-Last updated: 2026-11-06 — replaced lateral-lane heuristic with bounded A* desk-avoidance routing and verified 19 unit tests, production build and 10 browser tests.
+Last updated: 2026-11-06 — refined A* worker routing to use a shared entrance and fixed obstacle footprints; local verification: 20 unit tests, production build and 10 browser tests.
 
 ## Mission
 Continue Empire of Companies: https://github.com/ijoolaie/empire-of-companies
@@ -16,9 +16,9 @@ Continue Empire of Companies: https://github.com/ijoolaie/empire-of-companies
 
 ## Repository
 - Branch: feat/p3-progression-ux.
-- Latest pushed implementation head: 534577e; CI run #58 (42174797995) passed for implementation commit 534577e; current branch head d09adfa is a documentation-only follow-up.
-- Committed and pushed: bounded A* arrival routing around desk footprints and office bounds; 2 additional navigation tests.
-- Local verification: 19 unit tests, production build, 10 browser tests and diff check pass.
+- Latest pushed implementation head: 534577e; CI run #58 (42174797995) passed for that commit; current branch head before this local change is 3bd75c6.
+- Local uncommitted refinement: route workers from a shared office entrance to their desks, avoiding desk, planter, and structural wall footprints; added 3 focused navigation tests.
+- Local verification after refinement: 20 unit tests, production build, 10 browser tests and diff check pass.
 - PR #2: https://github.com/ijoolaie/empire-of-companies/pull/2.
 - CI run #40 (42109392998) passed for 1991369, including Chromium browser tests.
 - Local path: C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies.
@@ -46,7 +46,7 @@ P3 progression/usability remains active. P4 has started with an initial procedur
 - Manual Chromium screenshots at 1280x720 and 375x667 confirm the seated worker is visible in the default view. The mobile panel hides XP/objective details but keeps the tutorial and progression dialog reachable; alternate camera angles remain to review.
 
 ## Exact next task
-New-hire arrival walk and curved easing are pushed. Current local refinement adds a deterministic desk-obstacle-aware route heuristic. Local checks pass (17 unit tests, build, 10 browser tests, diff check). Next: commit/push this change and verify CI, then extend routing to walls/doors and coordinate multiple workers. Keep PR #2 Draft and unmerged. Keep PR #2 Draft and unmerged.
+Current local refinement routes new hires from the shared entrance to their assigned desks using bounded A*, avoiding desk, planter and structural wall footprints. Local checks pass (20 unit tests, production build, 10 browser tests, diff check). Next: commit/push this change and verify CI, then add worker-worker route separation. Keep PR #2 Draft and unmerged.
 
 ## Session update rule
 Update PROJECT_STATUS and SESSION_HANDOFF with verified facts after substantial work. Update ROADMAP/WBS when scope changes. Never claim a feature is complete solely because code was written.
@@ -55,4 +55,4 @@ Update PROJECT_STATUS and SESSION_HANDOFF with verified facts after substantial 
 - Added src/navigation.ts: tests two lateral approach routes against nearby desk footprints and selects a clear route when one is available.
 - Worker animation now follows the selected waypoint path while retaining eased timing and alternating limb swing.
 - Three unit tests cover direct-lane obstruction, nearby desk layouts and deterministic route selection.
-- Limitation: this is a bounded desk-footprint heuristic, not full pathfinding; walls, doors, dynamic obstacles and worker-worker collision avoidance remain future work.
+- Limitation: the office has an open front and no modeled door mesh/state; structural walls are represented as fixed navigation footprints and floor bounds. Dynamic replanning and worker-worker collision avoidance remain future work.

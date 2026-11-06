@@ -1,13 +1,20 @@
 export interface DeskObstacle { x: number; z: number }
+export interface NavigationObstacle {
+  x: number;
+  z: number;
+  halfWidth: number;
+  halfDepth: number;
+}
 export interface ArrivalPoint { x: number; y: number; z: number }
 
-const HALF_WIDTH = 1.05;
-const HALF_DEPTH = 0.68;
+const DESK_HALF_WIDTH = 1.05;
+const DESK_HALF_DEPTH = 0.68;
 const GRID = 0.25;
 const OFFICE_MIN_X = -4.4;
 const OFFICE_MAX_X = 4.4;
 const OFFICE_MIN_Z = -3.3;
-const OFFICE_MAX_Z = 5.2;
+const OFFICE_MAX_Z = 3.65;
+const ENTRANCE = { x: 0, z: 3.45 };
 
 interface Node {
   x: number;
@@ -15,7 +22,6 @@ interface Node {
   g: number;
   f: number;
   key: string;
-  parent?: string;
 }
 
 function key(x: number, z: number): string {
@@ -26,30 +32,48 @@ function distance(ax: number, az: number, bx: number, bz: number): number {
   return Math.hypot(bx - ax, bz - az);
 }
 
-function pointBlocked(x: number, z: number, obstacles: DeskObstacle[]): boolean {
+function pointBlocked(x: number, z: number, obstacles: NavigationObstacle[]): boolean {
   return obstacles.some(o =>
-    Math.abs(x - o.x) < HALF_WIDTH && Math.abs(z - o.z) < HALF_DEPTH
+    Math.abs(x - o.x) < o.halfWidth && Math.abs(z - o.z) < o.halfDepth
   );
 }
 
 /**
- * Plans a deterministic local-space route around desk footprints using a bounded
- * A* grid. Coordinates are relative to the assigned desk because the worker
- * model is parented to that desk. The route stays inside the open office bounds.
+ * Plans a deterministic bounded A* route from the office entrance to a desk.
+ * All returned points are local to the target desk because worker models are
+ * parented to their assigned desk. Desk, planter and structural footprints are
+ * treated as solid obstacles.
  */
 export function planWorkerArrivalPath(
   ownDesk: DeskObstacle,
-  desks: DeskObstacle[]
+  desks: DeskObstacle[],
+  fixedObstacles: NavigationObstacle[] = []
 ): ArrivalPoint[] {
-  const obstacles = desks
-    .filter(d => d.x !== ownDesk.x || d.z !== ownDesk.z)
-    .map(d => ({ x: d.x - ownDesk.x, z: d.z - ownDesk.z }));
+  const obstacles: NavigationObstacle[] = [
+    ...desks
+      .filter(d => d.x !== ownDesk.x || d.z !== ownDesk.z)
+      .map(d => ({
+        x: d.x - ownDesk.x,
+        z: d.z - ownDesk.z,
+        halfWidth: DESK_HALF_WIDTH,
+        halfDepth: DESK_HALF_DEPTH
+      })),
+    ...fixedObstacles.map(o => ({
+      x: o.x - ownDesk.x,
+      z: o.z - ownDesk.z,
+      halfWidth: o.halfWidth,
+      halfDepth: o.halfDepth
+    }))
+  ];
 
   const minX = Math.ceil((OFFICE_MIN_X - ownDesk.x) / GRID);
   const maxX = Math.floor((OFFICE_MAX_X - ownDesk.x) / GRID);
   const minZ = Math.ceil((OFFICE_MIN_Z - ownDesk.z) / GRID);
   const maxZ = Math.floor((OFFICE_MAX_Z - ownDesk.z) / GRID);
-  const start = { x: 0, z: Math.round(2.25 / GRID) };
+  const start = {
+    x: Math.round((ENTRANCE.x - ownDesk.x) / GRID),
+    z: Math.round((ENTRANCE.z - ownDesk.z) / GRID)
+  };
   const goal = { x: 0, z: 0 };
   const startKey = key(start.x, start.z);
   const goalKey = key(goal.x, goal.z);
@@ -58,8 +82,10 @@ export function planWorkerArrivalPath(
     x < minX || x > maxX || z < minZ || z > maxZ ||
     pointBlocked(x * GRID, z * GRID, obstacles);
 
+  // If an invalid custom layout blocks the entrance or target, keep the worker
+  // at its assigned desk instead of producing a route through solid geometry.
   if (blocked(start.x, start.z) || blocked(goal.x, goal.z)) {
-    return [{ x: 0, y: 0, z: 2.1 }, { x: 0, y: 0, z: 0 }];
+    return [{ x: 0, y: 0, z: 0 }];
   }
 
   const open: Node[] = [{
@@ -91,7 +117,9 @@ export function planWorkerArrivalPath(
       }
       cells.reverse();
       return cells.map((cell, index) => {
-        if (index === 0) return { x: 0, y: 0, z: 2.1 };
+        if (index === 0) {
+          return { x: ENTRANCE.x - ownDesk.x, y: 0, z: ENTRANCE.z - ownDesk.z };
+        }
         const [x, z] = cell.split(',').map(Number);
         return { x: x * GRID, y: 0, z: z * GRID };
       });
@@ -103,8 +131,9 @@ export function planWorkerArrivalPath(
       const z = current.z + dz;
       const nextKey = key(x, z);
       if (closed.has(nextKey) || blocked(x, z)) continue;
-      // Prevent diagonal corner cutting through touching desk footprints.
-      if (dx !== 0 && dz !== 0 && (blocked(current.x + dx, current.z) || blocked(current.x, current.z + dz))) continue;
+      // Prevent diagonal corner cutting through touching obstacle footprints.
+      if (dx !== 0 && dz !== 0 &&
+        (blocked(current.x + dx, current.z) || blocked(current.x, current.z + dz))) continue;
       const tentative = current.g + cost;
       if (tentative >= (best.get(nextKey) ?? Infinity)) continue;
       best.set(nextKey, tentative);
@@ -117,6 +146,6 @@ export function planWorkerArrivalPath(
     }
   }
 
-  // Safe deterministic fallback; this only occurs for invalid or fully blocked layouts.
-  return [{ x: 0, y: 0, z: 2.1 }, { x: 0, y: 0, z: 0 }];
+  // No valid path: keep the worker at its desk rather than crossing obstacles.
+  return [{ x: 0, y: 0, z: 0 }];
 }

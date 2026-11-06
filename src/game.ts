@@ -89,7 +89,7 @@ export class OfficeGame {
   while(this.workers.length>target){const worker=this.workers.pop()!;this.workerArms.pop();this.workerLegs.pop();this.workerWalkStartedAt.pop();this.workerWalkPaths.pop();worker.dispose();}
   while(this.workers.length<target){
    const index=this.workers.length,desk=this.desks[index],worker=new TransformNode('worker-'+(index+1),this.scene);
-   worker.parent=desk;const path=animateNewWorkers?planWorkerArrivalPath({x:desk.position.x,z:desk.position.z},this.desks.map(item=>({x:item.position.x,z:item.position.z}))):[Vector3.Zero()];const vectorPath=path.map(point=>new Vector3(point.x,point.y,point.z));this.workerWalkPaths.push(vectorPath);worker.position.copyFrom(vectorPath[0]);this.workerWalkStartedAt.push(performance.now()-(animateNewWorkers?0:1600));
+   worker.parent=desk;const path=animateNewWorkers?planWorkerArrivalPath({x:desk.position.x,z:desk.position.z},this.desks.map(item=>({x:item.position.x,z:item.position.z})),[{x:-4,z:3,halfWidth:.48,halfDepth:.48},{x:4,z:-2,halfWidth:.48,halfDepth:.48},{x:-5,z:0,halfWidth:.09,halfDepth:4},{x:0,z:-4,halfWidth:5,halfDepth:.09}]):[Vector3.Zero()];const vectorPath=path.map(point=>new Vector3(point.x,point.y,point.z));this.workerWalkPaths.push(vectorPath);worker.position.copyFrom(vectorPath[0]);this.workerWalkStartedAt.push(performance.now()-(animateNewWorkers?0:1600));
    const skin=this.getMaterial('worker-skin',new Color3(.78,.55,.39));
    const shirtColors=[new Color3(.16,.48,.72),new Color3(.22,.58,.43),new Color3(.62,.36,.68),new Color3(.78,.48,.2)];
    const shirt=this.getMaterial('worker-shirt-'+(index%shirtColors.length),shirtColors[index%shirtColors.length]);

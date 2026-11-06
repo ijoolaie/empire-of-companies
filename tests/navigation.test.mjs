@@ -12,55 +12,49 @@ function routeIntersectsObstacle(path, obstacle, ownDesk) {
       const t = step / steps;
       const x = from.x + (to.x - from.x) * t;
       const z = from.z + (to.z - from.z) * t;
-      if (Math.abs(x - center.x) < 1.05 && Math.abs(z - center.z) < 0.68) return true;
+      if (Math.abs(x - center.x) < obstacle.halfWidth && Math.abs(z - center.z) < obstacle.halfDepth) return true;
     }
   }
   return false;
 }
 
+test('arrival route starts at the shared entrance and reaches its assigned desk', () => {
+  const ownDesk = { x: -2, z: -1 };
+  const path = planWorkerArrivalPath(ownDesk, [ownDesk, { x: 1, z: -1 }]);
+
+  assert.deepEqual(path[0], { x: 2, y: 0, z: 4.45 });
+  assert.deepEqual(path.at(-1), { x: 0, y: 0, z: 0 });
+  assert.ok(path.length > 2);
+});
+
 test('arrival route detours around a desk placed directly in the approach lane', () => {
   const ownDesk = { x: 0, z: 0 };
-  const obstacle = { x: 0, z: 1.35 };
+  const obstacle = { x: 0, z: 2.1, halfWidth: 1.05, halfDepth: 0.68 };
   const path = planWorkerArrivalPath(ownDesk, [ownDesk, obstacle]);
 
-  assert.ok(path.length >= 4);
-  assert.equal(path[0].z, 2.1);
+  assert.ok(path.length > 4);
   assert.deepEqual(path.at(-1), { x: 0, y: 0, z: 0 });
   assert.equal(routeIntersectsObstacle(path, obstacle, ownDesk), false);
 });
 
-test('arrival path remains finite and reaches its assigned desk with nearby obstacles', () => {
+test('arrival route avoids fixed planter and wall-footprint obstacles', () => {
   const ownDesk = { x: -2, z: -1 };
-  const desks = [ownDesk, { x: -0.2, z: 0.2 }, { x: 1, z: -1 }, { x: 4, z: 2 }];
-  const path = planWorkerArrivalPath(ownDesk, desks);
+  const planter = { x: -2, z: 2.8, halfWidth: 0.48, halfDepth: 0.48 };
+  const wallSegment = { x: 2.2, z: 1.1, halfWidth: 0.12, halfDepth: 1.3 };
+  const path = planWorkerArrivalPath(ownDesk, [ownDesk, { x: 1, z: -1 }], [planter, wallSegment]);
 
-  assert.ok(path.every(point => Number.isFinite(point.x) && Number.isFinite(point.z)));
   assert.deepEqual(path.at(-1), { x: 0, y: 0, z: 0 });
-  for (const obstacle of desks.slice(1)) {
-    assert.equal(routeIntersectsObstacle(path, obstacle, ownDesk), false);
-  }
+  assert.equal(routeIntersectsObstacle(path, planter, ownDesk), false);
+  assert.equal(routeIntersectsObstacle(path, wallSegment, ownDesk), false);
 });
 
-test('arrival route is deterministic for the same desk layout', () => {
-  const desks = [{ x: 0, z: 0 }, { x: 0, z: 1.3 }, { x: 2, z: 0 }];
-  const first = planWorkerArrivalPath(desks[0], desks).map(point => [point.x, point.y, point.z]);
-  const second = planWorkerArrivalPath(desks[0], desks).map(point => [point.x, point.y, point.z]);
-  assert.deepEqual(first, second);
-});
-test('A* detours when both simple lateral approach lanes are obstructed', () => {
+test('arrival route is deterministic for the same desk layout and fixed obstacles', () => {
   const ownDesk = { x: 0, z: 0 };
-  const desks = [
-    ownDesk,
-    { x: -1.35, z: 1.65 },
-    { x: 1.35, z: 1.65 }
-  ];
-  const path = planWorkerArrivalPath(ownDesk, desks);
-
-  assert.ok(path.length > 2);
-  assert.deepEqual(path.at(-1), { x: 0, y: 0, z: 0 });
-  for (const obstacle of desks.slice(1)) {
-    assert.equal(routeIntersectsObstacle(path, obstacle, ownDesk), false);
-  }
+  const desks = [ownDesk, { x: 0, z: 1.3 }, { x: 2, z: 0 }];
+  const obstacles = [{ x: -2, z: 2, halfWidth: 0.5, halfDepth: 0.5 }];
+  const first = planWorkerArrivalPath(ownDesk, desks, obstacles).map(point => [point.x, point.y, point.z]);
+  const second = planWorkerArrivalPath(ownDesk, desks, obstacles).map(point => [point.x, point.y, point.z]);
+  assert.deepEqual(first, second);
 });
 
 test('arrival path remains within the office bounds for an edge desk', () => {
@@ -70,6 +64,13 @@ test('arrival path remains within the office bounds for an edge desk', () => {
   assert.deepEqual(path.at(-1), { x: 0, y: 0, z: 0 });
   for (const point of path) {
     assert.ok(ownDesk.x + point.x >= -4.4 && ownDesk.x + point.x <= 4.4);
-    assert.ok(ownDesk.z + point.z >= -3.3 && ownDesk.z + point.z <= 5.2);
+    assert.ok(ownDesk.z + point.z >= -3.3 && ownDesk.z + point.z <= 3.65);
   }
+});
+
+test('blocked entrance falls back to a stationary safe arrival', () => {
+  const ownDesk = { x: 0, z: 0 };
+  const entranceBlocker = { x: 0, z: 3.45, halfWidth: 0.8, halfDepth: 0.3 };
+  const path = planWorkerArrivalPath(ownDesk, [ownDesk], [entranceBlocker]);
+  assert.deepEqual(path, [{ x: 0, y: 0, z: 0 }]);
 });
