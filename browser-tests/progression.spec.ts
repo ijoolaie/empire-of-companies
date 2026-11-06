@@ -265,7 +265,7 @@ test('scene profiling compares zero-worker and five-worker CPU/render resource m
     playerXp: 0, completedObjectives: [], tutorialDismissed: true
   });
   await seedSave(page, save(0));
-  await page.goto('/');
+  await page.goto('/?profile=1');
   const canvas = page.locator('#game');
   const readMetrics = () => canvas.evaluate(el => ({
     average: Number(el.getAttribute('data-frame-cpu-ms-avg')),
