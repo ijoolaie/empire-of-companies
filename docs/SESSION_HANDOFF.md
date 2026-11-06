@@ -16,9 +16,9 @@ Continue Empire of Companies: https://github.com/ijoolaie/empire-of-companies
 
 ## Repository
 - Branch: feat/p3-progression-ux.
-- Latest pushed implementation commit before camera correction: 34a7150 — perf: reuse office and worker materials.
-- Current local change: default camera alpha changed from -PI/4 to +PI/4 after screenshot review showed the worker was occluded in the default view.
-- Local verification after camera correction: 14 unit tests, build, 9 browser tests, diff check all pass. CI status for the remote implementation head is still unreported.
+- Latest pushed implementation commit: 31cc0a2 — fix: show seated workers in default camera view.
+- Material reuse landed in 34a7150; 31cc0a2 changes default camera alpha from -PI/4 to +PI/4 after screenshot review showed the worker was occluded.
+- Local verification after camera correction: 14 unit tests, build, 9 browser tests, diff check all pass. CI status for 31cc0a2 is still unreported.
 - PR #2: https://github.com/ijoolaie/empire-of-companies/pull/2.
 - CI run #40 (42109392998) passed for 1991369, including Chromium browser tests.
 - Local path: C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies.
