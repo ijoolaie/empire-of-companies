@@ -327,6 +327,32 @@ test('office canvas and action toolbar fit narrow, tablet and wide viewports', a
   }
 });
 
+test('office camera responds to pointer drag while keeping tilt and zoom bounded', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 720 });
+  await page.goto('/');
+  const canvas = page.locator('#game');
+  const bounds = await canvas.boundingBox();
+  expect(bounds).not.toBeNull();
+  const initialAlpha = Number(await canvas.getAttribute('data-camera-alpha'));
+  const betaMin = Number(await canvas.getAttribute('data-camera-beta-min'));
+  const betaMax = Number(await canvas.getAttribute('data-camera-beta-max'));
+  const radiusMin = Number(await canvas.getAttribute('data-camera-radius-min'));
+  const radiusMax = Number(await canvas.getAttribute('data-camera-radius-max'));
+
+  await page.mouse.move(bounds.x + bounds.width * 0.55, bounds.y + bounds.height * 0.55);
+  await page.mouse.down();
+  await page.mouse.move(bounds.x + bounds.width * 0.72, bounds.y + bounds.height * 0.55, { steps: 8 });
+  await page.mouse.up();
+
+  await expect.poll(async () => Number(await canvas.getAttribute('data-camera-alpha'))).not.toBe(initialAlpha);
+  const beta = Number(await canvas.getAttribute('data-camera-beta'));
+  const radius = Number(await canvas.getAttribute('data-camera-radius'));
+  expect(beta).toBeGreaterThanOrEqual(betaMin);
+  expect(beta).toBeLessThanOrEqual(betaMax);
+  expect(radius).toBeGreaterThanOrEqual(radiusMin);
+  expect(radius).toBeLessThanOrEqual(radiusMax);
+});
+
 test('three rapid arrivals find valid paths in alternate desk layouts', async ({ browser }) => {
   const layouts = [
     [

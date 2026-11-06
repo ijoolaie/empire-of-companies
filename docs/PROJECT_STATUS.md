@@ -6,7 +6,7 @@ Last verified: 2026-11-06
 - GitHub: https://github.com/ijoolaie/empire-of-companies
 - Default branch: main; P2 merge: 06ebb5c.
 - Development branch: feat/p3-progression-ux.
-- Latest pushed branch head before render-loop cleanup: c4702eb; CI run #71 (42185532580) passed. Current local render-loop cleanup: 22 unit tests, production build, 14 browser tests and diff check passed.
+- Latest pushed head at render-loop cleanup: b29e0b1; CI run #72 (42186991889) passed. A subsequent local camera-drag regression test passes; local verification now: 22 unit tests, production build, 15 browser tests and diff check.
 - A* arrival routing starts at a shared office entrance and avoids desk, planter, and structural wall footprints; eight navigation tests cover entrance routing, fixed obstacles, blocked entrance fallback, deterministic routing, office bounds, alternate entry lanes around a reserved worker route, and 84 edge-desk/entrance-lane combinations. Active worker routes are reserved for later hires; the 12th browser test verifies three rapid arrivals in two desk layouts and checks each gets a non-fallback path.
 - New hires walk from the open side of the office toward their assigned desk for 1.6 seconds, swing their arms/legs, then transition into seated typing. Restored employees remain seated on reload.
 - PR #2: https://github.com/ijoolaie/empire-of-companies/pull/2 (open, Draft, not merged).
@@ -52,13 +52,13 @@ Last verified: 2026-11-06
 ## Open
 - Manual Chromium visual review completed at 1280x720 and 375x667: default camera angle now shows the seated worker; compact mobile panel keeps the worker/office visible while tutorial and progression remain reachable. Alternate camera angles and other device sizes remain open.
 - Continue P3 screen-reader, HUD hierarchy and responsive UX work.
-- Continue P4 worker work-state animation, variants, furniture details and performance profiling. Camera beta is constrained to 0.7–1.35 radians and zoom radius to 10–22; zoom clamping is automated. Interactive orbit and alternate-angle visual acceptance remain unverified.
+- Continue P4 worker work-state animation, variants, furniture details and performance profiling. Camera beta is constrained to 0.7–1.35 radians and zoom radius to 10–22; zoom clamping and pointer-drag orbit are automated. Alternate-angle visual/screenshot acceptance remains unverified.
 - Supabase Auth lifecycle remains unverified.
 - PWA and Android packaging remain unimplemented.
 
 ## Next actions
 1. Perform visual acceptance of alternate camera angles and additional device sizes; automated responsive checks now cover six viewport sizes, but alternate-angle screenshots have not been reviewed.
-2. CI run #71 passed for c4702eb. Render-loop allocation cleanup is locally verified; after push, verify its CI. Edge-of-office routes have unit coverage across 84 combinations. Camera zoom limits and responsive viewport checks are automated; alternate-angle visual acceptance remains open.
+2. CI run #72 passed for b29e0b1. Render-loop allocation cleanup and camera pointer-drag interaction are verified locally; 15 browser tests pass. Edge-of-office routes have unit coverage across 84 combinations. Alternate-angle visual acceptance remains open.
 3. Profile scene mesh/material counts and address the large Babylon bundle with measured changes.
 4. Keep PR #2 Draft and unmerged unless explicitly requested.
 5. Keep game saves device-local; Supabase remains identity-only.
