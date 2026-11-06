@@ -11,7 +11,7 @@ const state=loaded.state;
 syncObjectives(state);
 const game=new OfficeGame(canvas);
 for(const d of state.desks.slice(2))game.addDesk(d.x,d.z);
-game.syncWorkers(state.workers);
+game.syncWorkers(state.workers,false);
 let lang:Lang=localStorage.getItem('eoc-lang')==='fa'?'fa':navigator.language.toLowerCase().startsWith('fa')?'fa':'en';
 let buildMode=false,accountEmail:string|null=null,authMessage='',authMode:'signin'|'signup'='signin';
 let lastTick=Date.now();
