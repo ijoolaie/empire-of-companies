@@ -6,11 +6,11 @@ Last verified: 2026-11-06
 - GitHub: https://github.com/ijoolaie/empire-of-companies
 - Default branch: main; P2 merge: 06ebb5c.
 - Development branch: feat/p3-progression-ux.
-- Latest verified remote head before current local work: 7a1c861. CI run #55 (42170042512) passed, including Chromium browser regression.
-- Current local work adds desk-obstacle-aware arrival route planning; local tests, production build and browser regression pass.
+- Latest pushed head: 87c3939. CI run #56 (42174090774) is in progress.
+- Desk-obstacle-aware arrival route planning is committed and pushed; local tests, production build and browser regression pass.
 - New hires walk from the open side of the office toward their assigned desk for 1.6 seconds, swing their arms/legs, then transition into seated typing. Restored employees remain seated on reload.
 - PR #2: https://github.com/ijoolaie/empire-of-companies/pull/2 (open, Draft, not merged).
-- GitHub Actions run #55 (42170042512) passed for head 7a1c861.
+- GitHub Actions run #55 (42170042512) passed for prior head 7a1c861; run #56 (42174090774) is validating 87c3939.
 - Local clone: C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies.
 
 ## Phase status
@@ -49,7 +49,7 @@ Last verified: 2026-11-06
 - CI run #36 (42107749624) passed for 2146410.
 - CI run #37 (42108774779) passed for 7019cdc.
 - CI run #38 (42108661210) passed for 8c445bc.
-- CI run #40 (42109392998) passed for historical commit 1991369. Current head 7a1c861 passed CI run #55 (42170042512), including Chromium browser regression.
+- CI run #40 (42109392998) passed for historical commit 1991369. Head 7a1c861 passed CI run #55 (42170042512); head 87c3939 is under CI run #56 (42174090774).
 - Automated tests verify model synchronization and mesh counts; manual Chromium review separately verified that the worker is visible in the 1280x720 default camera view after the angle correction.
 
 ## Open

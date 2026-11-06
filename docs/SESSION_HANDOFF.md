@@ -16,8 +16,8 @@ Continue Empire of Companies: https://github.com/ijoolaie/empire-of-companies
 
 ## Repository
 - Branch: feat/p3-progression-ux.
-- Latest previously pushed head: 7a1c861; CI run #55 (42170042512) passed.
-- Current local changes: deterministic local arrival routes are selected around nearby desk footprints; 3 pure navigation tests added.
+- Latest pushed head: 87c3939; CI run #56 (42174090774) is in progress.
+- Committed and pushed: deterministic local arrival routes are selected around nearby desk footprints; 3 pure navigation tests added.
 - Local verification: 17 unit tests, build, 10 browser tests and diff check pass.
 - PR #2: https://github.com/ijoolaie/empire-of-companies/pull/2.
 - CI run #40 (42109392998) passed for 1991369, including Chromium browser tests.
