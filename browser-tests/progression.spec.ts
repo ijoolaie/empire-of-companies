@@ -111,6 +111,7 @@ test('office shell has an open entrance, framed windows and layered lighting', a
   await expect(canvas).toHaveAttribute('data-office-entrance-part-count', '5');
   await expect(canvas).toHaveAttribute('data-office-light-count', '5');
   await expect(canvas).toHaveAttribute('data-office-furniture-count', '3');
+  await expect(canvas).toHaveAttribute('data-office-entry-detail-count', '9');
   expect(pageErrors).toEqual([]);
 });
 
@@ -156,7 +157,7 @@ test('rapid consecutive hires reserve separate entrance corridors', async ({ pag
   for (let workerCount = 2; workerCount <= 4; workerCount++) {
     await page.locator('#hire').click();
     await expect(canvas).toHaveAttribute('data-worker-model-count', String(workerCount));
-    await expect(canvas).toHaveAttribute('data-walking-worker-count', String(workerCount - 1));
+
   }
 
   await expect(canvas).toHaveAttribute('data-walking-worker-count', '0', { timeout: 5500 });

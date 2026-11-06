@@ -51,6 +51,20 @@ export class OfficeGame {
    const board=MeshBuilder.CreateBox(name,{width,height:.12,depth},this.scene);board.position.set(x,.16,z);board.material=baseboard;
   }
   const entranceSign=MeshBuilder.CreateBox('entrance-sign',{width:1.15,height:.24,depth:.06},this.scene);entranceSign.position.set(0,2.32,3.82);entranceSign.material=trim;
+  // A simple three-bar emblem gives the entrance sign a readable focal point without text or external assets.
+  const emblem=mat('entrance-emblem',new Color3(.82,.68,.42));
+  for(const [index,height] of [.09,.15,.12].entries()){
+   const bar=MeshBuilder.CreateBox('sign-emblem-bar',{width:.07,height,depth:.025},this.scene);bar.position.set((index-1)*.16,2.32,3.775);bar.material=emblem;
+  }
+  // Keep the entry mat nearly flush with the floor so it cannot obstruct worker arrival paths.
+  const entryMat=MeshBuilder.CreateGround('entry-mat',{width:1.85,height:.62},this.scene);entryMat.position.set(0,.078,3.42);entryMat.material=mat('entry-mat-fabric',new Color3(.19,.27,.34));
+  const entryMatTrim=mat('entry-mat-trim',new Color3(.72,.61,.43));
+  for(const [name,width,depth,x,z] of [
+   ['entry-mat-front',1.85,.035,0,3.11],['entry-mat-back',1.85,.035,0,3.73],
+   ['entry-mat-left',.035,.62,-.91,3.42],['entry-mat-right',.035,.62,.91,3.42]
+  ] as const){const edge=MeshBuilder.CreateBox(name,{width,height:.018,depth},this.scene);edge.position.set(x,.09,z);edge.material=entryMatTrim;}
+  const entryMatStripe=MeshBuilder.CreateBox('entry-mat-stripe',{width:.055,height:.018,depth:.42},this.scene);entryMatStripe.position.set(0,.09,3.42);entryMatStripe.material=entryMatTrim;
+  canvas.setAttribute('data-office-entry-detail-count','9');
   // Compact storage and wall accents add office identity without intruding into worker routes.
   const bookcaseMat=mat('bookcase-wood',new Color3(.43,.32,.24));
   const bookcase=MeshBuilder.CreateBox('office-bookcase',{width:.48,height:.92,depth:1.65},this.scene);bookcase.position.set(4.48,.54,-.55);bookcase.material=bookcaseMat;
@@ -73,7 +87,7 @@ export class OfficeGame {
   const environmentCounts={
    walls:this.scene.meshes.filter(mesh=>['back-wall','side-wall','right-wall','front-wall-left','front-wall-right'].includes(mesh.name)).length,
    windows:this.scene.meshes.filter(mesh=>mesh.name==='window-pane').length,
-   entrance:this.scene.meshes.filter(mesh=>mesh.name.startsWith('entrance-')||mesh.name==='entrance-jamb'||mesh.name==='entrance-threshold').length,
+   entrance:this.scene.meshes.filter(mesh=>['entrance-header','entrance-sign','entrance-jamb','entrance-threshold'].includes(mesh.name)).length,
    lights:this.scene.lights.length
   };
   canvas.setAttribute('data-office-wall-segment-count',String(environmentCounts.walls));

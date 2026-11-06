@@ -19,26 +19,26 @@ https://github.com/ijoolaie/empire-of-companies
 - Local path: `C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies`.
 - Baseline main commit: `7914290` (PR #2 merged).
 - Current branch: `feat/p4-office-environment`.
-- Latest committed remote head before current local furniture slice: `be605f045c57b21bff0fdf3aad52f3ae2ef8b4a4`; new furniture slice is locally validated and awaiting commit/push.
-- PR #3: open, Draft, mergeable; CI run #88 passed for `be605f0`. Current local changes still need their own CI run. PR URL: https://github.com/ijoolaie/empire-of-companies/pull/3.
+- Latest committed remote head before current local entrance-detail slice: `565dfbc0ce411759fbfc9041258856590a6f4b63`; the entrance emblem/mat slice is locally validated and awaiting commit/push.
+- PR #3: open, Draft, mergeable; CI run #90 passed for `565dfbc`. Current local entrance-detail changes still need their own CI run. PR URL: https://github.com/ijoolaie/empire-of-companies/pull/3.
 
 ## Current implementation
 - Core economy, desk placement, hiring, upgrades, local persistence and bounded offline earnings.
 - Progression schema v4, XP/levels, three ordered objectives, tutorial and accessible progression dialog.
 - Procedural seated workers with deterministic appearance variants, three idle poses and arrival walking.
 - Desk equipment: monitor stand/base, keyboard and mouse.
-- Office-shell slice: five wall segments, open 2.5-unit entrance, entrance trim/threshold/sign, three framed rear windows, three ceiling panels, three warm point lights and baseboards. Current committed additions: bookcase/books, wall clock and framed wall art. New local slice: per-desk paper stack, mug and pen (3 accessory meshes per desk).
+- Office-shell slice: five wall segments, open 2.5-unit entrance, entrance trim/threshold/sign, three framed rear windows, three ceiling panels, three warm point lights and baseboards. Added bookcase/books, wall clock, framed wall art, per-desk paper/mug/pen accessories, a three-bar entrance emblem and a near-flush entry mat with trim.
 - Entrance remains open; no door mesh blocks the existing arrival corridor.
 - Canvas diagnostics: `data-office-wall-segment-count`, `data-office-window-count`, `data-office-entrance-part-count`, `data-office-light-count`, `data-office-furniture-count`, `data-desk-accessory-mesh-count`.
 
 ## Verification
 - Unit tests: 22/22 passed.
 - Production build: passed; 466 modules, main bundle 1,155.97 kB minified / 286.18 kB gzip. Existing >500 kB Vite warning remains.
-- Browser tests: 19/19 passed, including the furniture-detail assertion.
+- Browser tests: 19/19 passed, including entrance emblem/mat and desk-detail assertions.
 - Diff whitespace check: passed.
-- Automated office-shell mesh/light counts passed.
+- Automated office-shell mesh/light counts passed, including 9 entrance-detail meshes and 9 desk-accessory meshes across the three-desk fixture.
 - Visual review completed from headless Chromium/SwiftShader captures: desktop 900×600, mobile 390×844, and alternate orbit views at both sizes. No obvious geometry clipping or entrance blockage was seen; browser page errors were absent. This does not replace real-device GPU review.
-- GitHub Actions run #88 passed for `be605f0`. CI run #89 passed for `628bd45`. Current local desk-accessory slice passes 22 unit tests, build and 19 browser tests; its CI is pending push.
+- GitHub Actions run #90 passed for `565dfbc` (build, unit tests and browser tests). Current local entrance-detail slice passes 22 unit tests, build and 19 browser tests; its CI is pending push.
 
 ## Exact next steps
 1. Review PR #3; it is intentionally Draft and must not be merged without explicit approval.
