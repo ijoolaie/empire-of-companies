@@ -51,6 +51,19 @@ export class OfficeGame {
    const board=MeshBuilder.CreateBox(name,{width,height:.12,depth},this.scene);board.position.set(x,.16,z);board.material=baseboard;
   }
   const entranceSign=MeshBuilder.CreateBox('entrance-sign',{width:1.15,height:.24,depth:.06},this.scene);entranceSign.position.set(0,2.32,3.82);entranceSign.material=trim;
+  // Compact storage and wall accents add office identity without intruding into worker routes.
+  const bookcaseMat=mat('bookcase-wood',new Color3(.43,.32,.24));
+  const bookcase=MeshBuilder.CreateBox('office-bookcase',{width:.48,height:.92,depth:1.65},this.scene);bookcase.position.set(4.48,.54,-.55);bookcase.material=bookcaseMat;
+  const shelfMat=mat('bookcase-shelf',new Color3(.66,.53,.39));
+  for(const y of [.3,.62,.94]){const shelf=MeshBuilder.CreateBox('bookcase-shelf',{width:.55,height:.055,depth:1.72},this.scene);shelf.position.set(4.2,y,-.55);shelf.material=shelfMat;}
+  const bookColors=[new Color3(.62,.25,.2),new Color3(.2,.38,.52),new Color3(.78,.61,.3),new Color3(.24,.43,.34)];
+  for(let i=0;i<8;i++){const book=MeshBuilder.CreateBox('bookcase-book',{width:.12,height:.24+(i%3)*.035,depth:.16},this.scene);book.position.set(4.18,.43+(i%2)*.32,-1.18+i*.18);book.material=mat('book-'+i,bookColors[i%bookColors.length]);}
+  const clockFace=mat('wall-clock-face',new Color3(.94,.91,.82));
+  const clock=MeshBuilder.CreateCylinder('office-wall-clock',{diameter:.62,height:.08,tessellation:24},this.scene);clock.rotation.x=Math.PI/2;clock.position.set(3.25,1.72,-3.82);clock.material=clockFace;
+  const clockHand=MeshBuilder.CreateBox('wall-clock-hand',{width:.025,height:.22,depth:.025},this.scene);clockHand.position.set(3.25,1.78,-3.75);clockHand.material=trim;
+  const artFrame=MeshBuilder.CreateBox('office-wall-art-frame',{width:.08,height:.92,depth:1.2},this.scene);artFrame.position.set(-4.86,1.55,-1.65);artFrame.material=trim;
+  const artPanel=MeshBuilder.CreateBox('office-wall-art-panel',{width:.035,height:.78,depth:1.06},this.scene);artPanel.position.set(-4.8,1.55,-1.65);artPanel.material=mat('wall-art',new Color3(.3,.52,.58));
+  canvas.setAttribute('data-office-furniture-count','3');
   const warmLight=new Color3(1,.88,.7);
   for(const [index,x,z] of [[0,-2.8,-.8],[1,2.8,-.8],[2,0,2.4]] as const){
    const lamp=new PointLight('office-fill-'+index,new Vector3(x,2.1,z),this.scene);lamp.diffuse=warmLight;lamp.intensity=.22;lamp.range=8;
@@ -58,7 +71,7 @@ export class OfficeGame {
   const ceilingPanel=mat('ceiling-panel',new Color3(.88,.91,.93));
   for(const x of [-3,0,3]){const panel=MeshBuilder.CreateBox('ceiling-light-panel',{width:1.05,height:.045,depth:.38},this.scene);panel.position.set(x,2.26,.2);panel.material=ceilingPanel;}
   const environmentCounts={
-   walls:this.scene.meshes.filter(mesh=>mesh.name.includes('wall')).length,
+   walls:this.scene.meshes.filter(mesh=>['back-wall','side-wall','right-wall','front-wall-left','front-wall-right'].includes(mesh.name)).length,
    windows:this.scene.meshes.filter(mesh=>mesh.name==='window-pane').length,
    entrance:this.scene.meshes.filter(mesh=>mesh.name.startsWith('entrance-')||mesh.name==='entrance-jamb'||mesh.name==='entrance-threshold').length,
    lights:this.scene.lights.length
@@ -177,7 +190,7 @@ export class OfficeGame {
   while(this.workers.length<target){
    const index=this.workers.length,desk=this.desks[index],worker=new TransformNode('worker-'+(index+1),this.scene);
    worker.parent=desk;
-   const fixedObstacles=[{x:-4,z:3,halfWidth:.48,halfDepth:.48},{x:4,z:-2,halfWidth:.48,halfDepth:.48},{x:-5,z:0,halfWidth:.09,halfDepth:4},{x:0,z:-4,halfWidth:5,halfDepth:.09}];
+   const fixedObstacles=[{x:-4,z:3,halfWidth:.48,halfDepth:.48},{x:4,z:-2,halfWidth:.48,halfDepth:.48},{x:4.48,z:-.55,halfWidth:.38,halfDepth:.95},{x:-5,z:0,halfWidth:.09,halfDepth:4},{x:0,z:-4,halfWidth:5,halfDepth:.09}];
    if(animateNewWorkers){
     this.workers.forEach((existing,existingIndex)=>{
      if(performance.now()-this.workerWalkStartedAt[existingIndex]>=1600)return;

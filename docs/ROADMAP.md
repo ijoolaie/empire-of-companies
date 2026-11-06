@@ -30,9 +30,9 @@ Onboarding/tutorial, ordered milestones, XP/levels, rewards, Persian/English, re
 
 ### P4 — Content and visual identity (active)
 - Procedural workers, appearance variants, arrival/idle animations and desk equipment are implemented.
-- Current slice adds an office shell with side/front walls, a clear entrance, framed windows, trim, ceiling panels and warm fill lights.
+- Current slice adds an office shell with side/front walls, a clear entrance, framed windows, trim, ceiling panels, warm fill lights, a bookcase/books, a wall clock and framed wall art.
 - Headless Chromium/SwiftShader screenshots were reviewed at desktop (900×600) and mobile (390×844), including alternate orbit views; no obvious geometry clipping or entrance obstruction was observed. Real-device GPU review remains open.
-- Next: iterate on office furniture, environmental detail and visual hierarchy, validating each slice at desktop/mobile sizes and alternate camera angles.
+- Next: refine furniture layout, visual hierarchy, lighting and material contrast, validating each slice at desktop/mobile sizes and alternate camera angles.
 - Exit: coherent visual content slice, acceptable performance and documented asset provenance.
 
 ### P5 — Account and settings

@@ -19,29 +19,29 @@ https://github.com/ijoolaie/empire-of-companies
 - Local path: `C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies`.
 - Baseline main commit: `7914290` (PR #2 merged).
 - Current branch: `feat/p4-office-environment`.
-- Latest commit: `92a05fa` (`feat: build out procedural office environment`), pushed to `origin/feat/p4-office-environment`.
-- PR #3: open, Draft, mergeable; CI run #86 passed. PR URL: https://github.com/ijoolaie/empire-of-companies/pull/3.
+- Latest committed remote head before current local furniture slice: `be605f045c57b21bff0fdf3aad52f3ae2ef8b4a4`; new furniture slice is locally validated and awaiting commit/push.
+- PR #3: open, Draft, mergeable; CI run #88 passed for `be605f0`. Current local changes still need their own CI run. PR URL: https://github.com/ijoolaie/empire-of-companies/pull/3.
 
 ## Current implementation
 - Core economy, desk placement, hiring, upgrades, local persistence and bounded offline earnings.
 - Progression schema v4, XP/levels, three ordered objectives, tutorial and accessible progression dialog.
 - Procedural seated workers with deterministic appearance variants, three idle poses and arrival walking.
 - Desk equipment: monitor stand/base, keyboard and mouse.
-- Office-shell slice on current branch: five wall segments, open 2.5-unit entrance, entrance trim/threshold/sign, three framed rear windows, three ceiling panels, three warm point lights and baseboards.
+- Office-shell slice: five wall segments, open 2.5-unit entrance, entrance trim/threshold/sign, three framed rear windows, three ceiling panels, three warm point lights and baseboards. Current local addition: bookcase/books, wall clock and framed wall art.
 - Entrance remains open; no door mesh blocks the existing arrival corridor.
-- Canvas diagnostics: `data-office-wall-segment-count`, `data-office-window-count`, `data-office-entrance-part-count`, `data-office-light-count`.
+- Canvas diagnostics: `data-office-wall-segment-count`, `data-office-window-count`, `data-office-entrance-part-count`, `data-office-light-count`, `data-office-furniture-count`.
 
 ## Verification
 - Unit tests: 22/22 passed.
-- Production build: passed; 466 modules, main bundle 1,154.46 kB minified / 285.72 kB gzip. Existing >500 kB Vite warning remains.
-- Browser tests: 19/19 passed.
+- Production build: passed; 466 modules, main bundle 1,155.97 kB minified / 286.18 kB gzip. Existing >500 kB Vite warning remains.
+- Browser tests: 19/19 passed, including the furniture-detail assertion.
 - Diff whitespace check: passed.
 - Automated office-shell mesh/light counts passed.
 - Visual review completed from headless Chromium/SwiftShader captures: desktop 900×600, mobile 390×844, and alternate orbit views at both sizes. No obvious geometry clipping or entrance blockage was seen; browser page errors were absent. This does not replace real-device GPU review.
-- GitHub Actions run #86 passed. Run #87 exposed two timing-sensitive browser-test limits; test waits were made more tolerant (worker arrival 12s; profiler sample 45s with 90s test timeout). Local browser suite passed 19/19 after adjustment; CI for the updated head is pending.
+- GitHub Actions run #88 passed for `be605f0`. The current local furniture slice passes 22 unit tests, build and 19 browser tests; its CI is pending push.
 
 ## Exact next steps
 1. Review PR #3; it is intentionally Draft and must not be merged without explicit approval.
 2. Continue P4 with richer office furniture and environmental polish, maintaining desktop/mobile and alternate-angle checks.
-3. Schedule real-device GPU review when a physical test environment is available.
+3. Perform real-device GPU review when a physical test environment is available.
 4. Keep business simulation, Supabase Auth, PWA and Android work in their planned phases.
