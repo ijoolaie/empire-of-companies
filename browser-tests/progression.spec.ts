@@ -74,6 +74,7 @@ test('progression rewards are granted once and persist after reload', async ({ p
   const restored = await page.evaluate(key => JSON.parse(localStorage.getItem(key)), SAVE_KEY);
   expect(restored.cash).toBeGreaterThanOrEqual(cashAfterCompletion);
   expect(restored.completedObjectives).toHaveLength(3);
+  await expect(page.locator('#game')).toHaveAttribute('data-walking-worker-count', '0');
   expect(pageErrors).toEqual([]);
 });
 

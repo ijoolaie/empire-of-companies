@@ -42,13 +42,16 @@ export class OfficeGame {
     if(progress<1){
      walkingCount++;
      const stride=Math.sin(time*10+index*.9);
-     worker.position.z=2.1*(1-progress);
+     const eased=progress*progress*(3-2*progress);
+     const approachSide=index%2===0?1:-1;
+     worker.position.z=2.1*(1-eased);
+     worker.position.x=Math.sin(Math.PI*progress)*.55*approachSide;
      const legs=this.workerLegs[index],arms=this.workerArms[index];
      if(legs){legs[0].rotation.x=stride*.38;legs[1].rotation.x=-stride*.38;legs[0].position.z=.48+stride*.08;legs[1].position.z=.48-stride*.08;}
      if(arms){arms[0].rotation.x=Math.PI/2-stride*.28;arms[1].rotation.x=Math.PI/2+stride*.28;}
      return;
     }
-    worker.position.z=0;
+    worker.position.x=0;worker.position.z=0;
     const legs=this.workerLegs[index],arms=this.workerArms[index];
     if(legs){legs[0].rotation.x=Math.PI/2;legs[1].rotation.x=Math.PI/2;legs[0].position.z=.48;legs[1].position.z=.48;}
     if(arms){
