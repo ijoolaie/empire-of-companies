@@ -44,6 +44,7 @@ test('progression rewards are granted once and persist after reload', async ({ p
   await page.goto('/');
   await expect(page.locator('#game')).toHaveAttribute('data-worker-model-count', '1');
   await expect(page.locator('#game')).toHaveAttribute('data-worker-leg-mesh-count', '6');
+  const materialCountBeforeHire = await page.locator('#game').getAttribute('data-scene-material-count');
 
   const rows = page.locator('.objectives .objective');
   await expect(rows.nth(0)).toHaveClass(/is-complete/);
@@ -52,6 +53,7 @@ test('progression rewards are granted once and persist after reload', async ({ p
   await page.locator('#hire').click();
   await expect(page.locator('#game')).toHaveAttribute('data-worker-model-count', '2');
   await expect(page.locator('#game')).toHaveAttribute('data-worker-leg-mesh-count', '12');
+  await expect(page.locator('#game')).toHaveAttribute('data-scene-material-count', String(Number(materialCountBeforeHire) + 1));
   await expect(rows.nth(1)).toHaveClass(/is-complete/);
   await expect(page.locator('.progress-heading')).toContainText('50 / 100 XP');
 
@@ -71,6 +73,25 @@ test('progression rewards are granted once and persist after reload', async ({ p
   expect(restored.cash).toBeGreaterThanOrEqual(cashAfterCompletion);
   expect(restored.completedObjectives).toHaveLength(3);
   expect(pageErrors).toEqual([]);
+});
+
+test('worker material variants are reused instead of allocating one material set per employee', async ({ page }) => {
+  await seedSave(page, {
+    version: 4, cash: 100000, workers: 1, level: 1,
+    desks: [{ x: -2, z: -1 }, { x: 1, z: -1 }, { x: 4, z: 2 }, { x: -4, z: 2 }, { x: 0, z: 3 }],
+    lifetimeEarned: 0, lastSavedAt: Date.now(),
+    playerXp: 0, completedObjectives: [], tutorialDismissed: true
+  });
+  await page.goto('/');
+  const canvas = page.locator('#game');
+  const initialMaterials = Number(await canvas.getAttribute('data-scene-material-count'));
+
+  for (let workerCount = 2; workerCount <= 5; workerCount++) {
+    await page.locator('#hire').click();
+    await expect(canvas).toHaveAttribute('data-worker-model-count', String(workerCount));
+    const expectedMaterials = initialMaterials + Math.min(workerCount - 1, 3);
+    await expect(canvas).toHaveAttribute('data-scene-material-count', String(expectedMaterials));
+  }
 });
 
 test('offline earnings are shown after restoring a saved game', async ({ page }) => {

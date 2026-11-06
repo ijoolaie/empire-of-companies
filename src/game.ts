@@ -11,7 +11,7 @@ import {TransformNode} from '@babylonjs/core/Meshes/transformNode';
 import {PointerEventTypes} from '@babylonjs/core/Events/pointerEvents';
 
 export class OfficeGame {
- engine:Engine; scene:Scene; camera:ArcRotateCamera; floor:any; desks:TransformNode[]=[]; workers:TransformNode[]=[]; workerArms:Array<[any,any]>=[]; placing=false; onFloorTap?:(x:number,z:number)=>boolean;
+ engine:Engine; scene:Scene; camera:ArcRotateCamera; floor:any; desks:TransformNode[]=[]; workers:TransformNode[]=[]; workerArms:Array<[any,any]>=[]; materials:Record<string,StandardMaterial>={}; placing=false; onFloorTap?:(x:number,z:number)=>boolean;
  constructor(canvas:HTMLCanvasElement){
   this.engine=new Engine(canvas,true,{preserveDrawingBuffer:false,stencil:true,adaptToDeviceRatio:true});
   this.scene=new Scene(this.engine);this.scene.clearColor=new Color4(.72,.83,.91,1);
@@ -19,7 +19,7 @@ export class OfficeGame {
   this.camera.lowerRadiusLimit=10;this.camera.upperRadiusLimit=22;this.camera.wheelPrecision=45;this.camera.panningSensibility=90;this.camera.attachControl(canvas,true);
   new HemisphericLight('ambient',new Vector3(0,1,0),this.scene).intensity=.85;
   const sun=new DirectionalLight('sun',new Vector3(-.5,-1,.4),this.scene);sun.position=new Vector3(8,12,-8);sun.intensity=.55;
-  const mat=(name:string,c:Color3)=>{const m=new StandardMaterial(name,this.scene);m.diffuseColor=c;return m};
+  const mat=(name:string,c:Color3)=>this.getMaterial(name,c);
   const ground=MeshBuilder.CreateGround('ground',{width:22,height:18},this.scene);ground.material=mat('groundmat',new Color3(.55,.62,.64));
   this.floor=MeshBuilder.CreateGround('office-floor',{width:10,height:8},this.scene);this.floor.position.y=.04;this.floor.material=mat('tile',new Color3(.72,.78,.83));
   const wall=mat('wall',new Color3(.82,.87,.9));
@@ -40,13 +40,13 @@ export class OfficeGame {
  }
  addDesk(x:number,z:number){
   const root=new TransformNode('desk-root',this.scene);root.position.set(x,.08,z);
-  const wood=new StandardMaterial('deskwood',this.scene);wood.diffuseColor=new Color3(.88,.9,.91);
+  const wood=this.getMaterial('deskwood',new Color3(.88,.9,.91));
   const top=MeshBuilder.CreateBox('desk-top',{width:1.5,height:.13,depth:.75},this.scene);top.parent=root;top.position.y=.85;top.material=wood;
   for(const dx of [-.62,.62])for(const dz of [-.25,.25]){const leg=MeshBuilder.CreateBox('desk-leg',{width:.08,height:.82,depth:.08},this.scene);leg.parent=root;leg.position.set(dx,.41,dz);leg.material=wood;}
-  const chair=new StandardMaterial('chair',this.scene);chair.diffuseColor=new Color3(.12,.24,.38);
+  const chair=this.getMaterial('chair',new Color3(.12,.24,.38));
   const seat=MeshBuilder.CreateBox('chair-seat',{width:.62,height:.13,depth:.62},this.scene);seat.parent=root;seat.position.set(0,.53,.72);seat.material=chair;
   const backrest=MeshBuilder.CreateBox('chair-back',{width:.62,height:.62,depth:.12},this.scene);backrest.parent=root;backrest.position.set(0,.88,1.0);backrest.material=chair;
-  const monitor=MeshBuilder.CreateBox('monitor',{width:.65,height:.42,depth:.07},this.scene);monitor.parent=root;monitor.position.set(0,1.2,-.12);const screen=new StandardMaterial('screen',this.scene);screen.diffuseColor=new Color3(.035,.07,.12);monitor.material=screen;
+  const monitor=MeshBuilder.CreateBox('monitor',{width:.65,height:.42,depth:.07},this.scene);monitor.parent=root;monitor.position.set(0,1.2,-.12);const screen=this.getMaterial('screen',new Color3(.035,.07,.12));monitor.material=screen;
   this.desks.push(root);return root;
  }
  syncWorkers(count:number){
@@ -55,11 +55,12 @@ export class OfficeGame {
   while(this.workers.length<target){
    const index=this.workers.length,desk=this.desks[index],worker=new TransformNode('worker-'+(index+1),this.scene);
    worker.parent=desk;
-   const skin=new StandardMaterial('worker-skin-'+index,this.scene);skin.diffuseColor=new Color3(.78,.55,.39);
-   const shirt=new StandardMaterial('worker-shirt-'+index,this.scene);shirt.diffuseColor=[new Color3(.16,.48,.72),new Color3(.22,.58,.43),new Color3(.62,.36,.68),new Color3(.78,.48,.2)][index%4];
-   const hair=new StandardMaterial('worker-hair-'+index,this.scene);hair.diffuseColor=new Color3(.12,.1,.1);
-   const trousers=new StandardMaterial('worker-trousers-'+index,this.scene);trousers.diffuseColor=new Color3(.12,.19,.27);
-   const shoes=new StandardMaterial('worker-shoes-'+index,this.scene);shoes.diffuseColor=new Color3(.055,.065,.075);
+   const skin=this.getMaterial('worker-skin',new Color3(.78,.55,.39));
+   const shirtColors=[new Color3(.16,.48,.72),new Color3(.22,.58,.43),new Color3(.62,.36,.68),new Color3(.78,.48,.2)];
+   const shirt=this.getMaterial('worker-shirt-'+(index%shirtColors.length),shirtColors[index%shirtColors.length]);
+   const hair=this.getMaterial('worker-hair',new Color3(.12,.1,.1));
+   const trousers=this.getMaterial('worker-trousers',new Color3(.12,.19,.27));
+   const shoes=this.getMaterial('worker-shoes',new Color3(.055,.065,.075));
    const torso=MeshBuilder.CreateCylinder('worker-torso-'+index,{height:.48,diameterTop:.34,diameterBottom:.42,tessellation:8},this.scene);torso.parent=worker;torso.position.set(0,1.03,.65);torso.material=shirt;
    const head=MeshBuilder.CreateSphere('worker-head-'+index,{diameter:.34,segments:10},this.scene);head.parent=worker;head.position.set(0,1.43,.55);head.material=skin;
    const hairCap=MeshBuilder.CreateSphere('worker-hair-'+index,{diameter:.35,segments:8},this.scene);hairCap.parent=worker;hairCap.scaling.y=.48;hairCap.position.set(0,1.57,.55);hairCap.material=hair;
@@ -78,5 +79,14 @@ export class OfficeGame {
   }
   this.engine.getRenderingCanvas()?.setAttribute('data-worker-model-count',String(this.workers.length));
   this.engine.getRenderingCanvas()?.setAttribute('data-worker-leg-mesh-count',String(this.workers.length*6));
+  this.engine.getRenderingCanvas()?.setAttribute('data-scene-material-count',String(this.scene.materials.length));
+ }
+ getMaterial(name:string,color:Color3){
+  const existing=this.materials[name];
+  if(existing)return existing;
+  const material=new StandardMaterial(name,this.scene);
+  material.diffuseColor=color;
+  this.materials[name]=material;
+  return material;
  }
 }

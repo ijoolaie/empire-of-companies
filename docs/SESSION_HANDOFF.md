@@ -16,9 +16,9 @@ Continue Empire of Companies: https://github.com/ijoolaie/empire-of-companies
 
 ## Repository
 - Branch: feat/p3-progression-ux.
-- Latest implementation commit: d662645 — perf: narrow Babylon imports and reduce bundle; a documentation-only handoff follow-up is also pushed.
-- One documentation-only local commit is pending push after a temporary GitHub connectivity failure; the implementation optimization commit is already pushed.
-- CI for the latest remote head has not yet been confirmed.
+- Latest remote commit: 6637a3f — docs: note pending handoff push; branch was synchronized before current material-reuse changes.
+- Current uncommitted changes: shared material cache in src/game.ts and a Playwright regression test for material reuse across five workers.
+- CI for latest remote head 6637a3f has not yet been confirmed.
 - PR #2: https://github.com/ijoolaie/empire-of-companies/pull/2.
 - CI run #40 (42109392998) passed for 1991369, including Chromium browser tests.
 - Local path: C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies.
@@ -29,13 +29,13 @@ P3 progression/usability remains active. P4 has started with an initial procedur
 - Hiring synchronizes the scene after the economy action succeeds.
 - Models use primitive Babylon meshes/materials, seated torso/arms, procedural thighs, lower legs and shoes, subtle body motion and typing/arm motion; desk chair backrests are added.
 - Lower-body coordinates were corrected so thighs, shins and shoes extend toward the desk rather than the rear of the chair.
-- Canvas data-worker-model-count and data-worker-leg-mesh-count are used by Playwright to verify initial/hired worker and leg/shoe mesh counts.
+- Canvas data-worker-model-count, data-worker-leg-mesh-count and data-scene-material-count are used by Playwright. Desk materials are cached; worker materials are shared, with four shirt palette variants. Five-worker browser coverage verifies the fifth worker reuses variant one without increasing material count.
 - No external assets or Blender.
 
 ## Local verification
 - npm test: 14/14 passed.
 - npm run build: passed.
-- npm run test:browser: 8/8 passed.
+- npm run test:browser: 9/9 passed.
 - git diff --check: passed.
 - Previous Babylon/main chunk: 6,026.40 kB minified / 1,322.29 kB gzip.
 - Current build after direct module imports: largest app chunk 1,141.33 kB minified / 281.81 kB gzip; >500 kB warning remains.
@@ -46,7 +46,7 @@ P3 progression/usability remains active. P4 has started with an initial procedur
 - Visual acceptance on a real browser display is still outstanding; automated checks do not prove model aesthetics.
 
 ## Exact next task
-Direct Babylon module imports are now in place and locally verified; run final checks, commit and push this optimization, then review CI. A screenshot-capable visual review of worker proportions/placement is still outstanding. Continue worker poses/variants and scene profiling only after visual review. Keep PR #2 Draft and unmerged.
+Direct Babylon module imports are pushed. Current local work caches and reuses Babylon materials across desks and workers, with a Playwright regression proving the material count stays bounded after five hires. All local checks currently pass (14 unit, build, 9 browser). Next: update docs/PR, commit and push this material optimization, then verify CI. A screenshot-capable visual review of worker proportions/placement is still outstanding. Keep PR #2 Draft and unmerged.
 
 ## Session update rule
 Update PROJECT_STATUS and SESSION_HANDOFF with verified facts after substantial work. Update ROADMAP/WBS when scope changes. Never claim a feature is complete solely because code was written.
