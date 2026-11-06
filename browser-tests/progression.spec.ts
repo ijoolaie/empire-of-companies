@@ -128,6 +128,7 @@ test('each office desk includes a monitor stand, base, keyboard and mouse', asyn
   });
   await page.goto('/');
   await expect(page.locator('#game')).toHaveAttribute('data-desk-detail-mesh-count', '12');
+  await expect(page.locator('#game')).toHaveAttribute('data-desk-storage-mesh-count', '6');
 });
 
 test('seated workers cycle through distinct typing, reviewing and thinking poses', async ({ page }) => {

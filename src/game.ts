@@ -220,9 +220,13 @@ export class OfficeGame {
   const mugMat=this.getMaterial('desk-mug',new Color3(.72,.78,.8));
   const mug=MeshBuilder.CreateCylinder('desk-mug',{height:.16,diameter:.13,tessellation:12},this.scene);mug.parent=root;mug.position.set(.53,1.02,-.16);mug.material=mugMat;
   const pen=MeshBuilder.CreateCylinder('desk-pen',{height:.2,diameter:.025,tessellation:8},this.scene);pen.parent=root;pen.rotation.z=.16;pen.position.set(-.48,1.04,.12);pen.material=peripherals;
+  const drawerMat=this.getMaterial('desk-drawer',new Color3(.56,.62,.66));
+  const drawer=MeshBuilder.CreateBox('desk-drawer-unit',{width:.32,height:.48,depth:.52},this.scene);drawer.parent=root;drawer.position.set(-.43,.42,-.02);drawer.material=drawerMat;
+  const drawerHandle=MeshBuilder.CreateBox('desk-drawer-handle',{width:.12,height:.025,depth:.035},this.scene);drawerHandle.parent=root;drawerHandle.position.set(-.43,.53,.26);drawerHandle.material=deskAccent;
   this.desks.push(root);
   this.engine.getRenderingCanvas()?.setAttribute('data-desk-detail-mesh-count',String(this.desks.length*4));
   this.engine.getRenderingCanvas()?.setAttribute('data-desk-accessory-mesh-count',String(this.desks.length*3));
+  this.engine.getRenderingCanvas()?.setAttribute('data-desk-storage-mesh-count',String(this.desks.length*2));
   return root;
  }
  syncWorkers(count:number,animateNewWorkers=true){

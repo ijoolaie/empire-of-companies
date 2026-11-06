@@ -7,7 +7,7 @@ Last verified: 2026-11-06
 - Default branch: `main`; latest merged baseline: `7914290` (PR #2).
 - Current work branch: `feat/p4-office-environment`.
 - Local workspace: `C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies`.
-- Latest local work adds a five-mesh waiting bench against the left wall, registers its footprint as a worker-navigation obstacle, and adds browser assertions. This slice is validated locally and is not yet committed or pushed.
+- Latest pushed commit `9915b33` adds the five-mesh waiting bench against the left wall and registers its footprint as a worker-navigation obstacle. Current local changes add two under-desk storage meshes per desk; validation is complete and this slice is not yet committed.
 
 ## Product decisions
 - Browser-first 3D office/company management game, Babylon.js + TypeScript + Vite.
@@ -30,19 +30,20 @@ Last verified: 2026-11-06
 - Added window mullions and sills to the three rear glass panes.
 - Added three ceiling light panels, three warm point fill lights and wall baseboards.
 - Reused cached materials for architectural trim and finish surfaces.
-- Added a compact bookcase with shelves and books, a wall clock, framed wall art, a cork notice board with three pinned notes, a five-mesh waiting bench against the left wall, and desk-level paper, mug and pen accessories. Bookcase and bench are registered as worker-path obstacles; desk accessories are attached to each desk.
+- Added a compact bookcase with shelves and books, a wall clock, framed wall art, a cork notice board with three pinned notes, a five-mesh waiting bench against the left wall, and desk-level paper, mug, pen and under-desk drawer storage. Bookcase and bench are registered as worker-path obstacles; desk accessories and storage are attached to each desk.
 - Added canvas diagnostics for wall segments, windows, structural entrance parts, scene light count, nine entrance emblem/mat detail meshes and eight notice-board meshes.
-- Added Playwright regressions asserting 5 wall segments, 3 windows, 5 structural entrance parts, 5 total lights, 4 office detail features, 8 notice-board meshes, 5 waiting-area meshes, 9 entry-detail meshes and 9 desk accessory meshes in the 3-desk fixture, with no browser page errors.
+- Added Playwright regressions asserting 5 wall segments, 3 windows, 5 structural entrance parts, 5 total lights, 4 office detail features, 8 notice-board meshes, 5 waiting-area meshes, 9 entry-detail meshes, 9 desk accessory meshes and 6 desk-storage meshes in the 3-desk fixture, with no browser page errors.
 - No external art assets introduced.
 
 ## Verification for this working branch
 - `npm test`: 22 passed, 0 failed.
 - `npm run build`: passed (466 modules; main JS 1,158.52 kB minified / 286.83 kB gzip). Existing Vite >500 kB chunk warning remains.
-- `npm run test:browser`: 19 passed, 0 failed, including office shell, desk accessories, notice board, waiting bench, entrance emblem and entry mat regressions.
+- `npm run test:browser`: 19 passed, 0 failed, including office shell, desk accessories and storage, notice board, waiting bench, entrance emblem and entry mat regressions.
 - `git diff --check`: passed.
 - Visual review: inspected desktop views at two orbit angles in headless Chromium/SwiftShader. Corrected the notice board to mount flat on the rear wall and moved the clock to the right wall to remove the placement conflict. Re-captured the scene after the fix; the wall-mount diagnostics report `rear-wall` and `right-wall`, with no browser page errors. This remains simulated-browser review, not physical-device/GPU acceptance.
 - GitHub Actions run #92 passed for code head `64e1e9b0771eeb8825c0c860aca1b56517534d96`: https://github.com/ijoolaie/empire-of-companies/actions/runs/42235641909
-- GitHub Actions run #93 passed for docs head `805069f4e4f2eda08aac5aac6959da74710aea10`: https://github.com/ijoolaie/empire-of-companies/actions/runs/42236137069
+- GitHub Actions run #95 passed for pushed head `9915b33659c61312daf15b5eee76194e4d1027b2`: https://github.com/ijoolaie/empire-of-companies/actions/runs/42242077806.
+- Waiting-bench slice passed CI and local tests. Under-desk storage slice: `npm test` 22/22, build passed (1,159.92 kB minified / 287.20 kB gzip; existing Vite chunk warning), browser tests 19/19, diff check passed.
 
 ## Next actions
 1. PR #3 is open as Draft; review the diff and keep it unmerged until explicitly approved.
