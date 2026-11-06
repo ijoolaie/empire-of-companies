@@ -1,6 +1,6 @@
 # Session Handoff — Read First
 
-Last updated: 2026-11-06 — CI #66 passed for three-hire routing across two desk layouts; cached worker path lengths to reduce per-frame work; local verification: 21 unit tests, build and 12 browser tests.
+Last updated: 2026-11-06 — committed path-length caching; local verification: 21 unit tests, build and 12 browser tests; CI #67 is in progress.
 
 ## Mission
 Continue Empire of Companies: https://github.com/ijoolaie/empire-of-companies
@@ -16,9 +16,8 @@ Continue Empire of Companies: https://github.com/ijoolaie/empire-of-companies
 
 ## Repository
 - Branch: feat/p3-progression-ux.
-- Latest pushed implementation/test head: 08e2cfa; CI run #66 (42180394613) passed.
-- Committed: shared-entrance A* routing with desk/planter/structural-wall obstacles, temporary active-worker corridor reservations, and rapid-hire coverage across two desk layouts.
-- Local uncommitted optimization: cache each worker path's segment lengths and total length at hire time instead of allocating/recalculating them every render.
+- Latest pushed implementation head: ad9d934; CI run #67 (42181556728) is in progress.
+- Committed: shared-entrance A* routing with desk/planter/structural-wall obstacles, temporary active-worker corridor reservations, rapid-hire coverage across two desk layouts, and cached route lengths.
 - Local verification: 21 unit tests, production build, 12 browser tests and diff check pass.
 - PR #2: https://github.com/ijoolaie/empire-of-companies/pull/2.
 - CI run #40 (42109392998) passed for 1991369, including Chromium browser tests.
@@ -47,7 +46,7 @@ P3 progression/usability remains active. P4 has started with an initial procedur
 - Manual Chromium screenshots at 1280x720 and 375x667 confirm the seated worker is visible in the default view. The mobile panel hides XP/objective details but keeps the tutorial and progression dialog reachable; alternate camera angles remain to review.
 
 ## Exact next task
-Commit and push the worker path-length caching optimization, then verify CI. Next review alternate camera angles and edge-of-office desk layouts. Keep PR #2 Draft and unmerged.
+Verify CI run #67 for the worker path-length caching optimization. Next review alternate camera angles and edge-of-office desk layouts. Keep PR #2 Draft and unmerged.
 
 ## Session update rule
 Update PROJECT_STATUS and SESSION_HANDOFF with verified facts after substantial work. Update ROADMAP/WBS when scope changes. Never claim a feature is complete solely because code was written.
