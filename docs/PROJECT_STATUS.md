@@ -6,8 +6,8 @@ Last verified: 2026-11-06
 - GitHub: https://github.com/ijoolaie/empire-of-companies
 - Default branch: main; P2 merge: 06ebb5c.
 - Development branch: feat/p3-progression-ux.
-- Latest pushed implementation commit: 31cc0a2 — fix: show seated workers in default camera view.
-- The material-reuse implementation is in 34a7150; 31cc0a2 corrects the default camera angle after manual visual review. CI for the new head is not yet confirmed.
+- Latest pushed implementation commit: f8ffa28 — fix: keep office scene visible on mobile.
+- Material reuse landed in 34a7150; camera correction in 31cc0a2; compact mobile panel and regression test in f8ffa28. CI for f8ffa28 is not yet confirmed.
 - PR #2: https://github.com/ijoolaie/empire-of-companies/pull/2 (open, Draft, not merged).
 - GitHub Actions run #40 (42109392998) passed for 1991369, including Chromium browser regression tests.
 - Local clone: C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies.
