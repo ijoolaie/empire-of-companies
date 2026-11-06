@@ -7,7 +7,7 @@ Last verified: 2026-11-06
 - Default branch: `main`; latest merged baseline: `7914290` (PR #2).
 - Current work branch: `feat/p4-office-environment`.
 - Local workspace: `C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies`.
-- Latest remote head: `805069f` (`docs: refresh office environment handoff`). Local branch has one additional unpushed commit, `7f97e5c` (`fix: align office wall decor`); push attempts failed because GitHub port 443 was unreachable. PR #3 remains open as Draft and unmerged; remote CI runs #92 and #93 passed.
+- Latest local head: `91878c7` (`fix: align office wall decor`); it is one commit ahead of remote `805069f` and not yet in PR #3. PR #3 remains open as Draft and unmerged; remote CI runs #92 and #93 passed for the previous remote head.
 
 ## Product decisions
 - Browser-first 3D office/company management game, Babylon.js + TypeScript + Vite.
