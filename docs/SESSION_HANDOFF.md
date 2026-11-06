@@ -16,7 +16,7 @@ Continue Empire of Companies: https://github.com/ijoolaie/empire-of-companies
 
 ## Repository
 - Branch: feat/p3-progression-ux.
-- Latest pushed branch head: bf23b0f; CI run #76 (42196373889) passed. Profiling is opt-in with `?profile=1`; local unit, build and 16 browser-test suites pass.
+- Latest code/test head: bf23b0f; CI run #76 (42196373889) passed. A subsequent documentation-only commit records the verified state. Profiling is opt-in with `?profile=1`; local unit, build and 16 browser-test suites pass.
 - Committed: shared-entrance A* routing with desk/planter/structural-wall obstacles, temporary active-worker corridor reservations, rapid-hire coverage across two desk layouts, cached route lengths, and 84 edge-of-office desk/lane regression combinations.
 - Local verification after profiling instrumentation: 22 unit tests, production build, 16 browser tests and diff check pass.
 - PR #2: https://github.com/ijoolaie/empire-of-companies/pull/2.
