@@ -6,7 +6,7 @@ Last verified: 2026-11-06
 - GitHub: https://github.com/ijoolaie/empire-of-companies
 - Default branch: main; P2 merge: 06ebb5c.
 - Development branch: feat/p3-progression-ux.
-- Latest pushed head at render-loop cleanup: b29e0b1; CI run #72 (42186991889) passed. A subsequent local camera-drag regression test passes; local verification now: 22 unit tests, production build, 15 browser tests and diff check.
+- Latest pushed head: 3c6d180; CI run #72 (42186991889) passed for prior head b29e0b1. CI run #73 (42188157426) is running for 3c6d180. Local verification at 3c6d180: 22 unit tests, production build, 15 browser tests and diff check.
 - A* arrival routing starts at a shared office entrance and avoids desk, planter, and structural wall footprints; eight navigation tests cover entrance routing, fixed obstacles, blocked entrance fallback, deterministic routing, office bounds, alternate entry lanes around a reserved worker route, and 84 edge-desk/entrance-lane combinations. Active worker routes are reserved for later hires; the 12th browser test verifies three rapid arrivals in two desk layouts and checks each gets a non-fallback path.
 - New hires walk from the open side of the office toward their assigned desk for 1.6 seconds, swing their arms/legs, then transition into seated typing. Restored employees remain seated on reload.
 - PR #2: https://github.com/ijoolaie/empire-of-companies/pull/2 (open, Draft, not merged).

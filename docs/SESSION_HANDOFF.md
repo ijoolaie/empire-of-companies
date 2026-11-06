@@ -1,6 +1,6 @@
 # Session Handoff — Read First
 
-Last updated: 2026-11-06 — CI #71 passed for c4702eb; render-loop allocation cleanup verified locally (22 unit, build, 14 browser tests).
+Last updated: 2026-11-06 — CI #72 passed for b29e0b1; camera pointer-drag test added; latest head 3c6d180 has 22 unit and 15 browser tests passing locally, CI #73 running.
 
 ## Mission
 Continue Empire of Companies: https://github.com/ijoolaie/empire-of-companies
@@ -16,7 +16,7 @@ Continue Empire of Companies: https://github.com/ijoolaie/empire-of-companies
 
 ## Repository
 - Branch: feat/p3-progression-ux.
-- Latest pushed branch head before render-loop cleanup: c4702eb; CI run #71 (42185532580) passed, including build, unit tests and all 14 browser regression tests.
+- Latest pushed branch head: 3c6d180; CI run #72 (42186991889) passed for b29e0b1. CI run #73 (42188157426) is running for 3c6d180.
 - Committed: shared-entrance A* routing with desk/planter/structural-wall obstacles, temporary active-worker corridor reservations, rapid-hire coverage across two desk layouts, cached route lengths, and 84 edge-of-office desk/lane regression combinations.
 - Local verification after camera constraints and viewport coverage: 22 unit tests, production build, 14 browser tests and diff check pass.
 - PR #2: https://github.com/ijoolaie/empire-of-companies/pull/2.
@@ -35,7 +35,7 @@ P3 progression/usability remains active. P4 has started with an initial procedur
 ## Local verification
 - npm test: 22/22 passed, including eight navigation-planner tests.
 - npm run build: passed.
-- npm run test:browser: 14/14 passed; includes three concurrent arrivals in two desk layouts, camera zoom clamping, and canvas/toolbar/camera-bound checks at 320x568, 375x667, 768x1024, 1024x768, 1366x768 and 1920x1080.
+- npm run test:browser: 15/15 passed; includes three concurrent arrivals in two desk layouts, camera zoom clamping and pointer-drag orbit, and canvas/toolbar/camera-bound checks at 320x568, 375x667, 768x1024, 1024x768, 1366x768 and 1920x1080.
 - git diff --check: passed.
 - Previous Babylon/main chunk: 6,026.40 kB minified / 1,322.29 kB gzip.
 - Current build after direct module imports: largest app chunk 1,145.60 kB minified / 283.55 kB gzip; >500 kB warning remains.
