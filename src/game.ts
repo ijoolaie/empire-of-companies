@@ -77,7 +77,19 @@ export class OfficeGame {
   const clockHand=MeshBuilder.CreateBox('wall-clock-hand',{width:.025,height:.22,depth:.025},this.scene);clockHand.position.set(3.25,1.78,-3.75);clockHand.material=trim;
   const artFrame=MeshBuilder.CreateBox('office-wall-art-frame',{width:.08,height:.92,depth:1.2},this.scene);artFrame.position.set(-4.86,1.55,-1.65);artFrame.material=trim;
   const artPanel=MeshBuilder.CreateBox('office-wall-art-panel',{width:.035,height:.78,depth:1.06},this.scene);artPanel.position.set(-4.8,1.55,-1.65);artPanel.material=mat('wall-art',new Color3(.3,.52,.58));
-  canvas.setAttribute('data-office-furniture-count','3');
+  // A compact notice board fills the open back-wall bay beside the windows.
+  const boardFrame=mat('notice-board-frame',new Color3(.36,.27,.2));
+  const boardSurface=mat('notice-board-surface',new Color3(.57,.39,.27));
+  const noticeBoard=MeshBuilder.CreateBox('office-notice-board',{width:.09,height:1.02,depth:1.35},this.scene);noticeBoard.position.set(3.55,1.58,-3.86);noticeBoard.material=boardFrame;
+  const cork=MeshBuilder.CreateBox('notice-board-cork',{width:.035,height:.88,depth:1.21},this.scene);cork.position.set(3.49,1.58,-3.86);cork.material=boardSurface;
+  const noteColors=[new Color3(.91,.86,.68),new Color3(.75,.84,.86),new Color3(.88,.76,.65)];
+  for(let i=0;i<3;i++){
+   const z=-4.22+i*.36;
+   const note=MeshBuilder.CreateBox('notice-board-note',{width:.025,height:.31,depth:.27},this.scene);note.position.set(3.455,1.58+(i%2)*.08,z);note.material=mat('notice-note-'+i,noteColors[i]);
+   const pin=MeshBuilder.CreateSphere('notice-board-pin',{diameter:.07,segments:8},this.scene);pin.position.set(3.43,1.69+(i%2)*.08,z-.08);pin.material=mat('notice-pin-'+i,new Color3(.65,.24,.18));
+  }
+  canvas.setAttribute('data-office-notice-board-mesh-count','8');
+  canvas.setAttribute('data-office-furniture-count','4');
   const warmLight=new Color3(1,.88,.7);
   for(const [index,x,z] of [[0,-2.8,-.8],[1,2.8,-.8],[2,0,2.4]] as const){
    const lamp=new PointLight('office-fill-'+index,new Vector3(x,2.1,z),this.scene);lamp.diffuse=warmLight;lamp.intensity=.22;lamp.range=8;
