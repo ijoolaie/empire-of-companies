@@ -16,9 +16,8 @@ Continue Empire of Companies: https://github.com/ijoolaie/empire-of-companies
 
 ## Repository
 - Branch: feat/p3-progression-ux.
-- Latest remote commit: 6637a3f — docs: note pending handoff push; branch was synchronized before current material-reuse changes.
-- Current uncommitted changes: shared material cache in src/game.ts and a Playwright regression test for material reuse across five workers.
-- CI for latest remote head 6637a3f has not yet been confirmed.
+- Latest pushed implementation commit: 34a7150 — perf: reuse office and worker materials.
+- Local branch is synchronized with origin; GitHub has not reported CI checks for this head yet.
 - PR #2: https://github.com/ijoolaie/empire-of-companies/pull/2.
 - CI run #40 (42109392998) passed for 1991369, including Chromium browser tests.
 - Local path: C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies.
@@ -46,7 +45,7 @@ P3 progression/usability remains active. P4 has started with an initial procedur
 - Visual acceptance on a real browser display is still outstanding; automated checks do not prove model aesthetics.
 
 ## Exact next task
-Direct Babylon module imports are pushed. Current local work caches and reuses Babylon materials across desks and workers, with a Playwright regression proving the material count stays bounded after five hires. All local checks currently pass (14 unit, build, 9 browser). Next: update docs/PR, commit and push this material optimization, then verify CI. A screenshot-capable visual review of worker proportions/placement is still outstanding. Keep PR #2 Draft and unmerged.
+Direct Babylon module imports are pushed. Material reuse is pushed and locally verified (14 unit tests, build, 9 browser tests). Next: obtain a screenshot-capable visual review of worker proportions/placement. Only after visual review, continue worker poses/variants and scene profiling. CI for current head has not been reported yet. Keep PR #2 Draft and unmerged.
 
 ## Session update rule
 Update PROJECT_STATUS and SESSION_HANDOFF with verified facts after substantial work. Update ROADMAP/WBS when scope changes. Never claim a feature is complete solely because code was written.
