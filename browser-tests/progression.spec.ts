@@ -45,6 +45,7 @@ test('progression rewards are granted once and persist after reload', async ({ p
   await expect(page.locator('#game')).toHaveAttribute('data-worker-model-count', '1');
   await expect(page.locator('#game')).toHaveAttribute('data-desk-accessory-mesh-count', '9');
   await expect(page.locator('#game')).toHaveAttribute('data-worker-leg-mesh-count', '6');
+  await expect(page.locator('#game')).toHaveAttribute('data-worker-necktie-mesh-count', '1');
   const materialCountBeforeHire = await page.locator('#game').getAttribute('data-scene-material-count');
 
   const rows = page.locator('.objectives .objective');
@@ -57,8 +58,9 @@ test('progression rewards are granted once and persist after reload', async ({ p
   await expect(page.locator('#game')).toHaveAttribute('data-walking-worker-count', '1');
   await expect.poll(async () => Number(await page.locator('#game').getAttribute('data-worker-shin-swing'))).toBeGreaterThan(0);
   await expect(page.locator('#game')).toHaveAttribute('data-worker-leg-mesh-count', '12');
+  await expect(page.locator('#game')).toHaveAttribute('data-worker-necktie-mesh-count', '2');
   await expect(page.locator('#game')).toHaveAttribute('data-walking-worker-count', '0', { timeout: 12000 });
-  await expect(page.locator('#game')).toHaveAttribute('data-scene-material-count', String(Number(materialCountBeforeHire) + 3));
+  await expect(page.locator('#game')).toHaveAttribute('data-scene-material-count', String(Number(materialCountBeforeHire) + 4));
   await expect(rows.nth(1)).toHaveClass(/is-complete/);
   await expect(page.locator('.progress-heading')).toContainText('50 / 100 XP');
 
@@ -95,7 +97,7 @@ test('worker material variants are reused instead of allocating one material set
   for (let workerCount = 2; workerCount <= 5; workerCount++) {
     await page.locator('#hire').click();
     await expect(canvas).toHaveAttribute('data-worker-model-count', String(workerCount));
-    const expectedMaterials = initialMaterials + Math.min(workerCount - 1, 3) * 3;
+    const expectedMaterials = initialMaterials + Math.min(workerCount - 1, 3) * 4;
     await expect(canvas).toHaveAttribute('data-scene-material-count', String(expectedMaterials));
   }
 });

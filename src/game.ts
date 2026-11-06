@@ -279,7 +279,10 @@ export class OfficeGame {
    const hair=this.getMaterial('worker-hair-'+(index%hairColors.length),hairColors[index%hairColors.length]);
    const trousers=this.getMaterial('worker-trousers',new Color3(.12,.19,.27));
    const shoes=this.getMaterial('worker-shoes',new Color3(.055,.065,.075));
+   const tieColors=[new Color3(.78,.3,.24),new Color3(.84,.67,.34),new Color3(.3,.52,.66),new Color3(.35,.58,.43)];
+   const tie=this.getMaterial('worker-tie-'+variant,tieColors[variant]);
    const torso=MeshBuilder.CreateCylinder('worker-torso-'+index,{height:.48,diameterTop:.34,diameterBottom:.42,tessellation:8},this.scene);torso.parent=worker;torso.position.set(0,1.03,.65);torso.material=shirt;
+   const necktie=MeshBuilder.CreateBox('worker-necktie-'+index,{width:.075,height:.22,depth:.025},this.scene);necktie.parent=worker;necktie.position.set(0,1.02,.435);necktie.material=tie;
    const head=MeshBuilder.CreateSphere('worker-head-'+index,{diameter:.34,segments:10},this.scene);head.parent=worker;head.position.set(0,1.43,.55);head.material=skin;this.workerHeads.push(head);
    const hairCap=MeshBuilder.CreateSphere('worker-hair-'+index,{diameter:.35,segments:8},this.scene);hairCap.parent=worker;hairCap.scaling.y=[.42,.5,.58,.46][variant];hairCap.scaling.x=[1,.96,1.04,.92][variant];hairCap.position.set(0,1.57,.55);hairCap.material=hair;
    // Seated legs: thighs extend toward the desk, with lower legs and shoes below the desktop.
@@ -303,6 +306,7 @@ export class OfficeGame {
   this.engine.getRenderingCanvas()?.setAttribute('data-worker-idle-pose-types',['typing','reviewing','thinking'].filter((_,pose)=>this.workers.some((__,index)=>index%3===pose)).join(','));
   this.engine.getRenderingCanvas()?.setAttribute('data-worker-arrival-waypoint-counts',this.workerWalkPaths.map(path=>String(path.length)).join(','));
   this.engine.getRenderingCanvas()?.setAttribute('data-worker-leg-mesh-count',String(this.workers.length*6));
+  this.engine.getRenderingCanvas()?.setAttribute('data-worker-necktie-mesh-count',String(this.workers.length));
   this.engine.getRenderingCanvas()?.setAttribute('data-scene-material-count',String(this.scene.materials.length));
  }
  getMaterial(name:string,color:Color3){
