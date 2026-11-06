@@ -97,6 +97,34 @@ test('worker material variants are reused instead of allocating one material set
   }
 });
 
+
+test('rapid consecutive hires reserve separate entrance corridors', async ({ page }) => {
+  const pageErrors = [];
+  page.on('pageerror', error => pageErrors.push(error.message));
+  await seedSave(page, {
+    version: 4, cash: 100000, workers: 1, level: 1,
+    desks: [
+      { x: -2, z: -1 }, { x: 1, z: -1 }, { x: 4, z: 2 },
+      { x: -4, z: 2 }, { x: 0, z: 0 }
+    ],
+    lifetimeEarned: 0, lastSavedAt: Date.now(),
+    playerXp: 0, completedObjectives: [], tutorialDismissed: true
+  });
+  await page.goto('/');
+  const canvas = page.locator('#game');
+
+  for (let workerCount = 2; workerCount <= 4; workerCount++) {
+    await page.locator('#hire').click();
+    await expect(canvas).toHaveAttribute('data-worker-model-count', String(workerCount));
+    await expect(canvas).toHaveAttribute('data-walking-worker-count', String(workerCount - 1));
+  }
+
+  await expect(canvas).toHaveAttribute('data-walking-worker-count', '0', { timeout: 5500 });
+  const saved = await page.evaluate(key => JSON.parse(localStorage.getItem(key)), SAVE_KEY);
+  expect(saved.workers).toBe(4);
+  expect(pageErrors).toEqual([]);
+});
+
 test('offline earnings are shown after restoring a saved game', async ({ page }) => {
   const seeded = {
     version: 4, cash: 8000, workers: 1, level: 1,

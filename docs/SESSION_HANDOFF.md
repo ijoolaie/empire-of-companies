@@ -1,6 +1,6 @@
 # Session Handoff — Read First
 
-Last updated: 2026-11-06 — refined A* worker routing to use a shared entrance and fixed obstacle footprints; local verification: 20 unit tests, production build and 10 browser tests.
+Last updated: 2026-11-06 — added reserved worker-route corridors and a rapid consecutive-hire browser regression; local verification: 21 unit tests, production build and 11 browser tests.
 
 ## Mission
 Continue Empire of Companies: https://github.com/ijoolaie/empire-of-companies
@@ -16,9 +16,9 @@ Continue Empire of Companies: https://github.com/ijoolaie/empire-of-companies
 
 ## Repository
 - Branch: feat/p3-progression-ux.
-- Latest pushed implementation head: 534577e; CI run #58 (42174797995) passed for that commit; current branch head before this local change is 3bd75c6.
-- Local uncommitted refinement: route workers from a shared office entrance to their desks, avoiding desk, planter, and structural wall footprints; added 4 focused navigation tests, including a reserved entrance-lane case.
-- Local verification after refinement: 21 unit tests, production build, 10 browser tests and diff check pass.
+- Latest pushed implementation head: 9a3eab4; CI run #62 (42178572610) passed.
+- Committed: shared-entrance A* routing with desk/planter/structural-wall obstacles and temporary corridor reservations for active workers; seven navigation tests.
+- Local uncommitted change: Playwright regression for two rapid consecutive hires; local verification: 21 unit tests, production build, 11 browser tests and diff check pass.
 - PR #2: https://github.com/ijoolaie/empire-of-companies/pull/2.
 - CI run #40 (42109392998) passed for 1991369, including Chromium browser tests.
 - Local path: C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies.
@@ -33,9 +33,9 @@ P3 progression/usability remains active. P4 has started with an initial procedur
 - No external assets or Blender.
 
 ## Local verification
-- npm test: 14/14 passed.
+- npm test: 21/21 passed.
 - npm run build: passed.
-- npm run test:browser: 10/10 passed; hiring regression asserts walking count becomes 1 then returns to 0.
+- npm run test:browser: 11/11 passed; includes two rapid hires walking concurrently and returning to seated state.
 - git diff --check: passed.
 - Previous Babylon/main chunk: 6,026.40 kB minified / 1,322.29 kB gzip.
 - Current build after direct module imports: largest app chunk 1,141.33 kB minified / 281.81 kB gzip; >500 kB warning remains.
@@ -46,7 +46,7 @@ P3 progression/usability remains active. P4 has started with an initial procedur
 - Manual Chromium screenshots at 1280x720 and 375x667 confirm the seated worker is visible in the default view. The mobile panel hides XP/objective details but keeps the tutorial and progression dialog reachable; alternate camera angles remain to review.
 
 ## Exact next task
-Current local refinement routes new hires from the shared entrance to their assigned desks using bounded A*, avoiding desk, planter and structural wall footprints. Active worker paths are temporarily reserved as obstacle corridors, and subsequent hires try alternate entrance lanes. Local checks pass (21 unit tests, production build, 10 browser tests, diff check). Next: add browser coverage for rapid consecutive hires, then verify CI. Keep PR #2 Draft and unmerged.
+Commit and push the rapid consecutive-hire Playwright regression and updated handoff. The local test run is green (21 unit tests, production build, 11 browser tests, diff check); then verify CI for the new head. Keep PR #2 Draft and unmerged.
 
 ## Session update rule
 Update PROJECT_STATUS and SESSION_HANDOFF with verified facts after substantial work. Update ROADMAP/WBS when scope changes. Never claim a feature is complete solely because code was written.

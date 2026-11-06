@@ -6,11 +6,11 @@ Last verified: 2026-11-06
 - GitHub: https://github.com/ijoolaie/empire-of-companies
 - Default branch: main; P2 merge: 06ebb5c.
 - Development branch: feat/p3-progression-ux.
-- Latest pushed implementation head: 534577e. CI run #58 (42174797995) passed for that commit; current branch head is 3bd75c6.
-- A* arrival routing is locally refined to start at a shared office entrance and avoid desk, planter, and structural wall footprints; seven navigation tests cover entrance routing, fixed obstacles, blocked entrance fallback, deterministic routing, office bounds, and alternate entry lanes around a reserved worker route. A new hire reserves the corridor of any currently walking worker and tries alternate entrance lanes.
+- Latest pushed implementation head: 9a3eab4. CI run #62 (42178572610) passed; rapid consecutive-hire browser regression is now added locally and awaiting commit/CI.
+- A* arrival routing starts at a shared office entrance and avoids desk, planter, and structural wall footprints; seven navigation tests cover entrance routing, fixed obstacles, blocked entrance fallback, deterministic routing, office bounds, and alternate entry lanes around a reserved worker route. Active worker routes are reserved for later hires; an 11th browser test covers two consecutive hires.
 - New hires walk from the open side of the office toward their assigned desk for 1.6 seconds, swing their arms/legs, then transition into seated typing. Restored employees remain seated on reload.
 - PR #2: https://github.com/ijoolaie/empire-of-companies/pull/2 (open, Draft, not merged).
-- GitHub Actions run #55 (42170042512) passed for prior head 7a1c861; run #56 (42174090774) is validating 87c3939.
+- GitHub Actions run #61 (42177670283) passed for 07551af; run #62 (42178572610) passed for 9a3eab4.
 - Local clone: C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies.
 
 ## Phase status
@@ -43,7 +43,7 @@ Last verified: 2026-11-06
 ## Verification
 - npm test: 21 passed, 0 failed (includes 7 navigation-planner tests).
 - npm run build: passed.
-- npm run test:browser: 10 passed, 0 failed; hiring test confirms a new worker enters walking state and returns to seated state, and a reloaded save has zero walking workers.
+- npm run test:browser: 11 passed, 0 failed; includes a rapid consecutive-hire regression verifying two workers can walk concurrently using separate reserved entrance corridors.
 - git diff --check: passed.
 - Babylon/main application chunk after direct module imports: about 1,142.55 kB minified / 282.20 kB gzip (about 81% smaller minified and 79% smaller gzip than the previous 6,026.40 / 1,322.29 kB bundle). The >500 kB warning remains.
 - CI run #36 (42107749624) passed for 2146410.
@@ -61,7 +61,7 @@ Last verified: 2026-11-06
 
 ## Next actions
 1. Review alternate camera angles and additional device sizes; desktop and 375x667 default views now show the seated worker.
-2. Add browser coverage for rapid consecutive hires and inspect the reserved-corridor behavior. Model an actual doorway only when the office scene gains a front wall/door mesh.
+2. Commit/push the rapid consecutive-hire browser regression and refreshed handoff, then verify CI. Model an actual doorway only when the office scene gains a front wall/door mesh.
 3. Profile scene mesh/material counts and address the large Babylon bundle with measured changes.
 4. Keep PR #2 Draft and unmerged unless explicitly requested.
 5. Keep game saves device-local; Supabase remains identity-only.
