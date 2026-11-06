@@ -100,6 +100,18 @@ test('worker material variants are reused instead of allocating one material set
 });
 
 
+test('office shell has an open entrance, framed windows and layered lighting', async ({ page }) => {
+  const pageErrors = [];
+  page.on('pageerror', error => pageErrors.push(error.message));
+  await page.goto('/');
+  const canvas = page.locator('#game');
+  await expect(canvas).toHaveAttribute('data-office-wall-segment-count', '5');
+  await expect(canvas).toHaveAttribute('data-office-window-count', '3');
+  await expect(canvas).toHaveAttribute('data-office-entrance-part-count', '5');
+  await expect(canvas).toHaveAttribute('data-office-light-count', '5');
+  expect(pageErrors).toEqual([]);
+});
+
 test('each office desk includes a monitor stand, base, keyboard and mouse', async ({ page }) => {
   await seedSave(page, {
     version: 4, cash: 100000, workers: 1, level: 1,

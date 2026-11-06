@@ -4,6 +4,7 @@ import {ArcRotateCamera} from '@babylonjs/core/Cameras/arcRotateCamera';
 import {Vector3} from '@babylonjs/core/Maths/math.vector';
 import {HemisphericLight} from '@babylonjs/core/Lights/hemisphericLight';
 import {DirectionalLight} from '@babylonjs/core/Lights/directionalLight';
+import {PointLight} from '@babylonjs/core/Lights/pointLight';
 import {MeshBuilder} from '@babylonjs/core/Meshes/meshBuilder';
 import {StandardMaterial} from '@babylonjs/core/Materials/standardMaterial';
 import {Color3,Color4} from '@babylonjs/core/Maths/math.color';
@@ -30,8 +31,42 @@ export class OfficeGame {
   const wall=mat('wall',new Color3(.82,.87,.9));
   const back=MeshBuilder.CreateBox('back-wall',{width:10,height:2.3,depth:.18},this.scene);back.position.set(0,1.15,-4);back.material=wall;
   const side=MeshBuilder.CreateBox('side-wall',{width:.18,height:2.3,depth:8},this.scene);side.position.set(-5,1.15,0);side.material=wall;
+  const right=MeshBuilder.CreateBox('right-wall',{width:.18,height:2.3,depth:8},this.scene);right.position.set(5,1.15,0);right.material=wall;
+  // The front wall is split around a wide, permanently open entrance so arrival paths stay unobstructed.
+  const frontLeft=MeshBuilder.CreateBox('front-wall-left',{width:3.75,height:2.3,depth:.18},this.scene);frontLeft.position.set(-3.125,1.15,4);frontLeft.material=wall;
+  const frontRight=MeshBuilder.CreateBox('front-wall-right',{width:3.75,height:2.3,depth:.18},this.scene);frontRight.position.set(3.125,1.15,4);frontRight.material=wall;
+  const entranceHeader=MeshBuilder.CreateBox('entrance-header',{width:2.5,height:.28,depth:.24},this.scene);entranceHeader.position.set(0,2.16,4);entranceHeader.material=wall;
+  const trim=mat('architectural-trim',new Color3(.34,.43,.51));
+  for(const x of [-1.25,1.25]){const jamb=MeshBuilder.CreateBox('entrance-jamb',{width:.09,height:2.05,depth:.25},this.scene);jamb.position.set(x,1.025,4);jamb.material=trim;}
+  const threshold=MeshBuilder.CreateBox('entrance-threshold',{width:2.5,height:.055,depth:.32},this.scene);threshold.position.set(0,.085,4);threshold.material=trim;
   const glass=mat('panoramic-glass',new Color3(.24,.55,.72));glass.alpha=.72;
-  for(const x of [-3.2,-1.1,1.1]){const pane=MeshBuilder.CreateBox('window-pane',{width:1.65,height:1.25,depth:.06},this.scene);pane.position.set(x,1.65,-3.88);pane.material=glass;}
+  const windowFrame=mat('window-frame',new Color3(.34,.43,.51));
+  for(const x of [-3.2,-1.1,1.1]){
+   const pane=MeshBuilder.CreateBox('window-pane',{width:1.65,height:1.25,depth:.06},this.scene);pane.position.set(x,1.65,-3.88);pane.material=glass;
+   for(const dx of [-.86,.86]){const mullion=MeshBuilder.CreateBox('window-mullion',{width:.055,height:1.34,depth:.09},this.scene);mullion.position.set(x+dx,1.65,-3.9);mullion.material=windowFrame;}
+   const sill=MeshBuilder.CreateBox('window-sill',{width:1.82,height:.09,depth:.18},this.scene);sill.position.set(x,1.0,-3.88);sill.material=trim;
+  }
+  const baseboard=mat('baseboard',new Color3(.58,.65,.7));
+  for(const [name,width,depth,x,z] of [['back-baseboard',9.7,.07,0,-3.87],['left-baseboard',.07,7.7,-4.87,0],['right-baseboard',.07,7.7,4.87,0]] as const){
+   const board=MeshBuilder.CreateBox(name,{width,height:.12,depth},this.scene);board.position.set(x,.16,z);board.material=baseboard;
+  }
+  const entranceSign=MeshBuilder.CreateBox('entrance-sign',{width:1.15,height:.24,depth:.06},this.scene);entranceSign.position.set(0,2.32,3.82);entranceSign.material=trim;
+  const warmLight=new Color3(1,.88,.7);
+  for(const [index,x,z] of [[0,-2.8,-.8],[1,2.8,-.8],[2,0,2.4]] as const){
+   const lamp=new PointLight('office-fill-'+index,new Vector3(x,2.1,z),this.scene);lamp.diffuse=warmLight;lamp.intensity=.22;lamp.range=8;
+  }
+  const ceilingPanel=mat('ceiling-panel',new Color3(.88,.91,.93));
+  for(const x of [-3,0,3]){const panel=MeshBuilder.CreateBox('ceiling-light-panel',{width:1.05,height:.045,depth:.38},this.scene);panel.position.set(x,2.26,.2);panel.material=ceilingPanel;}
+  const environmentCounts={
+   walls:this.scene.meshes.filter(mesh=>mesh.name.includes('wall')).length,
+   windows:this.scene.meshes.filter(mesh=>mesh.name==='window-pane').length,
+   entrance:this.scene.meshes.filter(mesh=>mesh.name.startsWith('entrance-')||mesh.name==='entrance-jamb'||mesh.name==='entrance-threshold').length,
+   lights:this.scene.lights.length
+  };
+  canvas.setAttribute('data-office-wall-segment-count',String(environmentCounts.walls));
+  canvas.setAttribute('data-office-window-count',String(environmentCounts.windows));
+  canvas.setAttribute('data-office-entrance-part-count',String(environmentCounts.entrance));
+  canvas.setAttribute('data-office-light-count',String(environmentCounts.lights));
   const rug=MeshBuilder.CreateGround('rug',{width:4.2,height:2.6},this.scene);rug.position.set(0,.075,1.45);rug.material=mat('rugmat',new Color3(.16,.29,.43));
   const leaf=mat('plant-leaf',new Color3(.18,.42,.29)),potMat=mat('planter',new Color3(.76,.65,.48));
   for(const [x,z] of [[-4,3],[4,-2]]){const pot=MeshBuilder.CreateCylinder('pot',{height:.55,diameter:.55},this.scene);pot.position.set(x,.34,z);pot.material=potMat;for(let i=0;i<5;i++){const l=MeshBuilder.CreateSphere('leaf',{diameter:.48,segments:6},this.scene);l.scaling.set(.65,1.6,.65);l.position.set(x+Math.cos(i*1.25)*.22,.82,z+Math.sin(i*1.25)*.22);l.material=leaf;}}
