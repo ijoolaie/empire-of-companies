@@ -69,3 +69,11 @@ Last verified: 2026-11-06
 - Canvas diagnostic data-worker-idle-pose-types reports which of the three pose families are present in the current staffed office.
 - Added a Playwright regression that restores three workers and verifies all three pose families are present and all workers load seated.
 - Verification on this change: 22 unit tests passed; production build passed (465 modules; 1,148.65 kB main JS / 284.45 kB gzip, existing >500 kB warning); all 17 browser tests passed; git diff --check passed.
+
+## Latest continuation — desk equipment detail (2026-11-06)
+- Added four procedural desk accessories to every workstation: monitor stand, monitor base, keyboard and mouse. All are parented to the desk transform, so placement remains consistent.
+- Reused two shared materials for all new accessories; no external assets and no per-desk material allocation.
+- Added data-desk-detail-mesh-count and a Playwright regression verifying three restored desks expose 12 detail meshes.
+- Local verification: 22/22 unit tests, production build, 18/18 browser tests and git diff --check passed. Build output: 1,149.43 kB main JS / 284.66 kB gzip; the existing Vite >500 kB chunk warning remains.
+- CI #82 (42215360981) passed for prior head 056ba34, including build, unit tests, Chromium installation and all 17 browser tests. This desk-detail change is not yet pushed or covered by CI.
+

@@ -126,7 +126,15 @@ export class OfficeGame {
   const seat=MeshBuilder.CreateBox('chair-seat',{width:.62,height:.13,depth:.62},this.scene);seat.parent=root;seat.position.set(0,.53,.72);seat.material=chair;
   const backrest=MeshBuilder.CreateBox('chair-back',{width:.62,height:.62,depth:.12},this.scene);backrest.parent=root;backrest.position.set(0,.88,1.0);backrest.material=chair;
   const monitor=MeshBuilder.CreateBox('monitor',{width:.65,height:.42,depth:.07},this.scene);monitor.parent=root;monitor.position.set(0,1.2,-.12);const screen=this.getMaterial('screen',new Color3(.035,.07,.12));monitor.material=screen;
-  this.desks.push(root);return root;
+  const deskAccent=this.getMaterial('desk-accent',new Color3(.34,.4,.46));
+  const peripherals=this.getMaterial('desk-peripherals',new Color3(.16,.19,.22));
+  const monitorStand=MeshBuilder.CreateBox('monitor-stand',{width:.09,height:.16,depth:.08},this.scene);monitorStand.parent=root;monitorStand.position.set(0,1.0,-.12);monitorStand.material=deskAccent;
+  const monitorBase=MeshBuilder.CreateBox('monitor-base',{width:.34,height:.035,depth:.2},this.scene);monitorBase.parent=root;monitorBase.position.set(0,.94,-.12);monitorBase.material=deskAccent;
+  const keyboard=MeshBuilder.CreateBox('keyboard',{width:.58,height:.045,depth:.19},this.scene);keyboard.parent=root;keyboard.position.set(0,.94,.27);keyboard.material=peripherals;
+  const mouse=MeshBuilder.CreateSphere('mouse',{diameter:.13,segments:8},this.scene);mouse.parent=root;mouse.scaling.set(1,.32,1.45);mouse.position.set(.48,.96,.27);mouse.material=peripherals;
+  this.desks.push(root);
+  this.engine.getRenderingCanvas()?.setAttribute('data-desk-detail-mesh-count',String(this.desks.length*4));
+  return root;
  }
  syncWorkers(count:number,animateNewWorkers=true){
   const target=Math.max(0,Math.min(Math.floor(count),this.desks.length));

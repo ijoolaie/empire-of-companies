@@ -100,6 +100,17 @@ test('worker material variants are reused instead of allocating one material set
 });
 
 
+test('each office desk includes a monitor stand, base, keyboard and mouse', async ({ page }) => {
+  await seedSave(page, {
+    version: 4, cash: 100000, workers: 1, level: 1,
+    desks: [{ x: -2, z: -1 }, { x: 1, z: -1 }, { x: 4, z: 2 }],
+    lifetimeEarned: 0, lastSavedAt: Date.now(),
+    playerXp: 0, completedObjectives: [], tutorialDismissed: true
+  });
+  await page.goto('/');
+  await expect(page.locator('#game')).toHaveAttribute('data-desk-detail-mesh-count', '12');
+});
+
 test('seated workers cycle through distinct typing, reviewing and thinking poses', async ({ page }) => {
   await seedSave(page, {
     version: 4, cash: 100000, workers: 3, level: 1,

@@ -63,3 +63,11 @@ Update PROJECT_STATUS and SESSION_HANDOFF with verified facts after substantial 
 - New browser regression restores three workers and verifies the three work-state families and seated restore behavior.
 - Local verification: 22 unit tests, production build, all 17 browser tests and git diff --check passed.
 - Implementation and documentation are verified locally; commit and push are the immediate next repository operations, followed by CI verification.
+
+## Latest continuation — desk equipment detail (2026-11-06)
+- Added four procedural accessories to each desk: monitor stand/base, keyboard and mouse. They inherit the desk transform and use shared cached materials.
+- Added a browser regression for the four accessory meshes per desk; three desks expose 12 details.
+- Local checks: 22 unit tests, production build, 18 browser tests and git diff --check passed. Current build main chunk 1,149.43 kB / 284.66 kB gzip; Vite's existing >500 kB warning remains.
+- CI #82 (42215360981) passed for 056ba34; CI for the new desk-detail commit remains pending.
+- Immediate next step: commit and push the desk-detail slice, then verify the new GitHub Actions run. Keep PR #2 Draft and unmerged.
+
