@@ -6,7 +6,8 @@ Last verified: 2026-11-06
 - GitHub: https://github.com/ijoolaie/empire-of-companies
 - Default branch: main; P2 merge: 06ebb5c.
 - Development branch: feat/p3-progression-ux.
-- Latest local implementation: new-hire arrival walk cycle (not yet committed); previous remote implementation head: 84bb89f.
+- Latest pushed head: 0c6f4bf — feat: animate new hires walking to their desks.
+- GitHub Actions run #53 (42169496385) is running; build/unit tests and Chromium install passed, browser regression is in progress.
 - New hires walk from the open side of the office toward their assigned desk for 1.6 seconds, swing their arms/legs, then transition into seated typing. Restored employees remain seated on reload.
 - PR #2: https://github.com/ijoolaie/empire-of-companies/pull/2 (open, Draft, not merged).
 - GitHub Actions run #40 (42109392998) passed for 1991369, including Chromium browser regression tests.
@@ -48,7 +49,7 @@ Last verified: 2026-11-06
 - CI run #36 (42107749624) passed for 2146410.
 - CI run #37 (42108774779) passed for 7019cdc.
 - CI run #38 (42108661210) passed for 8c445bc.
-- CI run #40 (42109392998) passed for latest commit 1991369, including Chromium tests.
+- CI run #40 (42109392998) passed for historical commit 1991369. Current head 0c6f4bf is under CI run #53 (42169496385); browser regression is still in progress.
 - Automated tests verify model synchronization and mesh counts; manual Chromium review separately verified that the worker is visible in the 1280x720 default camera view after the angle correction.
 
 ## Open

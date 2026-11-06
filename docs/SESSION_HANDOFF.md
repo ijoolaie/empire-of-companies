@@ -16,8 +16,8 @@ Continue Empire of Companies: https://github.com/ijoolaie/empire-of-companies
 
 ## Repository
 - Branch: feat/p3-progression-ux.
-- Previous remote implementation head: 84bb89f. New local, uncommitted work adds a 1.6-second new-hire arrival walk; restored workers remain seated on load.
-- Local verification after arrival animation: 14 unit tests, build, 10 browser tests and diff check pass. CI for the pending changes has not run yet.
+- Latest pushed head: 0c6f4bf. New-hire arrival walk takes 1.6 seconds; restored workers remain seated on load.
+- Local verification after arrival animation: 14 unit tests, build, 10 browser tests and diff check pass. GitHub Actions run #53 (42169496385): build/unit tests and Chromium install passed; browser regression is in progress.
 - PR #2: https://github.com/ijoolaie/empire-of-companies/pull/2.
 - CI run #40 (42109392998) passed for 1991369, including Chromium browser tests.
 - Local path: C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies.
@@ -45,7 +45,7 @@ P3 progression/usability remains active. P4 has started with an initial procedur
 - Manual Chromium screenshots at 1280x720 and 375x667 confirm the seated worker is visible in the default view. The mobile panel hides XP/objective details but keeps the tutorial and progression dialog reachable; alternate camera angles remain to review.
 
 ## Exact next task
-New-hire arrival walk is implemented locally but not yet committed: new hires move from the office open side to their desk over 1.6 seconds with alternating limb swing, then sit and type; restored workers do not replay arrival. Local checks pass (14 unit tests, build, 10 browser tests, diff check). Next: inspect visual quality on mobile and desktop, commit/push, verify CI, then improve movement with a proper walk/obstacle-aware path. Keep PR #2 Draft and unmerged.
+New-hire arrival walk is implemented locally but not yet committed: new hires move from the office open side to their desk over 1.6 seconds with alternating limb swing, then sit and type; restored workers do not replay arrival. Local checks pass (14 unit tests, build, 10 browser tests, diff check). Next: confirm CI run #53 completes, then inspect the arrival motion on mobile and alternate camera angles; improve movement with obstacle-aware paths before calling it navigation. Keep PR #2 Draft and unmerged.
 
 ## Session update rule
 Update PROJECT_STATUS and SESSION_HANDOFF with verified facts after substantial work. Update ROADMAP/WBS when scope changes. Never claim a feature is complete solely because code was written.
