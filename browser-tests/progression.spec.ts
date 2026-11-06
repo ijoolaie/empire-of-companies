@@ -56,7 +56,7 @@ test('progression rewards are granted once and persist after reload', async ({ p
   await expect(page.locator('#game')).toHaveAttribute('data-walking-worker-count', '1');
   await expect.poll(async () => Number(await page.locator('#game').getAttribute('data-worker-shin-swing'))).toBeGreaterThan(0);
   await expect(page.locator('#game')).toHaveAttribute('data-worker-leg-mesh-count', '12');
-  await expect(page.locator('#game')).toHaveAttribute('data-walking-worker-count', '0', { timeout: 4000 });
+  await expect(page.locator('#game')).toHaveAttribute('data-walking-worker-count', '0', { timeout: 12000 });
   await expect(page.locator('#game')).toHaveAttribute('data-scene-material-count', String(Number(materialCountBeforeHire) + 3));
   await expect(rows.nth(1)).toHaveClass(/is-complete/);
   await expect(page.locator('.progress-heading')).toContainText('50 / 100 XP');
@@ -295,6 +295,7 @@ test('progression dialog fits common mobile, tablet and desktop viewport widths'
 });
 
 test('scene profiling compares zero-worker and five-worker CPU/render resource metrics', async ({ page }) => {
+  test.setTimeout(90000);
   await page.setViewportSize({ width: 1280, height: 720 });
   const desks = [{ x: -2, z: -1 }, { x: 1, z: -1 }, { x: 4, z: 2 }, { x: -4, z: 2 }, { x: 0, z: 3 }];
   const save = workers => ({
@@ -315,13 +316,13 @@ test('scene profiling compares zero-worker and five-worker CPU/render resource m
     lights: Number(el.getAttribute('data-scene-light-count'))
   }));
 
-  await expect.poll(async () => Number(await canvas.getAttribute('data-frame-cpu-ms-avg')), { timeout: 15000 }).toBeGreaterThan(0);
+  await expect.poll(async () => Number(await canvas.getAttribute('data-frame-cpu-ms-avg')), { timeout: 45000 }).toBeGreaterThan(0);
   const zeroWorkers = await readMetrics();
 
   await page.evaluate(({ key, value }) => localStorage.setItem(key, JSON.stringify(value)), { key: SAVE_KEY, value: save(5) });
   await page.reload();
   await expect(canvas).toHaveAttribute('data-worker-model-count', '5');
-  await expect.poll(async () => Number(await canvas.getAttribute('data-frame-cpu-ms-avg')), { timeout: 15000 }).toBeGreaterThan(0);
+  await expect.poll(async () => Number(await canvas.getAttribute('data-frame-cpu-ms-avg')), { timeout: 45000 }).toBeGreaterThan(0);
   const fiveWorkers = await readMetrics();
 
   for (const metrics of [zeroWorkers, fiveWorkers]) {

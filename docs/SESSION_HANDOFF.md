@@ -38,7 +38,7 @@ https://github.com/ijoolaie/empire-of-companies
 - Diff whitespace check: passed.
 - Automated office-shell mesh/light counts passed.
 - Visual review completed from headless Chromium/SwiftShader captures: desktop 900×600, mobile 390×844, and alternate orbit views at both sizes. No obvious geometry clipping or entrance blockage was seen; browser page errors were absent. This does not replace real-device GPU review.
-- GitHub Actions run #86 completed successfully, including the browser regression suite.
+- GitHub Actions run #86 passed. Run #87 exposed two timing-sensitive browser-test limits; test waits were made more tolerant (worker arrival 12s; profiler sample 45s with 90s test timeout). Local browser suite passed 19/19 after adjustment; CI for the updated head is pending.
 
 ## Exact next steps
 1. Review PR #3; it is intentionally Draft and must not be merged without explicit approval.

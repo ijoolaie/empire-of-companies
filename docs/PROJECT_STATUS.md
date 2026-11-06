@@ -40,7 +40,7 @@ Last verified: 2026-11-06
 - `npm run test:browser`: 19 passed, 0 failed, including the new office-shell regression.
 - `git diff --check`: passed.
 - Visual review: captured and inspected 900×600 desktop and 390×844 mobile views, plus alternate orbit views at both sizes using headless Chromium/SwiftShader. Walls, entrance, window framing and lighting rendered coherently; no obvious mesh clipping or browser page errors observed. This is simulated-browser review, not a physical-device/GPU acceptance test.
-- GitHub Actions run #86 completed successfully, including build, unit tests, Chromium setup and browser regression tests.
+- GitHub Actions run #86 passed. Run #87 exposed two timing-sensitive browser-test limits on the hosted runner; worker-arrival wait was raised to 12s and profiler sampling wait to 45s (90s test timeout). Local browser suite passed 19/19 after the adjustment. CI for the updated head is pending.
 
 ## Next actions
 1. PR #3 is open as Draft; review the diff and keep it unmerged until explicitly approved.
