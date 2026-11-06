@@ -74,3 +74,13 @@ test('blocked entrance falls back to a stationary safe arrival', () => {
   const path = planWorkerArrivalPath(ownDesk, [ownDesk], [entranceBlocker]);
   assert.deepEqual(path, [{ x: 0, y: 0, z: 0 }]);
 });
+test('a second hire can use an alternate entrance lane around a reserved worker route', () => {
+  const ownDesk = { x: 2, z: -1 };
+  const reservedEntranceLane = { x: 0, z: 3.45, halfWidth: 0.42, halfDepth: 0.42 };
+  const path = planWorkerArrivalPath(ownDesk, [ownDesk], [reservedEntranceLane], 0.8);
+
+  assert.equal(path[0].x, -1.2);
+  assert.equal(path[0].z, 4.45);
+  assert.deepEqual(path.at(-1), { x: 0, y: 0, z: 0 });
+  assert.equal(routeIntersectsObstacle(path, reservedEntranceLane, ownDesk), false);
+});

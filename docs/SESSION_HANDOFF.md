@@ -17,8 +17,8 @@ Continue Empire of Companies: https://github.com/ijoolaie/empire-of-companies
 ## Repository
 - Branch: feat/p3-progression-ux.
 - Latest pushed implementation head: 534577e; CI run #58 (42174797995) passed for that commit; current branch head before this local change is 3bd75c6.
-- Local uncommitted refinement: route workers from a shared office entrance to their desks, avoiding desk, planter, and structural wall footprints; added 3 focused navigation tests.
-- Local verification after refinement: 20 unit tests, production build, 10 browser tests and diff check pass.
+- Local uncommitted refinement: route workers from a shared office entrance to their desks, avoiding desk, planter, and structural wall footprints; added 4 focused navigation tests, including a reserved entrance-lane case.
+- Local verification after refinement: 21 unit tests, production build, 10 browser tests and diff check pass.
 - PR #2: https://github.com/ijoolaie/empire-of-companies/pull/2.
 - CI run #40 (42109392998) passed for 1991369, including Chromium browser tests.
 - Local path: C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies.
@@ -46,7 +46,7 @@ P3 progression/usability remains active. P4 has started with an initial procedur
 - Manual Chromium screenshots at 1280x720 and 375x667 confirm the seated worker is visible in the default view. The mobile panel hides XP/objective details but keeps the tutorial and progression dialog reachable; alternate camera angles remain to review.
 
 ## Exact next task
-Current local refinement routes new hires from the shared entrance to their assigned desks using bounded A*, avoiding desk, planter and structural wall footprints. Local checks pass (20 unit tests, production build, 10 browser tests, diff check). Next: commit/push this change and verify CI, then add worker-worker route separation. Keep PR #2 Draft and unmerged.
+Current local refinement routes new hires from the shared entrance to their assigned desks using bounded A*, avoiding desk, planter and structural wall footprints. Active worker paths are temporarily reserved as obstacle corridors, and subsequent hires try alternate entrance lanes. Local checks pass (21 unit tests, production build, 10 browser tests, diff check). Next: add browser coverage for rapid consecutive hires, then verify CI. Keep PR #2 Draft and unmerged.
 
 ## Session update rule
 Update PROJECT_STATUS and SESSION_HANDOFF with verified facts after substantial work. Update ROADMAP/WBS when scope changes. Never claim a feature is complete solely because code was written.

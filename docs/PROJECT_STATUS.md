@@ -7,7 +7,7 @@ Last verified: 2026-11-06
 - Default branch: main; P2 merge: 06ebb5c.
 - Development branch: feat/p3-progression-ux.
 - Latest pushed implementation head: 534577e. CI run #58 (42174797995) passed for that commit; current branch head is 3bd75c6.
-- A* arrival routing is locally refined to start at a shared office entrance and avoid desk, planter, and structural wall footprints; six navigation tests cover entrance routing, fixed obstacles, blocked entrance fallback, determinism, and office bounds. This refinement is not yet committed.
+- A* arrival routing is locally refined to start at a shared office entrance and avoid desk, planter, and structural wall footprints; seven navigation tests cover entrance routing, fixed obstacles, blocked entrance fallback, deterministic routing, office bounds, and alternate entry lanes around a reserved worker route. A new hire reserves the corridor of any currently walking worker and tries alternate entrance lanes.
 - New hires walk from the open side of the office toward their assigned desk for 1.6 seconds, swing their arms/legs, then transition into seated typing. Restored employees remain seated on reload.
 - PR #2: https://github.com/ijoolaie/empire-of-companies/pull/2 (open, Draft, not merged).
 - GitHub Actions run #55 (42170042512) passed for prior head 7a1c861; run #56 (42174090774) is validating 87c3939.
@@ -36,12 +36,12 @@ Last verified: 2026-11-06
 - Canvas data attributes expose worker-model count, expected leg/shoe mesh count and scene material count for browser regression checks.
 - Desk materials are cached and reused; worker skin/hair/trousers/shoes share materials, and shirt material is cached per one of four palette variants. Browser coverage verifies the fifth worker reuses the first variant without allocating a new material.
 - No external assets or Blender dependency.
-- Arrival now uses deterministic bounded A* from a shared entrance to each assigned desk, avoiding desk footprints, the two planter footprints, and the structural back/side wall footprints while remaining inside office bounds. The office has no modeled door mesh or doorway state; navigation is still static and does not coordinate simultaneous workers or replan around moving obstacles. Character variants, detailed poses, scene profiling and broader mobile/multi-angle visual acceptance remain open.
+- Arrival now uses deterministic bounded A* from a shared entrance to each assigned desk, avoiding desk footprints, the two planter footprints, and the structural back/side wall footprints while remaining inside office bounds. The office has no modeled door mesh or doorway state; navigation is still static and uses temporary corridor reservations to separate new hires while an earlier worker is still walking; it does not replan dynamically after movement starts. Character variants, detailed poses, scene profiling and broader mobile/multi-angle visual acceptance remain open.
 - Direct Babylon module imports replaced the root barrel import; Vite transforms 464 modules instead of 2,221.
 - Material reuse now prevents per-worker duplication of shared skin/hair/trouser/shoe materials and desk furniture materials; only four shirt-color variants are allocated.
 
 ## Verification
-- npm test: 20 passed, 0 failed (includes 6 navigation-planner tests).
+- npm test: 21 passed, 0 failed (includes 7 navigation-planner tests).
 - npm run build: passed.
 - npm run test:browser: 10 passed, 0 failed; hiring test confirms a new worker enters walking state and returns to seated state, and a reloaded save has zero walking workers.
 - git diff --check: passed.
@@ -61,7 +61,7 @@ Last verified: 2026-11-06
 
 ## Next actions
 1. Review alternate camera angles and additional device sizes; desktop and 375x667 default views now show the seated worker.
-2. Verify the entrance-to-desk route in browser with multiple hires; then add shared route reservations / worker-worker separation. Model an actual doorway only when the office scene gains a front wall/door mesh.
+2. Add browser coverage for rapid consecutive hires and inspect the reserved-corridor behavior. Model an actual doorway only when the office scene gains a front wall/door mesh.
 3. Profile scene mesh/material counts and address the large Babylon bundle with measured changes.
 4. Keep PR #2 Draft and unmerged unless explicitly requested.
 5. Keep game saves device-local; Supabase remains identity-only.

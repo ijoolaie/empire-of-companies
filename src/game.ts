@@ -89,7 +89,37 @@ export class OfficeGame {
   while(this.workers.length>target){const worker=this.workers.pop()!;this.workerArms.pop();this.workerLegs.pop();this.workerWalkStartedAt.pop();this.workerWalkPaths.pop();worker.dispose();}
   while(this.workers.length<target){
    const index=this.workers.length,desk=this.desks[index],worker=new TransformNode('worker-'+(index+1),this.scene);
-   worker.parent=desk;const path=animateNewWorkers?planWorkerArrivalPath({x:desk.position.x,z:desk.position.z},this.desks.map(item=>({x:item.position.x,z:item.position.z})),[{x:-4,z:3,halfWidth:.48,halfDepth:.48},{x:4,z:-2,halfWidth:.48,halfDepth:.48},{x:-5,z:0,halfWidth:.09,halfDepth:4},{x:0,z:-4,halfWidth:5,halfDepth:.09}]):[Vector3.Zero()];const vectorPath=path.map(point=>new Vector3(point.x,point.y,point.z));this.workerWalkPaths.push(vectorPath);worker.position.copyFrom(vectorPath[0]);this.workerWalkStartedAt.push(performance.now()-(animateNewWorkers?0:1600));
+   worker.parent=desk;
+   const fixedObstacles=[{x:-4,z:3,halfWidth:.48,halfDepth:.48},{x:4,z:-2,halfWidth:.48,halfDepth:.48},{x:-5,z:0,halfWidth:.09,halfDepth:4},{x:0,z:-4,halfWidth:5,halfDepth:.09}];
+   if(animateNewWorkers){
+    this.workers.forEach((existing,existingIndex)=>{
+     if(performance.now()-this.workerWalkStartedAt[existingIndex]>=1600)return;
+     const existingDesk=this.desks[existingIndex],existingPath=this.workerWalkPaths[existingIndex]??[];
+     for(let segment=1;segment<existingPath.length;segment++){
+      const from=existingPath[segment-1],to=existingPath[segment];
+      const dx=to.x-from.x,dz=to.z-from.z;
+      fixedObstacles.push({
+       x:existingDesk.position.x+(from.x+to.x)/2,
+       z:existingDesk.position.z+(from.z+to.z)/2,
+       halfWidth:Math.abs(dx)/2+.34,
+       halfDepth:Math.abs(dz)/2+.34
+      });
+     }
+    });
+   }
+   let path: Array<{x:number;y:number;z:number}>=[Vector3.Zero()];
+   if(animateNewWorkers){
+    for(const entranceOffset of [0,-.8,.8,-1.6,1.6]){
+     const candidate=planWorkerArrivalPath(
+      {x:desk.position.x,z:desk.position.z},
+      this.desks.map(item=>({x:item.position.x,z:item.position.z})),
+      fixedObstacles,
+      entranceOffset
+     );
+     if(candidate.length>1){path=candidate;break;}
+    }
+   }
+   const vectorPath=path.map(point=>new Vector3(point.x,point.y,point.z));this.workerWalkPaths.push(vectorPath);worker.position.copyFrom(vectorPath[0]);this.workerWalkStartedAt.push(performance.now()-(animateNewWorkers?0:1600));
    const skin=this.getMaterial('worker-skin',new Color3(.78,.55,.39));
    const shirtColors=[new Color3(.16,.48,.72),new Color3(.22,.58,.43),new Color3(.62,.36,.68),new Color3(.78,.48,.2)];
    const shirt=this.getMaterial('worker-shirt-'+(index%shirtColors.length),shirtColors[index%shirtColors.length]);

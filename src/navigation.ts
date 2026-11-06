@@ -47,7 +47,8 @@ function pointBlocked(x: number, z: number, obstacles: NavigationObstacle[]): bo
 export function planWorkerArrivalPath(
   ownDesk: DeskObstacle,
   desks: DeskObstacle[],
-  fixedObstacles: NavigationObstacle[] = []
+  fixedObstacles: NavigationObstacle[] = [],
+  entranceOffsetX = 0
 ): ArrivalPoint[] {
   const obstacles: NavigationObstacle[] = [
     ...desks
@@ -71,7 +72,7 @@ export function planWorkerArrivalPath(
   const minZ = Math.ceil((OFFICE_MIN_Z - ownDesk.z) / GRID);
   const maxZ = Math.floor((OFFICE_MAX_Z - ownDesk.z) / GRID);
   const start = {
-    x: Math.round((ENTRANCE.x - ownDesk.x) / GRID),
+    x: Math.round((ENTRANCE.x + entranceOffsetX - ownDesk.x) / GRID),
     z: Math.round((ENTRANCE.z - ownDesk.z) / GRID)
   };
   const goal = { x: 0, z: 0 };
@@ -118,7 +119,7 @@ export function planWorkerArrivalPath(
       cells.reverse();
       return cells.map((cell, index) => {
         if (index === 0) {
-          return { x: ENTRANCE.x - ownDesk.x, y: 0, z: ENTRANCE.z - ownDesk.z };
+          return { x: ENTRANCE.x + entranceOffsetX - ownDesk.x, y: 0, z: ENTRANCE.z - ownDesk.z };
         }
         const [x, z] = cell.split(',').map(Number);
         return { x: x * GRID, y: 0, z: z * GRID };
