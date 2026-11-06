@@ -16,8 +16,9 @@ Continue Empire of Companies: https://github.com/ijoolaie/empire-of-companies
 
 ## Repository
 - Branch: feat/p3-progression-ux.
-- Latest pushed implementation commit: 34a7150 — perf: reuse office and worker materials.
-- Local branch is synchronized with origin; GitHub has not reported CI checks for this head yet.
+- Latest pushed implementation commit before camera correction: 34a7150 — perf: reuse office and worker materials.
+- Current local change: default camera alpha changed from -PI/4 to +PI/4 after screenshot review showed the worker was occluded in the default view.
+- Local verification after camera correction: 14 unit tests, build, 9 browser tests, diff check all pass. CI status for the remote implementation head is still unreported.
 - PR #2: https://github.com/ijoolaie/empire-of-companies/pull/2.
 - CI run #40 (42109392998) passed for 1991369, including Chromium browser tests.
 - Local path: C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies.
@@ -42,10 +43,10 @@ P3 progression/usability remains active. P4 has started with an initial procedur
 - CI run #37 (42108774779) passed for 7019cdc.
 - CI run #38 (42108661210) passed for 8c445bc.
 - CI run #40 (42109392998) passed for 1991369.
-- Visual acceptance on a real browser display is still outstanding; automated checks do not prove model aesthetics.
+- Manual Chromium screenshots found that the default 1280x720 camera view initially hid the worker behind the desk/monitor. Changing camera alpha to +PI/4 makes the seated worker visible; desktop default-view acceptance is complete, while mobile/alternate-angle review remains open.
 
 ## Exact next task
-Direct Babylon module imports are pushed. Material reuse is pushed and locally verified (14 unit tests, build, 9 browser tests). Next: obtain a screenshot-capable visual review of worker proportions/placement. Only after visual review, continue worker poses/variants and scene profiling. CI for current head has not been reported yet. Keep PR #2 Draft and unmerged.
+Direct Babylon module imports and material reuse are pushed. Default camera-angle correction is locally verified: worker is visible at 1280x720, with 14 unit tests, build and 9 browser tests passing. Next: commit/push camera correction and update PR, then review mobile/alternate camera composition. CI for current remote head has not been reported yet. Keep PR #2 Draft and unmerged.
 
 ## Session update rule
 Update PROJECT_STATUS and SESSION_HANDOFF with verified facts after substantial work. Update ROADMAP/WBS when scope changes. Never claim a feature is complete solely because code was written.

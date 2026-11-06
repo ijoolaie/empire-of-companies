@@ -35,31 +35,31 @@ Last verified: 2026-11-06
 - Canvas data attributes expose worker-model count, expected leg/shoe mesh count and scene material count for browser regression checks.
 - Desk materials are cached and reused; worker skin/hair/trousers/shoes share materials, and shirt material is cached per one of four palette variants. Browser coverage verifies the fifth worker reuses the first variant without allocating a new material.
 - No external assets or Blender dependency.
-- Work/walk animations, character variants, detailed poses, scene profiling and visual manual acceptance remain open.
+- Work/walk animations, character variants, detailed poses, scene profiling and broader mobile/multi-angle visual acceptance remain open. Initial desktop default-view worker visibility is manually accepted.
 - Direct Babylon module imports replaced the root barrel import; Vite transforms 464 modules instead of 2,221.
 - Material reuse now prevents per-worker duplication of shared skin/hair/trouser/shoe materials and desk furniture materials; only four shirt-color variants are allocated.
 
 ## Verification
 - npm test: 14 passed, 0 failed.
 - npm run build: passed.
-- npm run test:browser: 9 passed, 0 failed.
+- npm run test:browser: 9 passed, 0 failed after the default camera-angle correction.
 - git diff --check: passed.
 - Babylon/main application chunk after direct module imports: 1,141.33 kB minified / 281.81 kB gzip (about 81% smaller minified and 79% smaller gzip than the previous 6,026.40 / 1,322.29 kB bundle). The >500 kB warning remains.
 - CI run #36 (42107749624) passed for 2146410.
 - CI run #37 (42108774779) passed for 7019cdc.
 - CI run #38 (42108661210) passed for 8c445bc.
 - CI run #40 (42109392998) passed for latest commit 1991369, including Chromium tests.
-- Automated tests verify model synchronization and mesh counts, not aesthetic quality; visual acceptance remains outstanding.
+- Automated tests verify model synchronization and mesh counts; manual Chromium review separately verified that the worker is visible in the 1280x720 default camera view after the angle correction.
 
 ## Open
-- Review worker model proportions/placement visually in a real browser session.
+- Initial manual visual acceptance completed in Chromium at 1280x720: default camera angle had hidden the worker behind desk/monitor; camera alpha changed from -PI/4 to +PI/4, and the seated worker is now visible in the default view. Review other camera angles and mobile scene composition remains open.
 - Continue P3 screen-reader, HUD hierarchy and responsive UX work.
 - Continue P4 worker work-state animation, variants, furniture details and performance profiling.
 - Supabase Auth lifecycle remains unverified.
 - PWA and Android packaging remain unimplemented.
 
 ## Next actions
-1. Obtain a screenshot-capable browser review of worker proportions and placement.
+1. Review worker visibility/composition at mobile sizes and alternate camera angles; the 1280x720 default view now shows the seated worker.
 2. Improve worker poses/variants and add meaningful visual regression coverage where feasible.
 3. Profile scene mesh/material counts and address the large Babylon bundle with measured changes.
 4. Keep PR #2 Draft and unmerged unless explicitly requested.

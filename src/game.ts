@@ -15,7 +15,7 @@ export class OfficeGame {
  constructor(canvas:HTMLCanvasElement){
   this.engine=new Engine(canvas,true,{preserveDrawingBuffer:false,stencil:true,adaptToDeviceRatio:true});
   this.scene=new Scene(this.engine);this.scene.clearColor=new Color4(.72,.83,.91,1);
-  this.camera=new ArcRotateCamera('camera',-Math.PI/4,1.05,15,new Vector3(0,0,0),this.scene);
+  this.camera=new ArcRotateCamera('camera',Math.PI/4,1.05,15,new Vector3(0,0,0),this.scene);
   this.camera.lowerRadiusLimit=10;this.camera.upperRadiusLimit=22;this.camera.wheelPrecision=45;this.camera.panningSensibility=90;this.camera.attachControl(canvas,true);
   new HemisphericLight('ambient',new Vector3(0,1,0),this.scene).intensity=.85;
   const sun=new DirectionalLight('sun',new Vector3(-.5,-1,.4),this.scene);sun.position=new Vector3(8,12,-8);sun.intensity=.55;
