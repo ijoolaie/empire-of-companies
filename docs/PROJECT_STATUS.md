@@ -6,8 +6,8 @@ Last verified: 2026-11-06
 - GitHub: https://github.com/ijoolaie/empire-of-companies
 - Default branch: main; P2 merge: 06ebb5c.
 - Development branch: feat/p3-progression-ux.
-- Latest pushed implementation head: ad9d934; local verification passes (21 unit tests, build, 12 browser tests). CI run #67 (42181556728) is validating the performance change.
-- A* arrival routing starts at a shared office entrance and avoids desk, planter, and structural wall footprints; seven navigation tests cover entrance routing, fixed obstacles, blocked entrance fallback, deterministic routing, office bounds, and alternate entry lanes around a reserved worker route. Active worker routes are reserved for later hires; the 12th browser test verifies three rapid arrivals in two desk layouts and checks each gets a non-fallback path.
+- Latest pushed implementation head before the current uncommitted test change: ad9d934; CI run #67 (42181556728) passed. Local verification after new edge-layout coverage: 22 unit tests, build, 12 browser tests.
+- A* arrival routing starts at a shared office entrance and avoids desk, planter, and structural wall footprints; eight navigation tests cover entrance routing, fixed obstacles, blocked entrance fallback, deterministic routing, office bounds, alternate entry lanes around a reserved worker route, and 84 edge-desk/entrance-lane combinations. Active worker routes are reserved for later hires; the 12th browser test verifies three rapid arrivals in two desk layouts and checks each gets a non-fallback path.
 - New hires walk from the open side of the office toward their assigned desk for 1.6 seconds, swing their arms/legs, then transition into seated typing. Restored employees remain seated on reload.
 - PR #2: https://github.com/ijoolaie/empire-of-companies/pull/2 (open, Draft, not merged).
 - GitHub Actions run #61 (42177670283) passed for 07551af; run #62 (42178572610) passed for 9a3eab4.
@@ -41,12 +41,12 @@ Last verified: 2026-11-06
 - Material reuse now prevents per-worker duplication of shared skin/hair/trouser/shoe materials and desk furniture materials; only four shirt-color variants are allocated.
 
 ## Verification
-- npm test: 21 passed, 0 failed (includes 7 navigation-planner tests).
+- npm test: 22 passed, 0 failed (includes 8 navigation-planner tests; new edge-layout test checks 84 desk/lane combinations).
 - npm run build: passed.
 - npm run test:browser: 12 passed, 0 failed; rapid-hire regression performs three consecutive hires before any arrival completes, verifies 1/2/3 active walkers, verifies valid waypoint paths in two desk layouts, then verifies all settle and the save contains four workers.
 - git diff --check: passed.
 - Babylon/main application chunk after direct module imports: about 1,142.55 kB minified / 282.20 kB gzip (about 81% smaller minified and 79% smaller gzip than the previous 6,026.40 / 1,322.29 kB bundle). The >500 kB warning remains.
-- GitHub Actions run #62 (42178572610) passed for 9a3eab4; run #64 (42179352858) passed for 195f2c5, including build, unit tests, Chromium and all 11 browser tests. CI run #66 (42180394613) passed for 08e2cfa, including all 12 browser tests. CI run #67 (42181556728) is in progress for ad9d934.
+- GitHub Actions run #62 (42178572610) passed for 9a3eab4; run #64 (42179352858) passed for 195f2c5; run #66 (42180394613) passed for 08e2cfa; CI run #67 (42181556728) passed for ad9d934, including build, unit tests, Chromium and all 12 browser tests.
 - Automated tests verify model synchronization and mesh counts; manual Chromium review separately verified that the worker is visible in the 1280x720 default camera view after the angle correction.
 
 ## Open
@@ -58,7 +58,7 @@ Last verified: 2026-11-06
 
 ## Next actions
 1. Review alternate camera angles and additional device sizes; desktop and 375x667 default views now show the seated worker.
-2. Verify CI run #67 for the path-length caching optimization. Then review alternate camera angles and edge-of-office desk layouts. Model an actual doorway only when the office scene gains a front wall/door mesh.
+2. CI run #67 passed for the path-length caching optimization; edge-of-office routes now have unit coverage across 84 combinations. Review alternate camera angles and additional device sizes. Model an actual doorway only when the office scene gains a front wall/door mesh.
 3. Profile scene mesh/material counts and address the large Babylon bundle with measured changes.
 4. Keep PR #2 Draft and unmerged unless explicitly requested.
 5. Keep game saves device-local; Supabase remains identity-only.

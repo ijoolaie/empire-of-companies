@@ -84,3 +84,49 @@ test('a second hire can use an alternate entrance lane around a reserved worker 
   assert.deepEqual(path.at(-1), { x: 0, y: 0, z: 0 });
   assert.equal(routeIntersectsObstacle(path, reservedEntranceLane, ownDesk), false);
 });
+
+test('edge-of-office desk layouts keep every entrance-lane route inside bounds and clear of scene obstacles', () => {
+  const existingDesks = [{ x: -2, z: -1 }, { x: 1, z: -1 }];
+  const fixedObstacles = [
+    { x: -4, z: 3, halfWidth: 0.48, halfDepth: 0.48 },
+    { x: 4, z: -2, halfWidth: 0.48, halfDepth: 0.48 },
+    { x: -5, z: 0, halfWidth: 0.09, halfDepth: 4 },
+    { x: 0, z: -4, halfWidth: 5, halfDepth: 0.09 }
+  ];
+  const edgeDesks = [
+    { x: -4, z: -3 }, { x: -4, z: 0 }, { x: -4, z: 2 },
+    { x: -3, z: 3 }, { x: 0, z: 3 }, { x: 3, z: 3 },
+    { x: 4, z: 2 }, { x: 4, z: 0 }, { x: 4, z: -3 },
+    { x: -3, z: -3 }, { x: 0, z: -3 }, { x: 3, z: -3 }
+  ];
+  const entranceOffsets = [0, -0.8, 0.8, -1.6, 1.6, -2.4, 2.4];
+
+  for (const ownDesk of edgeDesks) {
+    const desks = [...existingDesks, ownDesk];
+    const deskObstacles = existingDesks.map(desk => ({
+      ...desk,
+      halfWidth: 1.05,
+      halfDepth: 0.68
+    }));
+    const allObstacles = [...fixedObstacles, ...deskObstacles];
+
+    for (const entranceOffset of entranceOffsets) {
+      const path = planWorkerArrivalPath(ownDesk, desks, fixedObstacles, entranceOffset);
+
+      assert.ok(path.length > 1, `expected a route for desk ${JSON.stringify(ownDesk)} from lane ${entranceOffset}`);
+      for (const point of path) {
+        const x = ownDesk.x + point.x;
+        const z = ownDesk.z + point.z;
+        assert.ok(x >= -4.4 && x <= 4.4, `x out of bounds: ${x}`);
+        assert.ok(z >= -3.3 && z <= 3.65, `z out of bounds: ${z}`);
+      }
+      for (const obstacle of allObstacles) {
+        assert.equal(
+          routeIntersectsObstacle(path, obstacle, ownDesk),
+          false,
+          `route for desk ${JSON.stringify(ownDesk)} lane ${entranceOffset} intersects obstacle ${JSON.stringify(obstacle)}`
+        );
+      }
+    }
+  }
+});
