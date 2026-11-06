@@ -63,3 +63,9 @@ Last verified: 2026-11-06
 4. Keep PR #2 Draft and unmerged unless explicitly requested.
 5. Keep game saves device-local; Supabase remains identity-only.
 6. Profile worker/render-loop cost with measured frame-time and scene-count evidence before further optimization.
+## Worker work-state variation — 2026-11-06
+- Seated workers now cycle deterministically through three idle work poses without adding meshes or materials: typing (two-hand alternating key taps), reviewing (one arm resting with a subtle downward head angle and one-hand input), and thinking (raised hand near the face with a small head tilt).
+- The pose is stable by worker index and updates continuously in the existing render loop. Head transforms are reset before applying the seated pose; arrival gait remains separate.
+- Canvas diagnostic data-worker-idle-pose-types reports which of the three pose families are present in the current staffed office.
+- Added a Playwright regression that restores three workers and verifies all three pose families are present and all workers load seated.
+- Verification on this change: 22 unit tests passed; production build passed (465 modules; 1,148.65 kB main JS / 284.45 kB gzip, existing >500 kB warning); all 17 browser tests passed; git diff --check passed.

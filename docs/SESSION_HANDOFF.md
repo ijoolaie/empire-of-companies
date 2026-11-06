@@ -57,3 +57,9 @@ Update PROJECT_STATUS and SESSION_HANDOFF with verified facts after substantial 
 - Eight unit tests cover entrance routing, obstacle avoidance, deterministic results, office bounds, blocked entrance fallback, alternate lane routing, and 84 edge-of-office desk/entrance-lane combinations against the scene's fixed obstacles.
 - Browser regression now hires three workers in rapid succession, verifies three concurrent walking states, waits for all to settle, and checks persisted worker count.
 - Limitation: the office has an open front and no modeled door mesh/state; reservations are static for the 1.6-second walk and do not dynamically replan after movement starts.
+## Latest verified continuation — 2026-11-06
+- CI run #81 (42212008263) passed for commit 6904840: build, unit tests, Chromium installation and browser regression suite all succeeded.
+- New seated worker idle work-state variation is implemented: typing, reviewing and thinking poses are assigned deterministically by worker index using existing head/arm meshes. No additional mesh/material allocation was introduced.
+- New browser regression restores three workers and verifies the three work-state families and seated restore behavior.
+- Local verification: 22 unit tests, production build, all 17 browser tests and git diff --check passed.
+- Implementation and documentation are verified locally; commit and push are the immediate next repository operations, followed by CI verification.

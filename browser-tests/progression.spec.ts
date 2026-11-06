@@ -100,6 +100,19 @@ test('worker material variants are reused instead of allocating one material set
 });
 
 
+test('seated workers cycle through distinct typing, reviewing and thinking poses', async ({ page }) => {
+  await seedSave(page, {
+    version: 4, cash: 100000, workers: 3, level: 1,
+    desks: [{ x: -2, z: -1 }, { x: 1, z: -1 }, { x: 4, z: 2 }, { x: -4, z: 2 }],
+    lifetimeEarned: 0, lastSavedAt: Date.now(),
+    playerXp: 0, completedObjectives: [], tutorialDismissed: true
+  });
+  await page.goto('/');
+  const canvas = page.locator('#game');
+  await expect(canvas).toHaveAttribute('data-worker-model-count', '3');
+  await expect(canvas).toHaveAttribute('data-worker-idle-pose-types', 'typing,reviewing,thinking');
+  await expect(canvas).toHaveAttribute('data-walking-worker-count', '0');
+});
 test('rapid consecutive hires reserve separate entrance corridors', async ({ page }) => {
   const pageErrors = [];
   page.on('pageerror', error => pageErrors.push(error.message));
