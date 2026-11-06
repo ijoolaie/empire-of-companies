@@ -47,3 +47,29 @@ test('arrival route is deterministic for the same desk layout', () => {
   const second = planWorkerArrivalPath(desks[0], desks).map(point => [point.x, point.y, point.z]);
   assert.deepEqual(first, second);
 });
+test('A* detours when both simple lateral approach lanes are obstructed', () => {
+  const ownDesk = { x: 0, z: 0 };
+  const desks = [
+    ownDesk,
+    { x: -1.35, z: 1.65 },
+    { x: 1.35, z: 1.65 }
+  ];
+  const path = planWorkerArrivalPath(ownDesk, desks);
+
+  assert.ok(path.length > 2);
+  assert.deepEqual(path.at(-1), { x: 0, y: 0, z: 0 });
+  for (const obstacle of desks.slice(1)) {
+    assert.equal(routeIntersectsObstacle(path, obstacle, ownDesk), false);
+  }
+});
+
+test('arrival path remains within the office bounds for an edge desk', () => {
+  const ownDesk = { x: 4, z: 2 };
+  const path = planWorkerArrivalPath(ownDesk, [ownDesk, { x: 1, z: 0 }]);
+
+  assert.deepEqual(path.at(-1), { x: 0, y: 0, z: 0 });
+  for (const point of path) {
+    assert.ok(ownDesk.x + point.x >= -4.4 && ownDesk.x + point.x <= 4.4);
+    assert.ok(ownDesk.z + point.z >= -3.3 && ownDesk.z + point.z <= 5.2);
+  }
+});
