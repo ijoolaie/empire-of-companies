@@ -19,7 +19,7 @@ https://github.com/ijoolaie/empire-of-companies
 - Local path: `C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies`.
 - Baseline main commit: `7914290` (PR #2 merged).
 - Current branch: `feat/p4-office-environment`.
-- Latest pushed head: `7628d55bbe5bb19251f0c3d6032aefad5e47cab1` (`perf: merge static worker shoe meshes`). CI run #106 passed dependency installation, build, unit tests, Chromium installation and browser regression: https://github.com/ijoolaie/empire-of-companies/actions/runs/42265597027.
+- Latest code head: `7628d55bbe5bb19251f0c3d6032aefad5e47cab1` (`perf: merge static worker shoe meshes`); latest branch head: `1c4b7fe48ed4ef9283e28195a060dc4614b890ad` (`docs: record verified P4 CI status`). CI run #106 passed dependency installation, build, unit tests, Chromium installation and browser regression: https://github.com/ijoolaie/empire-of-companies/actions/runs/42265597027.
 - Static office geometry and furniture world matrices are frozen; worker animation updates at 30 Hz; both static shoes are merged per worker. Latest commit is pushed and CI #106 is green.
 - PR #3 remains open, Draft and unmerged. PR URL: https://github.com/ijoolaie/empire-of-companies/pull/3.
 
