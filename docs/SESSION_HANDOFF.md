@@ -19,7 +19,7 @@ https://github.com/ijoolaie/empire-of-companies
 - Local path: `C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies`.
 - Baseline main commit: `7914290` (PR #2 merged).
 - Current branch: `feat/p4-office-environment`.
-- Latest verified pushed code head before the camera-reset slice: `dc23e96fa6338e34daae7b24b3c2267136bcea7d`; GitHub Actions #121 passed build, unit tests and full browser regression. Current camera-reset slice is local pending verification/commit. PR #3 remains open, Draft and unmerged.
+- Latest verified pushed code head: `7e4c048b5e8ca678a505f04471e0cae593da4850`; GitHub Actions #123 passed build, unit tests and browser regression. PR #3 remains open, Draft and unmerged.
 - Static office geometry and furniture world matrices are frozen; worker animation updates at 30 Hz; both static shoes are merged per worker. Latest commit is pushed and CI #106 is green.
 - PR #3 remains open, Draft and unmerged. PR URL: https://github.com/ijoolaie/empire-of-companies/pull/3.
 
@@ -148,3 +148,9 @@ https://github.com/ijoolaie/empire-of-companies
 - Verified the exact Persian accessible name in the existing browser regression and checked its Unicode code points in the source (Arabic/Persian letters U+0628...U+0646).
 - Local verification: unit tests 24/24; production build passed (469 modules; main bundle 1,179.75 kB minified / 292.62 kB gzip; existing Vite chunk warning remains); focused camera browser regression 1/1 passed, including English and Persian accessible-name assertions; git diff --check passed.
 - This correction is local pending commit/push and CI. PR #3 remains Draft and unmerged.
+
+
+## Latest continuation - mobile build-mode toolbar regression
+- Added a Playwright test for desk-placement mode at 390x844, 375x667 and 320x568; it verifies all five toolbar actions remain within viewport bounds.
+- Focused browser test 1/1, unit tests 24/24, production build and diff check pass. New test awaits commit/push and CI.
+- Keep PR #3 Draft and unmerged; physical-device touch/visual acceptance remains open.

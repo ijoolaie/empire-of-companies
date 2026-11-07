@@ -659,3 +659,25 @@ test('touch desk placement previews on the first tap and commits on the second t
   await expect(canvas).toHaveAttribute('data-desk-placement-preview-visible', 'false');
   await context.close();
 });
+test('mobile build-mode toolbar keeps all five actions inside narrow viewports', async ({ page }) => {
+  for (const viewport of [{ width: 390, height: 844 }, { width: 375, height: 667 }, { width: 320, height: 568 }]) {
+    await page.setViewportSize(viewport);
+    await page.goto('/');
+    await page.locator('#build').click();
+    const metrics = await page.evaluate(() => {
+      const toolbar = document.querySelector('.toolbar').getBoundingClientRect();
+      const buttons = [...document.querySelectorAll('.toolbar .action')].map(button => {
+        const rect = button.getBoundingClientRect();
+        return { left: rect.left, right: rect.right, top: rect.top, bottom: rect.bottom };
+      });
+      return { width: document.documentElement.clientWidth, toolbarLeft: toolbar.left, toolbarRight: toolbar.right, buttons };
+    });
+    expect(metrics.buttons).toHaveLength(5);
+    expect(metrics.toolbarLeft).toBeGreaterThanOrEqual(0);
+    expect(metrics.toolbarRight).toBeLessThanOrEqual(metrics.width);
+    for (const button of metrics.buttons) {
+      expect(button.left).toBeGreaterThanOrEqual(0);
+      expect(button.right).toBeLessThanOrEqual(metrics.width);
+    }
+  }
+});

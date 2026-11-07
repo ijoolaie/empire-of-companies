@@ -5,9 +5,9 @@ Last verified: 2026-11-07
 ## Repository
 - GitHub: https://github.com/ijoolaie/empire-of-companies
 - Default branch: `main`; latest merged baseline: `7914290` (PR #2).
-- Current work branch: `feat/p4-office-environment`.
+- Current work branch: `feat/p4-office-environment`; latest pushed code head `7e4c048` (camera-reset Persian accessible-label fix).
 - Local workspace: `C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies`.
-- Latest pushed head before current camera-reset slice: `dc23e96` (`feat: preview and validate desk placement`); CI #121 passed build, unit tests and full browser regression. Current camera-reset slice is local pending commit/push. PR #3 remains open, Draft, mergeable and unmerged.
+- Latest pushed code head: `7e4c048` (`fix: render Persian camera reset label`); CI #123 passed build, unit tests and browser regression. PR #3 remains open, Draft, mergeable and unmerged.
 
 ## Product decisions
 - Browser-first 3D office/company management game, Babylon.js + TypeScript + Vite.
@@ -130,3 +130,9 @@ Last verified: 2026-11-07
 - Fixed the camera-reset accessible label to render actual Persian text; the existing browser regression verifies the exact Persian accessible name.
 - Local verification: 24/24 unit tests; production build passed; focused camera browser regression 1/1; diff check passed. Existing Vite chunk-size warning remains.
 - Correction is local pending commit/push and CI. Physical-device review remains open.
+
+
+## Latest continuation - mobile build-mode toolbar regression
+- Added a Playwright regression that enters desk-placement mode at 390x844, 375x667 and 320x568 and verifies all five toolbar actions remain inside the viewport.
+- Focused browser regression: 1/1 passed. Unit tests: 24/24 passed. Production build passed (469 modules; main bundle 1,179.75 kB minified / 292.62 kB gzip); existing Vite chunk-size warning remains. git diff --check passed.
+- New browser test is local pending commit/push and CI. Physical-device touch/visual acceptance remains open. PR #3 remains Draft and unmerged.
