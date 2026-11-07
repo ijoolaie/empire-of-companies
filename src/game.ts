@@ -79,7 +79,12 @@ export class OfficeGame {
   const clockFace=mat('wall-clock-face',new Color3(.94,.91,.82));
   // Mount the clock on the right wall, clear of the notice board on the rear wall.
   const clock=MeshBuilder.CreateCylinder('office-wall-clock',{diameter:.62,height:.08,tessellation:24},this.scene);clock.rotation.z=Math.PI/2;clock.position.set(4.86,1.72,-2.25);clock.material=clockFace;
-  const clockHand=MeshBuilder.CreateBox('wall-clock-hand',{width:.025,height:.22,depth:.025},this.scene);clockHand.rotation.z=Math.PI/2;clockHand.position.set(4.78,1.78,-2.25);clockHand.material=trim;
+  const clockMarks=mat('wall-clock-markers',new Color3(.25,.34,.4));
+  for(let mark=0;mark<12;mark++){const angle=mark*Math.PI/6;const tick=MeshBuilder.CreateBox('wall-clock-tick',{width:.018,height:.045,depth:.018},this.scene);tick.position.set(4.805,1.72+Math.sin(angle)*.245,-2.25+Math.cos(angle)*.245);tick.material=clockMarks;}
+  const minuteHand=MeshBuilder.CreateBox('wall-clock-minute-hand',{width:.025,height:.22,depth:.025},this.scene);minuteHand.position.set(4.795,1.77,-2.25);minuteHand.material=trim;
+  const hourHand=MeshBuilder.CreateBox('wall-clock-hour-hand',{width:.03,height:.15,depth:.03},this.scene);hourHand.position.set(4.79,1.75,-2.285);hourHand.rotation.x=-.55;hourHand.material=clockMarks;
+  const clockPin=MeshBuilder.CreateSphere('wall-clock-center-pin',{diameter:.055,segments:8},this.scene);clockPin.position.set(4.775,1.72,-2.25);clockPin.material=emblem;
+  canvas.setAttribute('data-office-clock-detail-count',String(this.scene.meshes.filter(mesh=>mesh.name==='wall-clock-tick'||mesh.name.startsWith('wall-clock-')&&mesh.name!=='wall-clock-markers').length));
   const artFrame=MeshBuilder.CreateBox('office-wall-art-frame',{width:.08,height:.92,depth:1.2},this.scene);artFrame.position.set(-4.86,1.55,-1.65);artFrame.material=trim;
   const artPanel=MeshBuilder.CreateBox('office-wall-art-panel',{width:.035,height:.78,depth:1.06},this.scene);artPanel.position.set(-4.8,1.55,-1.65);artPanel.material=mat('wall-art',new Color3(.3,.52,.58));
   // Mount the notice board flat on the rear wall, in the clear bay to the right of the windows.

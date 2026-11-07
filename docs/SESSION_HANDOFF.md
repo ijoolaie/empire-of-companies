@@ -100,3 +100,9 @@ https://github.com/ijoolaie/empire-of-companies
 - Local validation: 22/22 unit tests, production build passed (existing Vite chunk warning), focused office-shell browser regression 1/1, diff check passed.
 - Previous head `592257c` is fully green on GitHub Actions #113. The new center-mullion commit needs its own CI.
 - PR #3 remains Draft, open and unmerged; real-device visual/GPU acceptance remains outstanding.
+
+## Latest continuation - wall clock detailing
+- Rebuilt the right-wall clock face as a readable dial with 12 hour markers, distinct minute/hour hands and a center pin (15 detail meshes total).
+- Added `data-office-clock-detail-count=15` and a browser regression assertion; clock remains on the right wall and does not affect worker navigation.
+- Local verification: unit tests 22/22; production build passed (466 modules; existing Vite >500 kB chunk warning remains); focused office-shell Playwright regression 1/1; `git diff --check` passed.
+- This slice is locally verified and awaits commit/push and GitHub Actions. PR #3 remains Draft and unmerged; physical-device visual/GPU acceptance remains open.
