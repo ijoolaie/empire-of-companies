@@ -44,6 +44,8 @@ test('progression rewards are granted once and persist after reload', async ({ p
   await page.goto('/');
   await expect(page.locator('#game')).toHaveAttribute('data-worker-model-count', '1');
   await expect(page.locator('#game')).toHaveAttribute('data-desk-accessory-mesh-count', '9');
+  await expect(page.locator('#game')).toHaveAttribute('data-desk-chair-detail-mesh-count', '9');
+  await expect(page.locator('#game')).toHaveAttribute('data-desk-monitor-ui-count', '3');
   await expect(page.locator('#game')).toHaveAttribute('data-worker-leg-mesh-count', '5');
   await expect(page.locator('#game')).toHaveAttribute('data-worker-necktie-mesh-count', '1');
   const materialCountBeforeHire = await page.locator('#game').getAttribute('data-scene-material-count');
@@ -60,7 +62,7 @@ test('progression rewards are granted once and persist after reload', async ({ p
   await expect(page.locator('#game')).toHaveAttribute('data-worker-leg-mesh-count', '10');
   await expect(page.locator('#game')).toHaveAttribute('data-worker-necktie-mesh-count', '2');
   await expect(page.locator('#game')).toHaveAttribute('data-walking-worker-count', '0', { timeout: 12000 });
-  await expect(page.locator('#game')).toHaveAttribute('data-scene-material-count', String(Number(materialCountBeforeHire) + 4));
+  await expect(page.locator('#game')).toHaveAttribute('data-scene-material-count', String(Number(materialCountBeforeHire) + 5));
   await expect(rows.nth(1)).toHaveClass(/is-complete/);
   await expect(page.locator('.progress-heading')).toContainText('50 / 100 XP');
 
@@ -97,7 +99,7 @@ test('worker material variants are reused instead of allocating one material set
   for (let workerCount = 2; workerCount <= 5; workerCount++) {
     await page.locator('#hire').click();
     await expect(canvas).toHaveAttribute('data-worker-model-count', String(workerCount));
-    const expectedMaterials = initialMaterials + Math.min(workerCount - 1, 3) * 4;
+    const expectedMaterials = initialMaterials + Math.min(workerCount - 1, 3) * 5;
     await expect(canvas).toHaveAttribute('data-scene-material-count', String(expectedMaterials));
   }
 });
@@ -139,6 +141,8 @@ test('each office desk includes a monitor stand, base, keyboard and mouse', asyn
   await page.goto('/');
   await expect(page.locator('#game')).toHaveAttribute('data-desk-detail-mesh-count', '12');
   await expect(page.locator('#game')).toHaveAttribute('data-desk-storage-mesh-count', '6');
+  await expect(page.locator('#game')).toHaveAttribute('data-desk-chair-detail-mesh-count', '9');
+  await expect(page.locator('#game')).toHaveAttribute('data-desk-monitor-ui-count', '3');
 });
 
 test('seated workers cycle through distinct typing, reviewing and thinking poses', async ({ page }) => {
@@ -313,6 +317,24 @@ test('progression dialog fits common mobile, tablet and desktop viewport widths'
   }
 });
 
+test('main character is visible and worker models include facial features', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 720 });
+  const desks = [{ x: -2, z: -1 }, { x: 1, z: -1 }];
+  await seedSave(page, {
+    version: 4, cash: 100000, workers: 2, level: 1, desks,
+    lifetimeEarned: 0, lastSavedAt: Date.now(),
+    playerXp: 0, completedObjectives: [], tutorialDismissed: true
+  });
+  await page.goto('/');
+  const canvas = page.locator('#game');
+  await expect(canvas).toHaveAttribute('data-main-character-present', 'true');
+  await expect(canvas).toHaveAttribute('data-main-character-role', 'player-founder');
+  await expect(canvas).toHaveAttribute('data-main-character-nameplate', 'true');
+  await expect(canvas).toHaveAttribute('data-office-feature-wall-slat-count', '5');
+  await expect(canvas).toHaveAttribute('data-worker-model-count', '2');
+  await expect.poll(async () => Number(await canvas.getAttribute('data-worker-face-detail-mesh-count'))).toBeGreaterThanOrEqual(12);
+  await expect.poll(async () => Number(await canvas.getAttribute('data-main-character-face-detail-count'))).toBeGreaterThanOrEqual(12);
+});
 test('scene profiling compares zero, five, ten, twelve and twenty-worker CPU/render resource metrics', async ({ page }) => {
   test.setTimeout(150000);
   await page.setViewportSize({ width: 1280, height: 720 });

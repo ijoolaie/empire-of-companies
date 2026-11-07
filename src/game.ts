@@ -17,7 +17,7 @@ import {TransformNode} from '@babylonjs/core/Meshes/transformNode';
 import {planWorkerArrivalPath} from './navigation';
 
 export class OfficeGame {
- engine:Engine; scene:Scene; camera:ArcRotateCamera; floor:any; placementPreview:any; placementMaterials:Record<string,StandardMaterial>={}; canPreviewDesk?:(x:number,z:number)=>boolean; onTouchPlacementPreview?:()=>void; touchPlacementTarget:{x:number;z:number}|null=null; desks:TransformNode[]=[]; workers:TransformNode[]=[]; workerArms:Array<[any,any]>=[]; workerHeads:any[]=[]; workerLegs:Array<[any,any]>=[]; workerShins:Array<[any,any]>=[]; workerWalkStartedAt:number[]=[]; workerWalkPaths:Vector3[][]=[]; workerWalkPathLengths:number[][]=[]; workerWalkPathTotalLengths:number[]=[]; materials:Record<string,StandardMaterial>={}; surfaceTextures:Record<string,DynamicTexture>={}; shadowGenerator!:ShadowGenerator; placing=false; onFloorTap?:(x:number,z:number)=>boolean;
+ engine:Engine; scene:Scene; camera:ArcRotateCamera; floor:any; placementPreview:any; placementMaterials:Record<string,StandardMaterial>={}; canPreviewDesk?:(x:number,z:number)=>boolean; onTouchPlacementPreview?:()=>void; touchPlacementTarget:{x:number;z:number}|null=null; desks:TransformNode[]=[]; mainCharacter:TransformNode|null=null; workers:TransformNode[]=[]; workerArms:Array<[any,any]>=[]; workerHeads:any[]=[]; workerLegs:Array<[any,any]>=[]; workerShins:Array<[any,any]>=[]; workerWalkStartedAt:number[]=[]; workerWalkPaths:Vector3[][]=[]; workerWalkPathLengths:number[][]=[]; workerWalkPathTotalLengths:number[]=[]; materials:Record<string,StandardMaterial>={}; surfaceTextures:Record<string,DynamicTexture>={}; shadowGenerator!:ShadowGenerator; placing=false; onFloorTap?:(x:number,z:number)=>boolean;
  constructor(canvas:HTMLCanvasElement){
   this.engine=new Engine(canvas,true,{preserveDrawingBuffer:false,stencil:true,adaptToDeviceRatio:true});
   this.scene=new Scene(this.engine);this.scene.clearColor=new Color4(.72,.83,.91,1);
@@ -151,9 +151,9 @@ export class OfficeGame {
   }
   canvas.setAttribute('data-office-plant-foliage-mesh-count',String(this.scene.meshes.filter(mesh=>mesh.name.startsWith('plant-foliage-')).length));
   canvas.setAttribute('data-office-planter-detail-count',String(this.scene.meshes.filter(mesh=>mesh.name==='planter-soil'||mesh.name==='planter-rim').length));
-  this.addDesk(-2,-1);this.addDesk(1,-1);
+  this.addDesk(-2,-1);this.addDesk(1,-1);this.createMainCharacter();
   // Office architecture and furniture are static; freeze their world matrices so Babylon can skip per-frame recomputation.
-  const shadowCasterNames=new Set(['back-wall','side-wall','right-wall','front-wall-left','front-wall-right','entrance-header','office-bookcase','office-wall-clock','office-wall-art-frame','office-wall-art-panel','office-notice-board','notice-board-cork','waiting-bench-seat','waiting-bench-back','waiting-bench-support','pot','desk-top','desk-leg','chair-seat','chair-back','monitor']);
+  const shadowCasterNames=new Set(['back-wall','side-wall','right-wall','front-wall-left','front-wall-right','entrance-header','office-bookcase','office-wall-clock','office-wall-art-frame','office-wall-art-panel','office-notice-board','notice-board-cork','player-feature-wall-panel','player-feature-wall-slat','player-feature-wall-emblem','waiting-bench-seat','waiting-bench-back','waiting-bench-support','pot','desk-top','desk-leg','chair-frame','chair-upholstery','chair-base','monitor']);
   const shadowReceiverNames=new Set(['ground','office-floor','rug','back-wall','side-wall','right-wall','front-wall-left','front-wall-right']);
   this.scene.meshes.forEach(mesh=>{if(mesh.material&&(shadowCasterNames.has(mesh.name)||mesh.name.startsWith('plant-foliage-')))this.shadowGenerator.addShadowCaster(mesh);mesh.receiveShadows=shadowReceiverNames.has(mesh.name);mesh.freezeWorldMatrix();});
   this.placementMaterials.valid=this.getMaterial('placement-valid',new Color3(.16,.72,.34));
@@ -296,8 +296,23 @@ export class OfficeGame {
   for(const dx of [-.62,.62])for(const dz of [-.25,.25]){const leg=MeshBuilder.CreateBox('desk-leg',{width:.08,height:.82,depth:.08},this.scene);leg.parent=root;leg.position.set(dx,.41,dz);leg.material=wood;}
   const chair=this.getMaterial('chair',new Color3(.12,.24,.38));
   const seat=MeshBuilder.CreateBox('chair-seat',{width:.62,height:.13,depth:.62},this.scene);seat.parent=root;seat.position.set(0,.53,.72);seat.material=chair;
-  const backrest=MeshBuilder.CreateBox('chair-back',{width:.62,height:.62,depth:.12},this.scene);backrest.parent=root;backrest.position.set(0,.88,1.0);backrest.material=chair;
-  const monitor=MeshBuilder.CreateBox('monitor',{width:.65,height:.42,depth:.07},this.scene);monitor.parent=root;monitor.position.set(0,1.2,-.12);const screen=this.getMaterial('screen',new Color3(.035,.07,.12));monitor.material=screen;
+  const backrest=MeshBuilder.CreateBox('chair-back',{width:.62,height:.62,depth:.12},this.scene);backrest.parent=root;backrest.position.set(0,.88,1.0);backrest.material=chair;  const chairFrameParts:Mesh[]=[seat,backrest];
+  for(const side of [-1,1]){
+   const armSupport=MeshBuilder.CreateBox('chair-arm-support',{width:.055,height:.25,depth:.07},this.scene);armSupport.position.set(side*.35,.69,.78);armSupport.material=chair;chairFrameParts.push(armSupport);
+   const armPad=MeshBuilder.CreateBox('chair-arm-pad',{width:.1,height:.075,depth:.44},this.scene);armPad.position.set(side*.35,.82,.78);armPad.material=chair;chairFrameParts.push(armPad);
+  }
+  chairFrameParts.forEach(mesh=>{mesh.parent=null;});const chairFrame=Mesh.MergeMeshes(chairFrameParts,true,true);if(chairFrame){chairFrame.name='chair-frame';chairFrame.parent=root;chairFrame.material=chair;}
+  const chairFabric=this.getMaterial('chair-fabric',new Color3(.18,.31,.42));
+  const upholsteryParts:Mesh[]=[];
+  const seatPad=MeshBuilder.CreateBox('chair-seat-cushion',{width:.54,height:.065,depth:.54},this.scene);seatPad.position.set(0,.63,.72);seatPad.material=chairFabric;upholsteryParts.push(seatPad);
+  const backPad=MeshBuilder.CreateBox('chair-back-cushion',{width:.52,height:.48,depth:.055},this.scene);backPad.position.set(0,.9,.925);backPad.material=chairFabric;upholsteryParts.push(backPad);
+  const upholstery=Mesh.MergeMeshes(upholsteryParts,true,true);if(upholstery){upholstery.name='chair-upholstery';upholstery.parent=root;upholstery.material=chairFabric;}
+  const chairMetal=this.getMaterial('chair-metal',new Color3(.42,.49,.54));const baseParts:Mesh[]=[];
+  const gasLift=MeshBuilder.CreateCylinder('chair-gas-lift',{height:.3,diameter:.105,tessellation:10},this.scene);gasLift.position.set(0,.31,.72);gasLift.material=chairMetal;baseParts.push(gasLift);
+  for(const rotation of [0,Math.PI/2]){const spoke=MeshBuilder.CreateBox('chair-base-spoke',{width:.78,height:.045,depth:.065},this.scene);spoke.position.set(0,.16,.72);spoke.rotation.y=rotation;spoke.material=chairMetal;baseParts.push(spoke);}
+  for(const [dx,dz] of [[-.3,-.3],[-.3,.3],[.3,-.3],[.3,.3]] as const){const caster=MeshBuilder.CreateSphere('chair-caster',{diameter:.105,segments:8},this.scene);caster.position.set(dx,.105,.72+dz);caster.scaling.y=.62;caster.material=chairMetal;baseParts.push(caster);}
+  const chairBase=Mesh.MergeMeshes(baseParts,true,true);if(chairBase){chairBase.name='chair-base';chairBase.parent=root;chairBase.material=chairMetal;}
+  const monitor=MeshBuilder.CreateBox('monitor',{width:.65,height:.42,depth:.07},this.scene);monitor.parent=root;monitor.position.set(0,1.2,-.12);const screen=this.getMaterial('screen',new Color3(.035,.07,.12));screen.diffuseTexture=this.createMonitorDisplayTexture();monitor.material=screen;
   const deskAccent=this.getMaterial('desk-accent',new Color3(.34,.4,.46));
   const peripherals=this.getMaterial('desk-peripherals',new Color3(.16,.19,.22));
   const monitorStand=MeshBuilder.CreateBox('monitor-stand',{width:.09,height:.16,depth:.08},this.scene);monitorStand.parent=root;monitorStand.position.set(0,1.0,-.12);monitorStand.material=deskAccent;
@@ -312,12 +327,60 @@ export class OfficeGame {
   const drawer=MeshBuilder.CreateBox('desk-drawer-unit',{width:.32,height:.48,depth:.52},this.scene);drawer.parent=root;drawer.position.set(-.43,.42,-.02);drawer.material=drawerMat;
   const drawerHandle=MeshBuilder.CreateBox('desk-drawer-handle',{width:.12,height:.025,depth:.035},this.scene);drawerHandle.parent=root;drawerHandle.position.set(-.43,.53,.26);drawerHandle.material=deskAccent;
   root.freezeWorldMatrix();
-  root.getChildMeshes().forEach(mesh=>{if(['desk-top','desk-leg','chair-seat','chair-back','monitor'].includes(mesh.name))this.shadowGenerator.addShadowCaster(mesh);mesh.freezeWorldMatrix();});
+  root.getChildMeshes().forEach(mesh=>{if(['desk-top','desk-leg','chair-frame','chair-upholstery','chair-base','monitor'].includes(mesh.name))this.shadowGenerator.addShadowCaster(mesh);mesh.freezeWorldMatrix();});
   this.desks.push(root);
+  this.engine.getRenderingCanvas()?.setAttribute('data-desk-chair-detail-mesh-count',String(this.desks.length*3));
+  this.engine.getRenderingCanvas()?.setAttribute('data-desk-monitor-ui-count',String(this.desks.length));
   this.engine.getRenderingCanvas()?.setAttribute('data-desk-detail-mesh-count',String(this.desks.length*4));
   this.engine.getRenderingCanvas()?.setAttribute('data-desk-accessory-mesh-count',String(this.desks.length*3));
   this.engine.getRenderingCanvas()?.setAttribute('data-desk-storage-mesh-count',String(this.desks.length*2));
   return root;
+ }
+ createMainCharacter(){
+  const root=new TransformNode('main-character-player',this.scene);root.position.set(4.3,.08,3.55);root.rotation.y=0;this.mainCharacter=root;
+  const skin=this.getMaterial('player-skin',new Color3(.72,.48,.34));
+  const hair=this.getMaterial('player-hair',new Color3(.075,.065,.06));
+  const jacket=this.getMaterial('player-jacket',new Color3(.12,.2,.29));
+  const shirt=this.getMaterial('player-shirt',new Color3(.88,.87,.81));
+  const trousers=this.getMaterial('player-trousers',new Color3(.11,.14,.19));
+  const shoes=this.getMaterial('player-shoes',new Color3(.045,.05,.06));
+  const gold=this.getMaterial('player-accent',new Color3(.78,.59,.29));
+  const body=MeshBuilder.CreateCapsule('player-jacket-body',{height:.78,radius:.23,tessellation:10},this.scene);body.parent=root;body.position.y=1.08;body.scaling.set(1.05,1,.72);body.material=jacket;
+  const shirtFront=MeshBuilder.CreateBox('player-shirt-front',{width:.19,height:.58,depth:.035},this.scene);shirtFront.parent=root;shirtFront.position.set(0,1.12,.205);shirtFront.material=shirt;
+  const tie=MeshBuilder.CreateBox('player-tie',{width:.07,height:.32,depth:.035},this.scene);tie.parent=root;tie.position.set(0,1.12,.23);tie.material=gold;
+  for(const side of [-1,1]){
+   const lapel=MeshBuilder.CreateBox('player-lapel',{width:.105,height:.42,depth:.045},this.scene);lapel.parent=root;lapel.position.set(side*.105,1.22,.225);lapel.rotation.z=side*.32;lapel.material=jacket;
+   const arm=MeshBuilder.CreateCapsule('player-arm',{height:.66,radius:.09,tessellation:8},this.scene);arm.parent=root;arm.position.set(side*.29,1.08,.015);arm.rotation.z=side*.12;arm.material=jacket;
+   const cuff=MeshBuilder.CreateCylinder('player-cuff',{height:.12,diameter:.19,tessellation:10},this.scene);cuff.parent=root;cuff.position.set(side*.32,.78,.04);cuff.rotation.z=Math.PI/2;cuff.material=shirt;
+   const hand=MeshBuilder.CreateSphere('player-hand',{diameter:.17,segments:8},this.scene);hand.parent=root;hand.position.set(side*.33,.68,.05);hand.material=skin;
+   const leg=MeshBuilder.CreateCapsule('player-leg',{height:.72,radius:.115,tessellation:8},this.scene);leg.parent=root;leg.position.set(side*.13,.43,0);leg.material=trousers;
+   const shoe=MeshBuilder.CreateBox('player-shoe',{width:.22,height:.13,depth:.38},this.scene);shoe.parent=root;shoe.position.set(side*.13,.13,.08);shoe.material=shoes;
+  }
+  const neck=MeshBuilder.CreateCylinder('player-neck',{height:.18,diameter:.16,tessellation:10},this.scene);neck.parent=root;neck.position.y=1.51;neck.material=skin;
+  const head=MeshBuilder.CreateSphere('player-head',{diameter:.39,segments:16},this.scene);head.parent=root;head.position.y=1.72;head.scaling.set(.92,1.12,.9);head.material=skin;
+  const hairCap=MeshBuilder.CreateSphere('player-hair-cap',{diameter:.405,segments:12},this.scene);hairCap.parent=root;hairCap.position.set(0,1.87,-.015);hairCap.scaling.set(1,.58,.95);hairCap.material=hair;
+  const fringe=MeshBuilder.CreateSphere('player-hair-fringe',{diameter:.22,segments:10},this.scene);fringe.parent=root;fringe.position.set(-.075,1.86,.145);fringe.scaling.set(1.25,.5,.55);fringe.material=hair;
+  const white=this.getMaterial('player-eye-white',new Color3(.96,.94,.88));const iris=this.getMaterial('player-iris',new Color3(.19,.28,.25));const pupil=this.getMaterial('player-pupil',new Color3(.025,.03,.035));
+  for(const side of [-1,1]){
+   const eye=MeshBuilder.CreateSphere('player-eye',{diameter:.072,segments:10},this.scene);eye.parent=root;eye.position.set(side*.078,1.735,.165);eye.scaling.z=.42;eye.material=white;
+   const irisMesh=MeshBuilder.CreateSphere('player-iris',{diameter:.04,segments:8},this.scene);irisMesh.parent=root;irisMesh.position.set(side*.078,1.735,.194);irisMesh.scaling.z=.4;irisMesh.material=iris;
+   const pupilMesh=MeshBuilder.CreateSphere('player-pupil',{diameter:.021,segments:8},this.scene);pupilMesh.parent=root;pupilMesh.position.set(side*.078,1.735,.208);pupilMesh.scaling.z=.4;pupilMesh.material=pupil;
+   const brow=MeshBuilder.CreateBox('player-eyebrow',{width:.09,height:.02,depth:.025},this.scene);brow.parent=root;brow.position.set(side*.078,1.79,.17);brow.rotation.z=side*.08;brow.material=hair;
+   const ear=MeshBuilder.CreateSphere('player-ear',{diameter:.09,segments:8},this.scene);ear.parent=root;ear.position.set(side*.18,1.7,0);ear.scaling.set(.55,1,.65);ear.material=skin;
+  }
+  const nose=MeshBuilder.CreateSphere('player-nose',{diameter:.07,segments:10},this.scene);nose.parent=root;nose.position.set(0,1.69,.2);nose.scaling.set(.65,.85,.8);nose.material=skin;
+  const mouth=MeshBuilder.CreateBox('player-mouth',{width:.09,height:.014,depth:.02},this.scene);mouth.parent=root;mouth.position.set(0,1.625,.17);mouth.material=this.getMaterial('player-mouth',new Color3(.32,.12,.12));
+  const beard=this.getMaterial('player-beard',new Color3(.16,.12,.1));const chin=MeshBuilder.CreateSphere('player-beard-chin',{diameter:.2,segments:10},this.scene);chin.parent=root;chin.position.set(0,1.59,.105);chin.scaling.set(.9,.38,.65);chin.material=beard;
+  const badge=MeshBuilder.CreateBox('player-identity-badge',{width:.16,height:.2,depth:.025},this.scene);badge.parent=root;badge.position.set(-.16,1.08,.235);badge.material=gold;
+  const badgeDot=MeshBuilder.CreateSphere('player-badge-mark',{diameter:.055,segments:8},this.scene);badgeDot.parent=root;badgeDot.position.set(-.16,1.1,.255);badgeDot.material=shirt;  const nameplateTexture=new DynamicTexture('player-nameplate-texture',{width:256,height:64},this.scene,false);const nameplateContext=nameplateTexture.getContext();nameplateContext.fillStyle='#14283a';nameplateContext.fillRect(0,0,256,64);nameplateContext.strokeStyle='#c9a66b';nameplateContext.lineWidth=5;nameplateContext.strokeRect(3,3,250,58);nameplateContext.fillStyle='#f3e7cf';nameplateContext.font='bold 28px Arial';nameplateContext.fillText('FOUNDER',60,42);nameplateTexture.update(false);
+  const nameplateMaterial=this.getMaterial('player-nameplate-material',new Color3(1,1,1));nameplateMaterial.diffuseTexture=nameplateTexture;nameplateMaterial.emissiveColor=new Color3(.18,.16,.12);
+  const nameplate=MeshBuilder.CreatePlane('player-nameplate',{width:.72,height:.18},this.scene);nameplate.parent=root;nameplate.position.set(0,2.12,.015);nameplate.material=nameplateMaterial;nameplate.isPickable=false;
+  const featureWall=this.getMaterial('player-feature-wall',new Color3(.16,.24,.3));const featureWallPanel=MeshBuilder.CreateBox('player-feature-wall-panel',{width:.08,height:2.05,depth:1.9},this.scene);featureWallPanel.position.set(4.84,1.15,2.55);featureWallPanel.material=featureWall;
+  const featureSlat=this.getMaterial('player-feature-wall-slat',new Color3(.62,.43,.28));for(let slat=0;slat<5;slat++){const detail=MeshBuilder.CreateBox('player-feature-wall-slat',{width:.035,height:1.88,depth:.07},this.scene);detail.position.set(4.9,1.15,1.82+slat*.36);detail.material=featureSlat;}
+  const wallEmblem=MeshBuilder.CreateBox('player-feature-wall-emblem',{width:.035,height:.34,depth:.52},this.scene);wallEmblem.position.set(4.92,1.88,2.55);wallEmblem.material=gold;
+  this.engine.getRenderingCanvas()?.setAttribute('data-office-feature-wall-slat-count','5');
+  const shadowMeshes=root.getChildMeshes();shadowMeshes.forEach(mesh=>this.shadowGenerator.addShadowCaster(mesh));
+  const canvas=this.engine.getRenderingCanvas();canvas?.setAttribute('data-main-character-present','true');canvas?.setAttribute('data-main-character-role','player-founder');canvas?.setAttribute('data-main-character-nameplate','true');canvas?.setAttribute('data-main-character-face-detail-count',String(shadowMeshes.filter(mesh=>/player-(eye|iris|pupil|eyebrow|ear|nose|mouth)/.test(mesh.name)).length));
  }
  syncWorkers(count:number,animateNewWorkers=true){
   const target=Math.max(0,Math.min(Math.floor(count),this.desks.length));
@@ -325,7 +388,7 @@ export class OfficeGame {
   while(this.workers.length<target){
    const index=this.workers.length,desk=this.desks[index],worker=new TransformNode('worker-'+(index+1),this.scene);
    worker.parent=desk;
-   const fixedObstacles=[{x:-4,z:3,halfWidth:.48,halfDepth:.48},{x:4,z:-2,halfWidth:.48,halfDepth:.48},{x:4.48,z:-.55,halfWidth:.38,halfDepth:.95},{x:-4.48,z:1.1,halfWidth:.48,halfDepth:.9},{x:-5,z:0,halfWidth:.09,halfDepth:4},{x:0,z:-4,halfWidth:5,halfDepth:.09}];
+   const fixedObstacles=[{x:-4,z:3,halfWidth:.48,halfDepth:.48},{x:4,z:-2,halfWidth:.48,halfDepth:.48},{x:4.48,z:-.55,halfWidth:.38,halfDepth:.95},{x:4.3,z:3.55,halfWidth:.38,halfDepth:.38},{x:-4.48,z:1.1,halfWidth:.48,halfDepth:.9},{x:-5,z:0,halfWidth:.09,halfDepth:4},{x:0,z:-4,halfWidth:5,halfDepth:.09}];
    if(animateNewWorkers){
     this.workers.forEach((existing,existingIndex)=>{
      if(performance.now()-this.workerWalkStartedAt[existingIndex]>=1600)return;
@@ -375,6 +438,28 @@ export class OfficeGame {
    const necktie=MeshBuilder.CreateBox('worker-necktie-'+index,{width:.075,height:.22,depth:.025},this.scene);necktie.parent=worker;necktie.position.set(0,1.02,.435);necktie.material=tie;
    const head=MeshBuilder.CreateSphere('worker-head-'+index,{diameter:.34,segments:10},this.scene);head.parent=worker;head.position.set(0,1.43,.55);head.material=skin;this.workerHeads.push(head);
    const hairCap=MeshBuilder.CreateSphere('worker-hair-'+index,{diameter:.35,segments:8},this.scene);hairCap.parent=worker;hairCap.scaling.y=[.42,.5,.58,.46][variant];hairCap.scaling.x=[1,.96,1.04,.92][variant];hairCap.position.set(0,1.57,.55);hairCap.material=hair;
+   // Readable facial features turn the former blank head spheres into identifiable people.
+   const eyeWhite=this.getMaterial('worker-eye-white',new Color3(.94,.92,.86));
+   const iris=this.getMaterial('worker-iris-'+variant,[new Color3(.18,.32,.25),new Color3(.28,.2,.13),new Color3(.16,.28,.4),new Color3(.34,.25,.18)][variant]);
+   const pupil=this.getMaterial('worker-pupil',new Color3(.035,.045,.055));
+   const features:Mesh[]=[];
+   for(const side of [-1,1]){
+    const eye=MeshBuilder.CreateSphere('worker-eye-'+index+'-'+side,{diameter:.064,segments:8},this.scene);eye.parent=worker;eye.position.set(side*.066,1.445,.704);eye.scaling.z=.42;eye.material=eyeWhite;features.push(eye);
+    const irisMesh=MeshBuilder.CreateSphere('worker-iris-'+index+'-'+side,{diameter:.034,segments:8},this.scene);irisMesh.parent=worker;irisMesh.position.set(side*.066,1.445,.729);irisMesh.scaling.z=.42;irisMesh.material=iris;features.push(irisMesh);
+    const pupilMesh=MeshBuilder.CreateSphere('worker-pupil-'+index+'-'+side,{diameter:.018,segments:6},this.scene);pupilMesh.parent=worker;pupilMesh.position.set(side*.066,1.445,.742);pupilMesh.scaling.z=.4;pupilMesh.material=pupil;features.push(pupilMesh);
+    const brow=MeshBuilder.CreateBox('worker-brow-'+index+'-'+side,{width:.075,height:.018,depth:.025},this.scene);brow.parent=worker;brow.position.set(side*.066,1.493,.704);brow.rotation.z=side*.08;brow.material=hair;features.push(brow);
+    const ear=MeshBuilder.CreateSphere('worker-ear-'+index+'-'+side,{diameter:.085,segments:8},this.scene);ear.parent=worker;ear.position.set(side*.166,1.43,.55);ear.scaling.set(.55,1,.62);ear.material=skin;features.push(ear);
+   }
+   const nose=MeshBuilder.CreateSphere('worker-nose-'+index,{diameter:.065,segments:8},this.scene);nose.parent=worker;nose.position.set(0,1.405,.718);nose.scaling.set(.62,.8,.72);nose.material=skin;features.push(nose);
+   const mouth=MeshBuilder.CreateBox('worker-mouth-'+index,{width:.075,height:.012,depth:.018},this.scene);mouth.parent=worker;mouth.position.set(0,1.365,.704);mouth.material=this.getMaterial('worker-mouth',new Color3(.36,.13,.13));features.push(mouth);
+   const fringe=MeshBuilder.CreateSphere('worker-fringe-'+index,{diameter:.19,segments:8},this.scene);fringe.parent=worker;fringe.position.set(-.045,1.565,.675);fringe.scaling.set(1.2,.42,.58);fringe.material=hair;features.push(fringe);   // Merge same-material face parts into a handful of meshes to keep 20-worker scenes affordable.
+   const faceMaterials=[eyeWhite,iris,pupil,hair,skin,this.materials['worker-mouth']];
+   faceMaterials.forEach((material,groupIndex)=>{
+    const parts=features.filter(mesh=>mesh.material===material);if(!parts.length)return;
+    if(parts.length===1){parts[0].name='worker-face-detail-'+index+'-'+groupIndex;return;}
+    parts.forEach(mesh=>{mesh.parent=null;});
+    const merged=Mesh.MergeMeshes(parts,true,true);if(merged){merged.name='worker-face-detail-'+index+'-'+groupIndex;merged.parent=worker;merged.material=material;}
+   });
    // Seated legs: thighs extend toward the desk, with lower legs and shoes below the desktop.
    const thighs:any[]=[],shins:any[]=[],shoeMeshes:any[]=[];
    for(const side of [-1,1]){
@@ -391,7 +476,7 @@ export class OfficeGame {
    this.workerArms.push([arms[0],arms[1]]);
    this.workerLegs.push([thighs[0],thighs[1]]);
    this.workerShins.push([shins[0],shins[1]]);
-   worker.getChildMeshes().forEach(mesh=>{if(/^(worker-torso|worker-head|worker-hair|worker-thigh|worker-shin|worker-arm|worker-shoes)-/.test(mesh.name))this.shadowGenerator.addShadowCaster(mesh);});
+   worker.getChildMeshes().forEach(mesh=>{if(/^(worker-torso|worker-head|worker-hair|worker-face-detail|worker-thigh|worker-shin|worker-arm|worker-shoes)-/.test(mesh.name))this.shadowGenerator.addShadowCaster(mesh);});
     this.workers.push(worker);
   }
   this.engine.getRenderingCanvas()?.setAttribute('data-worker-model-count',String(this.workers.length));
@@ -400,7 +485,26 @@ export class OfficeGame {
   this.engine.getRenderingCanvas()?.setAttribute('data-worker-arrival-waypoint-counts',this.workerWalkPaths.map(path=>String(path.length)).join(','));
   this.engine.getRenderingCanvas()?.setAttribute('data-worker-leg-mesh-count',String(this.workers.length*5));
   this.engine.getRenderingCanvas()?.setAttribute('data-worker-necktie-mesh-count',String(this.workers.length));
+  this.engine.getRenderingCanvas()?.setAttribute('data-worker-face-detail-mesh-count',String(this.scene.meshes.filter(mesh=>mesh.name.startsWith('worker-face-detail-')).length));
   this.engine.getRenderingCanvas()?.setAttribute('data-scene-material-count',String(this.scene.materials.length));
+ }
+ createMonitorDisplayTexture(){
+  const existing=this.surfaceTextures['monitor-ui-display'];if(existing)return existing;
+  const texture=new DynamicTexture('monitor-ui-display',{width:512,height:512},this.scene,false);
+  const ctx=texture.getContext();
+  ctx.fillStyle='#101c2b';ctx.fillRect(0,0,512,512);
+  ctx.fillStyle='#172a3d';ctx.fillRect(0,0,512,54);
+  ctx.fillStyle='#e9f0f3';ctx.font='bold 20px Arial';ctx.fillText('OFFICE / CONTROL',20,34);
+  ctx.fillStyle='#39b9a4';ctx.fillRect(20,68,7,7);ctx.fillStyle='#9bb2c1';ctx.font='13px Arial';ctx.fillText('LIVE WORKSPACE',36,78);
+  ctx.fillStyle='#1b3044';ctx.fillRect(18,94,476,112);ctx.fillRect(18,220,228,118);ctx.fillRect(264,220,230,118);
+  ctx.fillStyle='#7f9aac';ctx.font='12px Arial';ctx.fillText('WEEKLY PERFORMANCE',32,116);ctx.fillText('TASK FLOW',32,242);ctx.fillText('TEAM ACTIVITY',278,242);
+  ctx.strokeStyle='#31536b';ctx.lineWidth=1;for(let y=132;y<194;y+=20){ctx.beginPath();ctx.moveTo(32,y);ctx.lineTo(478,y);ctx.stroke();}
+  ctx.strokeStyle='#45c7b0';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(34,181);ctx.lineTo(92,168);ctx.lineTo(151,174);ctx.lineTo(211,145);ctx.lineTo(270,155);ctx.lineTo(330,133);ctx.lineTo(389,142);ctx.lineTo(470,119);ctx.stroke();
+  const bars=[38,61,48,78,91,70];bars.forEach((height,index)=>{ctx.fillStyle=index===4?'#e2b86b':'#3d9f9a';ctx.fillRect(34+index*30,320-height,17,height);});
+  for(let i=0;i<4;i++){ctx.fillStyle=i===0?'#45c7b0':'#35546b';ctx.beginPath();ctx.arc(286,270+i*17,4,0,Math.PI*2);ctx.fill();ctx.fillStyle='#a8bac5';ctx.fillRect(300,266+i*17,150-(i%2)*36,7);}
+  ctx.fillStyle='#172a3d';ctx.fillRect(18,356,476,136);ctx.fillStyle='#7f9aac';ctx.font='12px Arial';ctx.fillText('PROJECT STATUS',32,378);
+  for(let i=0;i<3;i++){ctx.fillStyle='#a8bac5';ctx.fillRect(32,397+i*28,92,6);ctx.fillStyle='#263f53';ctx.fillRect(142,394+i*28,320,12);ctx.fillStyle=['#45c7b0','#e2b86b','#6f9ed0'][i];ctx.fillRect(142,394+i*28,[244,188,276][i],12);}
+  texture.update(false);this.surfaceTextures['monitor-ui-display']=texture;return texture;
  }
  createSurfaceTexture(name:string,base:string,accent:string,detailCount:number){
   const existing=this.surfaceTextures[name];if(existing)return existing;
