@@ -51,3 +51,9 @@ https://github.com/ijoolaie/empire-of-companies
 2. Continue P4 with richer office furniture and environmental polish, maintaining desktop/mobile and alternate-angle checks.
 3. Perform real-device GPU review when a physical test environment is available.
 4. Keep business simulation, Supabase Auth, PWA and Android work in their planned phases.
+
+## Latest continuation - shared book materials
+- Reused four cached color materials across the eight procedural book meshes in the bookcase.
+- Added data-office-book-material-count=4 diagnostic and a browser regression assertion.
+- Verification: unit tests 22/22; production build passed; Playwright 19/19 passed. Baseline materials decreased from 50 to 46; 20-worker fixture decreased from 62 to 58.
+- CI #108 for prior docs head passed. Current optimization is locally verified and awaits CI.

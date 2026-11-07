@@ -72,7 +72,8 @@ export class OfficeGame {
   const shelfMat=mat('bookcase-shelf',new Color3(.66,.53,.39));
   for(const y of [.3,.62,.94]){const shelf=MeshBuilder.CreateBox('bookcase-shelf',{width:.55,height:.055,depth:1.72},this.scene);shelf.position.set(4.2,y,-.55);shelf.material=shelfMat;}
   const bookColors=[new Color3(.62,.25,.2),new Color3(.2,.38,.52),new Color3(.78,.61,.3),new Color3(.24,.43,.34)];
-  for(let i=0;i<8;i++){const book=MeshBuilder.CreateBox('bookcase-book',{width:.12,height:.24+(i%3)*.035,depth:.16},this.scene);book.position.set(4.18,.43+(i%2)*.32,-1.18+i*.18);book.material=mat('book-'+i,bookColors[i%bookColors.length]);}
+  for(let i=0;i<8;i++){const book=MeshBuilder.CreateBox('bookcase-book',{width:.12,height:.24+(i%3)*.035,depth:.16},this.scene);book.position.set(4.18,.43+(i%2)*.32,-1.18+i*.18);book.material=mat('book-'+(i%bookColors.length),bookColors[i%bookColors.length]);}
+  canvas.setAttribute('data-office-book-material-count',String(bookColors.length));
   const clockFace=mat('wall-clock-face',new Color3(.94,.91,.82));
   // Mount the clock on the right wall, clear of the notice board on the rear wall.
   const clock=MeshBuilder.CreateCylinder('office-wall-clock',{diameter:.62,height:.08,tessellation:24},this.scene);clock.rotation.z=Math.PI/2;clock.position.set(4.86,1.72,-2.25);clock.material=clockFace;
