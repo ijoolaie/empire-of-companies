@@ -1,6 +1,6 @@
 # Session Handoff — Empire of Companies
 
-Last updated: 2026-11-06
+Last updated: 2026-11-07
 
 ## Mission
 Continue the browser-first 3D office/company management game:
@@ -19,8 +19,8 @@ https://github.com/ijoolaie/empire-of-companies
 - Local path: `C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies`.
 - Baseline main commit: `7914290` (PR #2 merged).
 - Current branch: `feat/p4-office-environment`.
-- Latest pushed head before current optimization: `a90528be7cc1eeff8291607837e75474b990ec4e` (`test: profile office scenes with twenty employees`). CI run #101 passed build, unit tests and browser regression: https://github.com/ijoolaie/empire-of-companies/actions/runs/42251912036.
-- Current local optimization freezes world matrices for static office geometry and desk/furniture meshes. Local unit, build and browser checks pass; awaiting final commit/push.
+- Latest pushed head: `7628d55bbe5bb19251f0c3d6032aefad5e47cab1` (`perf: merge static worker shoe meshes`). CI run #106 passed dependency installation, build, unit tests, Chromium installation and browser regression: https://github.com/ijoolaie/empire-of-companies/actions/runs/42265597027.
+- Static office geometry and furniture world matrices are frozen; worker animation updates at 30 Hz; both static shoes are merged per worker. Latest commit is pushed and CI #106 is green.
 - PR #3 remains open, Draft and unmerged. PR URL: https://github.com/ijoolaie/empire-of-companies/pull/3.
 
 ## Current implementation
@@ -33,7 +33,7 @@ https://github.com/ijoolaie/empire-of-companies
 - Canvas diagnostics: `data-office-wall-segment-count`, `data-office-window-count`, `data-office-entrance-part-count`, `data-office-light-count`, `data-office-furniture-count`, `data-office-notice-board-mesh-count`, `data-office-waiting-area-mesh-count`, `data-desk-accessory-mesh-count`, `data-desk-storage-mesh-count`.
 
 ## Verification
-- Latest static-shoe optimization: both non-animated shoes per employee are merged into one worker-local mesh; animated thighs and shins remain separate. The 20-worker browser fixture now has 641 meshes versus 661 before (20 fewer). Local unit tests 22/22, build passed (main JS 1,160.62 kB minified / 287.41 kB gzip), and Playwright 19/19 passed. CPU timings remain noisy; no speed gain is claimed.
+- Latest static-shoe optimization: both non-animated shoes per employee are merged into one worker-local mesh; animated thighs and shins remain separate. The 20-worker browser fixture now has 641 meshes versus 661 before (20 fewer). Local unit tests 22/22, build passed (main JS 1,160.62 kB minified / 287.41 kB gzip), Playwright 19/19 passed, and GitHub Actions run #106 passed all steps. CPU timings remain noisy; no speed gain is claimed.
 - Browser performance regression now profiles 0, 5, 10, 12 and 20 employees across a 20-desk stress layout. Latest SwiftShader sample: average CPU frame 7.353 / 8.824 / 9.856 / 13.328 / 12.145 ms; p95 17.5 / 20.0 / 18.9 / 40.9 / 26.9 ms; max spikes 63.0 / 74.3 / 67.1 / 78.4 / 89.9 ms; meshes 433 / 481 / 541 / 565 / 661; materials 50 / 62 / 62 / 62 / 62; lights remain 5. Timing is noisy/non-monotonic under headless SwiftShader and is diagnostic only, not real-device GPU acceptance.
 - The alternate-layout rapid-arrival browser test now validates generated waypoints and eventual arrival without requiring all workers to still be walking at the exact assertion instant; this removes a renderer-speed-dependent timing race.
 - Previous pushed head `706207b` passed GitHub Actions run #100 (build, unit tests and browser regression): https://github.com/ijoolaie/empire-of-companies/actions/runs/42246878178.
