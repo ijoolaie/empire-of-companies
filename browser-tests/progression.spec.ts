@@ -391,9 +391,11 @@ test('account dialog exposes modal semantics, traps focus and restores its opene
   const dialog = page.getByRole('dialog');
   await expect(dialog).toBeVisible();
   await expect(dialog).toHaveAttribute('aria-modal', 'true');
-  const email = dialog.locator('input[name="email"]');
+  const email = dialog.getByLabel('Email');
+  const password = dialog.getByLabel('Password');
   const close = dialog.getByRole('button', { name: 'Close' });
   await expect(email).toBeFocused();
+  await expect(password).toBeVisible();
   await page.keyboard.press('Shift+Tab');
   await expect(close).toBeFocused();
   await page.keyboard.press('Shift+Tab');
