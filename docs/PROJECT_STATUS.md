@@ -108,3 +108,12 @@ Last verified: 2026-11-07
 - Previous head `592257c` passed GitHub Actions #113 in full, including browser regression: https://github.com/ijoolaie/empire-of-companies/actions/runs/42351343608.
 - Latest central-mullion change is committed/pushed separately and requires its own CI run.
 - PR #3 remains Draft, open and unmerged. Physical-device visual/GPU acceptance remains open.
+
+## Latest continuation - desk placement preview and validation
+- Added one reusable, translucent desk-footprint preview. It follows the pointer over the office floor and switches to green for a valid position and red for an invalid/overlapping position; the guide is localized in English and Persian.
+- Preview validation calls the same canPlaceDesk rule used by buildDesk, and also checks the full desk-and-chair footprint against planters, bookcase, waiting bench, entrance mat and office boundaries. Insufficient cash also marks the preview invalid.
+- Placement works from pointer movement/down events, covering mouse and touch input. Desktop clicks commit valid positions; touch requires two taps on the same valid spot so the first tap previews and the second commits. Invalid clicks do not change cash or saved desks; changing or losing the touch target clears pending confirmation. Escape and the cancel toolbar action hide the preview.
+- Added a unit test proving preview validation does not mutate state, plus a browser regression that finds invalid and valid floor positions, verifies the red/green states, checks invalid placement does not charge, and confirms valid placement commits.
+- Local verification: unit tests 24/24; production build passed (469 modules; main JS 1,179.21 kB minified / 292.47 kB gzip; existing Vite >500 kB chunk warning remains); focused desktop/touch tests 2/2; full browser suite 23/23; git diff --check passed.
+- Previous pushed head 3242c54 passed GitHub Actions #120, including build, unit tests and browser regression: https://github.com/ijoolaie/empire-of-companies/actions/runs/42353651375. This new placement-preview slice is local only and still needs its own commit/push and CI.
+- PR #3 remains Draft and unmerged. Real-device touch and visual/GPU acceptance remain outstanding.

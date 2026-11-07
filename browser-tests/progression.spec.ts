@@ -556,3 +556,95 @@ test('three rapid arrivals find valid paths in alternate desk layouts', async ({
     await context.close();
   }
 });
+
+test('desk placement preview distinguishes invalid and valid spots before charging', async ({ page }) => {
+  await page.goto('/');
+  const canvas = page.locator('#game');
+  await expect(canvas).toHaveAttribute('data-desk-placement-preview-count', '1');
+  const bounds = await canvas.boundingBox();
+  expect(bounds).not.toBeNull();
+
+  await page.locator('#build').click();
+  let invalidPoint: { x: number; y: number } | undefined;
+  for (const py of [240, 320, 400, 480, 560]) {
+    for (const px of [320, 480, 640, 800, 960]) {
+      await page.mouse.move(px, py);
+      await page.waitForTimeout(30);
+      if (await canvas.getAttribute('data-desk-placement-floor-hit') === 'true') {
+        invalidPoint = { x: px, y: py };
+        break;
+      }
+    }
+    if (invalidPoint) break;
+  }
+  expect(invalidPoint).toBeDefined();
+  await expect(canvas).toHaveAttribute('data-desk-placement-preview-visible', 'true');
+  await expect(canvas).toHaveAttribute('data-desk-placement-valid', 'false');
+  await page.mouse.click(invalidPoint.x, invalidPoint.y);
+  let saved = await page.evaluate(key => JSON.parse(localStorage.getItem(key)), SAVE_KEY);
+  expect(saved.cash).toBe(12000);
+  expect(saved.desks).toHaveLength(2);
+  await expect(page.locator('#cancel-build')).toBeVisible();
+  await page.locator('#cancel-build').click();
+  await expect(canvas).toHaveAttribute('data-desk-placement-preview-visible', 'false');
+
+  await page.locator('#build').click();
+  let validPoint: { x: number; y: number } | undefined;
+  for (const py of [200, 280, 360, 440, 520, 600]) {
+    for (const px of [240, 360, 480, 600, 720, 840, 960, 1080]) {
+      await page.mouse.move(px, py);
+      await page.waitForTimeout(30);
+      if (await canvas.getAttribute('data-desk-placement-valid') === 'true') {
+        validPoint = { x: px, y: py };
+        break;
+      }
+    }
+    if (validPoint) break;
+  }
+  expect(validPoint).toBeDefined();
+  await page.mouse.click(validPoint.x, validPoint.y);
+  saved = await page.evaluate(key => JSON.parse(localStorage.getItem(key)), SAVE_KEY);
+  expect(saved.cash).toBeGreaterThanOrEqual(11000);
+  expect(saved.cash).toBeLessThan(13000);
+  expect(saved.desks).toHaveLength(3);
+  await expect(page.locator('#cancel-build')).toHaveCount(0);
+  await expect(canvas).toHaveAttribute('data-desk-placement-preview-visible', 'false');
+});
+
+test('touch desk placement previews on the first tap and commits on the second tap', async ({ browser }) => {
+  const context = await browser.newContext({
+    viewport: { width: 390, height: 844 },
+    hasTouch: true
+  });
+  const page = await context.newPage();
+  await page.addInitScript(() => localStorage.setItem('eoc-lang', 'en'));
+  await page.goto('/');
+  const canvas = page.locator('#game');
+  await page.locator('#build').click();
+
+  let validPoint: { x: number; y: number } | undefined;
+  for (const y of [240, 300, 360, 420, 480, 540]) {
+    for (const x of [60, 120, 180, 240, 300, 360]) {
+      await page.touchscreen.tap(x, y);
+      if (await canvas.getAttribute('data-desk-placement-valid') === 'true') {
+        validPoint = { x, y };
+        break;
+      }
+    }
+    if (validPoint) break;
+  }
+
+  expect(validPoint).toBeDefined();
+  await expect(canvas).toHaveAttribute('data-desk-placement-preview-visible', 'true');
+  await expect(page.locator('.toast')).toContainText('Tap the same spot again');
+  let saved = await page.evaluate(key => JSON.parse(localStorage.getItem(key)), SAVE_KEY);
+  expect(saved.desks).toHaveLength(2);
+  expect(saved.cash).toBe(12000);
+
+  await page.touchscreen.tap(validPoint.x, validPoint.y);
+  saved = await page.evaluate(key => JSON.parse(localStorage.getItem(key)), SAVE_KEY);
+  expect(saved.desks).toHaveLength(3);
+  await expect(page.locator('#cancel-build')).toHaveCount(0);
+  await expect(canvas).toHaveAttribute('data-desk-placement-preview-visible', 'false');
+  await context.close();
+});

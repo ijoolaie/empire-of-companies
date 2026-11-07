@@ -1,7 +1,8 @@
 import {Engine} from '@babylonjs/core/Engines/engine';
 import {Scene} from '@babylonjs/core/scene';
 import {ArcRotateCamera} from '@babylonjs/core/Cameras/arcRotateCamera';
-import {Vector3} from '@babylonjs/core/Maths/math.vector';
+import {Matrix,Vector3} from '@babylonjs/core/Maths/math.vector';
+import {Ray} from '@babylonjs/core/Culling/ray';
 import {HemisphericLight} from '@babylonjs/core/Lights/hemisphericLight';
 import {DirectionalLight} from '@babylonjs/core/Lights/directionalLight';
 import {PointLight} from '@babylonjs/core/Lights/pointLight';
@@ -10,11 +11,10 @@ import {Mesh} from '@babylonjs/core/Meshes/mesh';
 import {StandardMaterial} from '@babylonjs/core/Materials/standardMaterial';
 import {Color3,Color4} from '@babylonjs/core/Maths/math.color';
 import {TransformNode} from '@babylonjs/core/Meshes/transformNode';
-import {PointerEventTypes} from '@babylonjs/core/Events/pointerEvents';
 import {planWorkerArrivalPath} from './navigation';
 
 export class OfficeGame {
- engine:Engine; scene:Scene; camera:ArcRotateCamera; floor:any; desks:TransformNode[]=[]; workers:TransformNode[]=[]; workerArms:Array<[any,any]>=[]; workerHeads:any[]=[]; workerLegs:Array<[any,any]>=[]; workerShins:Array<[any,any]>=[]; workerWalkStartedAt:number[]=[]; workerWalkPaths:Vector3[][]=[]; workerWalkPathLengths:number[][]=[]; workerWalkPathTotalLengths:number[]=[]; materials:Record<string,StandardMaterial>={}; placing=false; onFloorTap?:(x:number,z:number)=>boolean;
+ engine:Engine; scene:Scene; camera:ArcRotateCamera; floor:any; placementPreview:any; placementMaterials:Record<string,StandardMaterial>={}; canPreviewDesk?:(x:number,z:number)=>boolean; onTouchPlacementPreview?:()=>void; touchPlacementTarget:{x:number;z:number}|null=null; desks:TransformNode[]=[]; workers:TransformNode[]=[]; workerArms:Array<[any,any]>=[]; workerHeads:any[]=[]; workerLegs:Array<[any,any]>=[]; workerShins:Array<[any,any]>=[]; workerWalkStartedAt:number[]=[]; workerWalkPaths:Vector3[][]=[]; workerWalkPathLengths:number[][]=[]; workerWalkPathTotalLengths:number[]=[]; materials:Record<string,StandardMaterial>={}; placing=false; onFloorTap?:(x:number,z:number)=>boolean;
  constructor(canvas:HTMLCanvasElement){
   this.engine=new Engine(canvas,true,{preserveDrawingBuffer:false,stencil:true,adaptToDeviceRatio:true});
   this.scene=new Scene(this.engine);this.scene.clearColor=new Color4(.72,.83,.91,1);
@@ -148,7 +148,52 @@ export class OfficeGame {
   this.addDesk(-2,-1);this.addDesk(1,-1);
   // Office architecture and furniture are static; freeze their world matrices so Babylon can skip per-frame recomputation.
   this.scene.meshes.forEach(mesh=>mesh.freezeWorldMatrix());
-  this.scene.onPointerObservable.add(pi=>{if(pi.type===PointerEventTypes.POINTERPICK&&this.placing){const pick=this.scene.pick(this.scene.pointerX,this.scene.pointerY,m=>m===this.floor);if(pick?.hit&&pick.pickedPoint){const x=Math.round(pick.pickedPoint.x),z=Math.round(pick.pickedPoint.z);if(this.onFloorTap?.(x,z))this.addDesk(x,z);}}});
+  this.placementMaterials.valid=this.getMaterial('placement-valid',new Color3(.16,.72,.34));
+  this.placementMaterials.invalid=this.getMaterial('placement-invalid',new Color3(.82,.2,.18));
+  this.placementPreview=MeshBuilder.CreateBox('desk-placement-preview',{width:1.5,height:.025,depth:1.45},this.scene);
+  this.placementPreview.position.y=.065;this.placementPreview.isPickable=false;this.placementPreview.visibility=.58;this.placementPreview.isVisible=false;this.engine.getRenderingCanvas()?.setAttribute("data-desk-placement-preview-count","1");this.engine.getRenderingCanvas()?.setAttribute("data-desk-placement-preview-visible","false");
+  const renderCanvas=this.engine.getRenderingCanvas()!;
+  const updatePlacement=(event:PointerEvent):{x:number;z:number;valid:boolean}|null=>{
+   if(!this.placing)return null;
+   const rect=renderCanvas.getBoundingClientRect();
+   const px=(event.clientX-rect.left)*this.engine.getRenderWidth()/rect.width;
+   const py=(event.clientY-rect.top)*this.engine.getRenderHeight()/rect.height;
+   const ray=this.scene.createPickingRay(px,py,Matrix.Identity(),this.camera);
+   if(!(ray instanceof Ray))return null;
+   const distance=(.04-ray.origin.y)/ray.direction.y;
+   const intersectsFloor=Number.isFinite(distance)&&distance>=0&&Math.abs(ray.direction.y)>.0001;
+   const point=intersectsFloor?ray.origin.add(ray.direction.scale(distance)):null;
+   const insideFloor=!!point&&Math.abs(point.x)<=5&&Math.abs(point.z)<=4;
+   renderCanvas.setAttribute("data-desk-placement-floor-hit",String(insideFloor));
+   if(!insideFloor||!point){this.placementPreview.isVisible=false;renderCanvas.setAttribute("data-desk-placement-preview-visible","false");renderCanvas.setAttribute("data-desk-placement-valid","false");return null;}
+   const x=Math.round(point.x),z=Math.round(point.z);
+   this.placementPreview.position.x=x;this.placementPreview.position.z=z+.3425;
+   const valid=this.canPreviewDesk?.(x,z)??false;
+   this.placementPreview.material=this.placementMaterials[valid?'valid':'invalid'];
+   this.placementPreview.isVisible=true;
+   renderCanvas.setAttribute("data-desk-placement-preview-visible","true");
+   renderCanvas.setAttribute("data-desk-placement-valid",String(valid));
+   renderCanvas.setAttribute("data-desk-placement-x",String(x));
+   renderCanvas.setAttribute("data-desk-placement-z",String(z));
+   return {x,z,valid};
+  };
+  renderCanvas.addEventListener('pointermove',event=>{const candidate=updatePlacement(event);if(event.pointerType==='touch'&&!candidate)this.touchPlacementTarget=null;});
+  renderCanvas.addEventListener('pointerdown',event=>{
+   const candidate=updatePlacement(event);
+   if(!candidate){if(event.pointerType==='touch')this.touchPlacementTarget=null;return;}
+   if(event.pointerType==='touch'){
+    if(!candidate.valid){this.touchPlacementTarget=null;this.onFloorTap?.(candidate.x,candidate.z);return;}
+    if(this.touchPlacementTarget?.x===candidate.x&&this.touchPlacementTarget.z===candidate.z){
+     this.touchPlacementTarget=null;
+     if(this.onFloorTap?.(candidate.x,candidate.z))this.addDesk(candidate.x,candidate.z);
+    }else{
+     this.touchPlacementTarget={x:candidate.x,z:candidate.z};
+     this.onTouchPlacementPreview?.();
+    }
+    return;
+   }
+   if(this.onFloorTap?.(candidate.x,candidate.z))this.addDesk(candidate.x,candidate.z);
+  });
   const profileEnabled=window.location.search.includes('profile=1');
   const frameDurations=new Array<number>(120).fill(0);
   let frameSampleCount=0,frameSampleCursor=0,frameStartedAt=0,lastWorkerUpdateAt=0;
@@ -233,6 +278,7 @@ export class OfficeGame {
   });
   this.engine.runRenderLoop(()=>this.scene.render());window.addEventListener('resize',()=>this.engine.resize());
  }
+ setPlacing(active:boolean){this.placing=active;if(!active)this.touchPlacementTarget=null;this.engine.getRenderingCanvas()?.setAttribute("data-desk-placement-active",String(active));if(!active&&this.placementPreview){this.placementPreview.isVisible=false;this.engine.getRenderingCanvas()?.setAttribute("data-desk-placement-preview-visible","false");this.engine.getRenderingCanvas()?.setAttribute("data-desk-placement-valid","false");}}
  addDesk(x:number,z:number){
   const root=new TransformNode('desk-root',this.scene);root.position.set(x,.08,z);
   const wood=this.getMaterial('deskwood',new Color3(.88,.9,.91));
