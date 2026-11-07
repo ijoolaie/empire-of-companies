@@ -107,6 +107,12 @@ https://github.com/ijoolaie/empire-of-companies
 - Local verification: unit tests 22/22; production build passed (466 modules; existing Vite >500 kB chunk warning remains); focused office-shell Playwright regression 1/1; `git diff --check` passed.
 - This slice is locally verified and awaits commit/push and GitHub Actions. PR #3 remains Draft and unmerged; physical-device visual/GPU acceptance remains open.
 
+## Latest continuation - cancellable desk placement
+- Added Escape-key and visible toolbar cancellation for desk placement; action is conditionally shown only while placement mode is active and localized in English/Persian.
+- Playwright regression checks both cancellation routes and verifies the save still contains only the two starter desks.
+- Local verification: unit tests 22/22; production build passed (466 modules; main JS 1,164.73 kB minified / 288.33 kB gzip; existing Vite chunk warning); focused browser test 1/1; diff check passed.
+- Local work is not yet committed. CI #119 for earlier pushed head 72f29c5 is in progress.
+
 ## Latest continuation - accessible account dialog
 - The sign-in/register dialog now has modal semantics (`role=dialog`, `aria-modal=true`, labelled/described relationships), a translated accessible close-button label, and explicit accessible names for email/password inputs.
 - Initial focus moves to email; Tab/Shift+Tab remain inside the dialog; Escape, backdrop click and close button restore focus to the account opener.

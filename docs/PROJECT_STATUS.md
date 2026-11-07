@@ -58,6 +58,12 @@ Last verified: 2026-11-07
 - Verification: unit tests 22/22; production build passed; Playwright 19/19 passed. Baseline materials decreased from 50 to 46; 20-worker fixture decreased from 62 to 58. Existing Vite chunk-size warning remains.
 - CI #108 for previous docs head passed all steps. Current optimization is locally verified and awaiting CI.
 
+## Latest continuation - cancellable desk placement
+- Desk placement can now be cancelled with Escape or a visible toolbar action; the control is shown only while placement mode is active and is localized in English and Persian.
+- Added browser regression coverage for both cancellation paths and verified no desk is added or saved.
+- Local verification: unit tests 22/22; production build passed (466 modules; main JS 1,164.73 kB minified / 288.33 kB gzip; existing Vite chunk-size warning); focused browser test 1/1; `git diff --check` passed.
+- Work is local and not yet committed. CI #119 for the earlier pushed head 72f29c5 is running.
+
 ## Latest continuation - accessible account dialog
 - The player-account sign-in/register dialog now exposes `role=dialog`, `aria-modal=true`, a labelled/described relationship, a translated accessible close-button name, and explicit accessible names for the email/password fields.
 - Keyboard behavior: initial focus moves to the email field; Tab/Shift+Tab stay inside the dialog; Escape and backdrop/close-button dismissal return focus to the account opener.

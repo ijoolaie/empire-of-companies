@@ -405,6 +405,21 @@ test('account dialog exposes modal semantics, traps focus and restores its opene
   await expect(opener).toBeFocused();
 });
 
+test('desk placement can be cancelled by Escape or the visible cancel action', async ({ page }) => {
+  await page.goto('/');
+  const build = page.locator('#build');
+  await build.click();
+  await expect(page.locator('#cancel-build')).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(page.locator('#cancel-build')).toHaveCount(0);
+  await build.click();
+  await expect(page.locator('#cancel-build')).toBeVisible();
+  await page.locator('#cancel-build').click();
+  await expect(page.locator('#cancel-build')).toHaveCount(0);
+  const saved = await page.evaluate(key => JSON.parse(localStorage.getItem(key)), SAVE_KEY);
+  expect(saved.desks).toHaveLength(2);
+});
+
 test('office camera zoom stays within safe viewing limits', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 667 });
   await page.goto('/');
