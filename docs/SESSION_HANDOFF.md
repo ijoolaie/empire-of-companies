@@ -106,3 +106,9 @@ https://github.com/ijoolaie/empire-of-companies
 - Added `data-office-clock-detail-count=15` and a browser regression assertion; clock remains on the right wall and does not affect worker navigation.
 - Local verification: unit tests 22/22; production build passed (466 modules; existing Vite >500 kB chunk warning remains); focused office-shell Playwright regression 1/1; `git diff --check` passed.
 - This slice is locally verified and awaits commit/push and GitHub Actions. PR #3 remains Draft and unmerged; physical-device visual/GPU acceptance remains open.
+
+## Latest continuation - tiled office floor finish
+- Added a restrained one-metre floor-joint layout: 10 longitudinal and 8 transverse seams (18 total), using one shared material and thin geometry at floor level.
+- Added `data-office-floor-joint-count=18` and a browser regression assertion.
+- Local verification: unit tests 22/22; production build passed (466 modules; existing Vite >500 kB chunk warning remains); focused office-shell Playwright regression 1/1 passed after correcting the expected seam count; `git diff --check` passed.
+- This floor-finish slice is locally verified and awaits commit/push and its own GitHub Actions run. PR #3 remains Draft and unmerged; real-device visual/GPU acceptance remains open.

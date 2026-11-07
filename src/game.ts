@@ -29,6 +29,11 @@ export class OfficeGame {
   const mat=(name:string,c:Color3)=>this.getMaterial(name,c);
   const ground=MeshBuilder.CreateGround('ground',{width:22,height:18},this.scene);ground.material=mat('groundmat',new Color3(.55,.62,.64));
   this.floor=MeshBuilder.CreateGround('office-floor',{width:10,height:8},this.scene);this.floor.position.y=.04;this.floor.material=mat('tile',new Color3(.72,.78,.83));
+  // Fine, recessed-looking grout lines give the open office floor a subtle one-metre tile layout.
+  const floorGrout=mat('floor-grout',new Color3(.62,.69,.74));
+  for(let x=-4.5;x<=4.5;x+=1){const joint=MeshBuilder.CreateBox('office-floor-joint',{width:.012,height:.006,depth:8},this.scene);joint.position.set(x,.045,0);joint.material=floorGrout;}
+  for(let z=-3.5;z<=3.5;z+=1){const joint=MeshBuilder.CreateBox('office-floor-joint',{width:10,height:.006,depth:.012},this.scene);joint.position.set(0,.045,z);joint.material=floorGrout;}
+  canvas.setAttribute('data-office-floor-joint-count',String(this.scene.meshes.filter(mesh=>mesh.name==='office-floor-joint').length));
   const wall=mat('wall',new Color3(.82,.87,.9));
   const back=MeshBuilder.CreateBox('back-wall',{width:10,height:2.3,depth:.18},this.scene);back.position.set(0,1.15,-4);back.material=wall;
   const side=MeshBuilder.CreateBox('side-wall',{width:.18,height:2.3,depth:8},this.scene);side.position.set(-5,1.15,0);side.material=wall;

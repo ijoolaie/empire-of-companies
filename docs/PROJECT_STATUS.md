@@ -31,7 +31,7 @@ Last verified: 2026-11-07
 - Added three ceiling light panels, three warm point fill lights and wall baseboards.
 - Reused cached materials for architectural trim and finish surfaces.
 - Added a compact bookcase with shelves and books, a wall clock, framed wall art, a cork notice board with three pinned notes, a five-mesh waiting bench against the left wall, and desk-level paper, mug, pen and under-desk drawer storage. Bookcase and bench are registered as worker-path obstacles; desk accessories and storage are attached to each desk.
-- Added canvas diagnostics for wall segments, windows, structural entrance parts, scene light count, nine entrance emblem/mat detail meshes, eight notice-board meshes and 15 clock-detail meshes (12 hour markers, two hands and a center pin).
+- Added canvas diagnostics for wall segments, windows, structural entrance parts, scene light count, 18 subtle floor-tile joints, nine entrance emblem/mat detail meshes, eight notice-board meshes and 15 clock-detail meshes (12 hour markers, two hands and a center pin).
 - Added Playwright regressions asserting 5 wall segments, 3 windows, 5 structural entrance parts, 5 total lights, 4 office detail features, 8 notice-board meshes, 5 waiting-area meshes, 9 entry-detail meshes, 9 desk accessory meshes and 6 desk-storage meshes in the 3-desk fixture, with no browser page errors.
 - No external art assets introduced.
 
