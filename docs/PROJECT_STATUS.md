@@ -58,6 +58,13 @@ Last verified: 2026-11-07
 - Verification: unit tests 22/22; production build passed; Playwright 19/19 passed. Baseline materials decreased from 50 to 46; 20-worker fixture decreased from 62 to 58. Existing Vite chunk-size warning remains.
 - CI #108 for previous docs head passed all steps. Current optimization is locally verified and awaiting CI.
 
+## Latest continuation - accessible account dialog
+- The player-account sign-in/register dialog now exposes `role=dialog`, `aria-modal=true`, a labelled/described relationship, and a translated accessible close-button name.
+- Keyboard behavior: initial focus moves to the email field; Tab/Shift+Tab stay inside the dialog; Escape and backdrop/close-button dismissal return focus to the account opener.
+- Added a Playwright regression for modal semantics, focus trapping and focus restoration.
+- Local verification: unit tests 22/22; production build passed (466 modules; main JS 1,164.34 kB minified / 288.20 kB gzip; existing Vite chunk-size warning remains); focused browser regression 1/1; `git diff --check` passed.
+- Current local work is not yet committed. CI #116 for prior head `eb3a883` has build and unit tests passing; full browser regression is still running.
+
 ## Latest continuation - merged plant foliage
 - Combined five static leaf meshes per planter into one canopy mesh; the two planters now contribute two foliage meshes instead of ten (8 fewer scene meshes).
 - Added `data-office-plant-foliage-mesh-count=2` and a Playwright assertion.

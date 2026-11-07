@@ -107,6 +107,13 @@ https://github.com/ijoolaie/empire-of-companies
 - Local verification: unit tests 22/22; production build passed (466 modules; existing Vite >500 kB chunk warning remains); focused office-shell Playwright regression 1/1; `git diff --check` passed.
 - This slice is locally verified and awaits commit/push and GitHub Actions. PR #3 remains Draft and unmerged; physical-device visual/GPU acceptance remains open.
 
+## Latest continuation - accessible account dialog
+- The sign-in/register dialog now has modal semantics (`role=dialog`, `aria-modal=true`, labelled/described relationships) and a translated accessible close-button label.
+- Initial focus moves to email; Tab/Shift+Tab remain inside the dialog; Escape, backdrop click and close button restore focus to the account opener.
+- Added Playwright coverage for dialog semantics, focus trapping and focus restoration.
+- Local verification: unit tests 22/22; production build passed (466 modules; main JS 1,164.34 kB minified / 288.20 kB gzip; existing Vite chunk warning); focused browser test 1/1; diff check passed.
+- This change is local only. CI #116 for previous head `eb3a883` has build/unit tests green; browser regression is still running. PR #3 remains Draft and unmerged.
+
 ## Latest continuation - tiled office floor finish
 - Added a restrained one-metre floor-joint layout: 10 longitudinal and 8 transverse seams (18 total), using one shared material and thin geometry at floor level.
 - Added `data-office-floor-joint-count=18` and a browser regression assertion.

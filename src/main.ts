@@ -82,7 +82,24 @@ function showProgression(){
 }
 function showAuth(){
  const modal=document.createElement('div');modal.className='modal-backdrop';modal.innerHTML=`<form class="auth-card"><button type="button" class="close">×</button><h2>${lang==='fa'?'حساب بازیکن':'Player account'}</h2><p>${lang==='fa'?'حساب فقط برای هویت بازیکن است؛ ذخیره بازی روی دستگاه می‌ماند.':'Your account identifies you; game saves stay on this device.'}</p>${!authConfigured()?'<p>Supabase config missing. Set .env.local first.</p>':''}<input name="email" type="email" placeholder="Email" required autocomplete="email"/><input name="password" type="password" placeholder="Password (min 8 characters)" required minlength="8"/><button class="action" type="submit" ${!authConfigured()?'disabled':''}>${authMode==='signin'?(lang==='fa'?'ورود':'Sign in'):(lang==='fa'?'ساخت حساب':'Create account')}</button><button class="text-button" type="button" id="switch">${authMode==='signin'?'Need an account? Register':'Already registered? Sign in'}</button><div class="auth-error" role="status">${authMessage}</div></form>`;
- ui.append(modal);modal.querySelector('.close')!.addEventListener('click',()=>modal.remove());modal.querySelector('#switch')!.addEventListener('click',()=>{authMode=authMode==='signin'?'signup':'signin';authMessage='';modal.remove();showAuth();});
+ modal.setAttribute('role','dialog');modal.setAttribute('aria-modal','true');modal.setAttribute('aria-labelledby','auth-title');modal.setAttribute('aria-describedby','auth-description');
+ const opener=document.querySelector<HTMLButtonElement>('#account');
+ const close=()=>{modal.remove();if(opener?.isConnected)opener.focus();};
+ const closeButton=modal.querySelector<HTMLButtonElement>('.close')!;closeButton.setAttribute('aria-label',t(lang,'close'));
+ modal.querySelector('h2')!.id='auth-title';modal.querySelector('p')!.id='auth-description';
+ closeButton.addEventListener('click',close);
+ modal.addEventListener('click',event=>{if(event.target===modal)close();});
+ modal.addEventListener('keydown',event=>{
+  if(event.key==='Escape'){event.preventDefault();close();return;}
+  if(event.key!=='Tab')return;
+  const focusable=[...modal.querySelectorAll<HTMLElement>('button:not([disabled]),input:not([disabled]),a[href]')];
+  if(!focusable.length){event.preventDefault();modal.focus();return;}
+  const first=focusable[0],last=focusable[focusable.length-1];
+  if(event.shiftKey&&(document.activeElement===first||!modal.contains(document.activeElement))){event.preventDefault();last.focus();}
+  else if(!event.shiftKey&&(document.activeElement===last||!modal.contains(document.activeElement))){event.preventDefault();first.focus();}
+ });
+ ui.append(modal);modal.querySelector<HTMLInputElement>('input[name="email"]')!.focus();
+ modal.querySelector('#switch')!.addEventListener('click',()=>{authMode=authMode==='signin'?'signup':'signin';authMessage='';modal.remove();showAuth();});
  modal.querySelector('form')!.addEventListener('submit',async e=>{e.preventDefault();const form=e.currentTarget as HTMLFormElement,data=new FormData(form),email=String(data.get('email')).trim(),password=String(data.get('password')),submit=form.querySelector('button[type="submit"]') as HTMLButtonElement;submit.disabled=true;try{if(authMode==='signin')accountEmail=await signIn(email,password);else{const result=await signUp(email,password);accountEmail=result.needsConfirmation?null:result.email;authMessage=result.needsConfirmation?(lang==='fa'?'حساب ساخته شد؛ ایمیل تأیید را بررسی کنید.':'Account created. Check your email to confirm it.'):'';}modal.remove();render();}catch(err){form.querySelector('.auth-error')!.textContent=err instanceof Error?err.message:'Authentication failed';submit.disabled=false;}});
 }
 async function handleSignOut(){try{await signOut();accountEmail=null;notify(lang==='fa'?'خارج شدید.':'Signed out.');}catch(e){notify(String(e));}}

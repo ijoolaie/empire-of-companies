@@ -383,6 +383,26 @@ test('scene profiling compares zero, five, ten, twelve and twenty-worker CPU/ren
   expect(twentyWorkers.materials).toBeGreaterThanOrEqual(twelveWorkers.materials);
 });
 
+test('account dialog exposes modal semantics, traps focus and restores its opener', async ({ page }) => {
+  await page.goto('/');
+  const opener = page.locator('#account');
+  await opener.focus();
+  await opener.click();
+  const dialog = page.getByRole('dialog');
+  await expect(dialog).toBeVisible();
+  await expect(dialog).toHaveAttribute('aria-modal', 'true');
+  const email = dialog.locator('input[name="email"]');
+  const close = dialog.getByRole('button', { name: 'Close' });
+  await expect(email).toBeFocused();
+  await page.keyboard.press('Shift+Tab');
+  await expect(close).toBeFocused();
+  await page.keyboard.press('Shift+Tab');
+  await expect(dialog.locator('#switch')).toBeFocused();
+  await page.keyboard.press('Escape');
+  await expect(dialog).toHaveCount(0);
+  await expect(opener).toBeFocused();
+});
+
 test('office camera zoom stays within safe viewing limits', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 667 });
   await page.goto('/');
