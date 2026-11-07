@@ -5,9 +5,9 @@ Last verified: 2026-11-07
 ## Repository
 - GitHub: https://github.com/ijoolaie/empire-of-companies
 - Default branch: `main`; latest merged baseline: `7914290` (PR #2).
-- Current work branch: `feat/p4-office-environment`; latest pushed code head `d85373d` (mobile panel/toolbar overlap fix).
+- Current work branch: `feat/p4-office-environment`; latest local code head `ba64876` (mobile notification placement fix; CI pending).
 - Local workspace: `C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies`.
-- Latest pushed code head: `d85373d` (`fix: prevent mobile panel toolbar overlap`); CI #125 passed build, unit tests, Chromium installation and browser regression. PR #3 remains open, Draft, mergeable and unmerged.
+- Latest local code head: `ba64876` (`fix: keep placement notices inside mobile panel`); local unit/build/browser verification passed; GitHub Actions verification pending. PR #3 remains open, Draft, mergeable and unmerged.
 
 ## Product decisions
 - Browser-first 3D office/company management game, Babylon.js + TypeScript + Vite.
@@ -150,4 +150,4 @@ Last verified: 2026-11-07
 - Extended the mobile build-mode regression to assert the notification stays in the panel below the top bar and no floating toast is present. The touch-placement regression now checks the inline notification.
 - Local verification on this tree: unit tests 24/24; production build passed (469 modules; main JS 1,179.78 kB minified / 292.63 kB gzip; existing Vite >500 kB warning remains); full Playwright suite 24/24 passed in 2.9 minutes; `git diff --check` passed. Targeted responsive/camera/office suite 6/6 passed.
 - The 320x568, 375x667 and 390x844 build-mode samples have no horizontal overflow; all five actions remain inside the viewport and the panel stays above the toolbar. No browser page/console errors were recorded by the visual-check script.
-- Changes are local pending commit/push and CI. Physical-device headed desktop/mobile and GPU acceptance remain open. PR #3 remains Draft and unmerged.
+- Commit `ba64876` is local and ready to push; GitHub Actions verification is pending. Physical-device headed desktop/mobile and GPU acceptance remain open. PR #3 remains Draft and unmerged.
