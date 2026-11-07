@@ -45,6 +45,7 @@ export class OfficeGame {
   for(const x of [-3.2,-1.1,1.1]){
    const pane=MeshBuilder.CreateBox('window-pane',{width:1.65,height:1.25,depth:.06},this.scene);pane.position.set(x,1.65,-3.88);pane.material=glass;
    for(const dx of [-.86,.86]){const mullion=MeshBuilder.CreateBox('window-mullion',{width:.055,height:1.34,depth:.09},this.scene);mullion.position.set(x+dx,1.65,-3.9);mullion.material=windowFrame;}
+   const transom=MeshBuilder.CreateBox('window-transom',{width:1.72,height:.055,depth:.09},this.scene);transom.position.set(x,1.65,-3.9);transom.material=windowFrame;
    const sill=MeshBuilder.CreateBox('window-sill',{width:1.82,height:.09,depth:.18},this.scene);sill.position.set(x,1.0,-3.88);sill.material=trim;
   }
   const baseboard=mat('baseboard',new Color3(.58,.65,.7));
@@ -117,6 +118,7 @@ export class OfficeGame {
   };
   canvas.setAttribute('data-office-wall-segment-count',String(environmentCounts.walls));
   canvas.setAttribute('data-office-window-count',String(environmentCounts.windows));
+  canvas.setAttribute('data-office-window-transom-count',String(this.scene.meshes.filter(mesh=>mesh.name==='window-transom').length));
   canvas.setAttribute('data-office-entrance-part-count',String(environmentCounts.entrance));
   canvas.setAttribute('data-office-light-count',String(environmentCounts.lights));
   const rug=MeshBuilder.CreateGround('rug',{width:4.2,height:2.6},this.scene);rug.position.set(0,.075,1.45);rug.material=mat('rugmat',new Color3(.16,.29,.43));

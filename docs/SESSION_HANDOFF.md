@@ -86,3 +86,10 @@ https://github.com/ijoolaie/empire-of-companies
 - Local unit tests 22/22 and production build pass. Full Playwright invocation passed 14 tests before reaching the long scene-profile test and hitting the local 120-second process limit; the targeted office-shell test was rerun and passed. CI verification for this new slice remains pending.
 - Previous pushed head 94a5cb passed GitHub Actions #111: https://github.com/ijoolaie/empire-of-companies/actions/runs/42350040612.
 - Current changes are local only. Keep PR #3 Draft and unmerged.
+
+## Latest continuation - window transom detail
+- Three rear window panes now each include a horizontal transom; no opening size or worker navigation geometry changed.
+- Added a browser diagnostic/assertion for exactly three transoms.
+- Local validation: 22/22 unit tests, production build passed (existing Vite chunk warning), focused office-shell browser regression 1/1.
+- Previous head `598c9b4` is fully green on GitHub Actions #112; the transom slice is being committed/pushed next and requires its own CI run.
+- PR #3 remains Draft, open and unmerged; real-device visual/GPU acceptance remains outstanding.

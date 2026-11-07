@@ -80,3 +80,10 @@ Last verified: 2026-11-07
 - A full Playwright invocation reached 14 passing tests but exceeded the local 120-second process limit during the long scene-profiling test; the targeted office-shell test was rerun independently and passed. Full browser CI verification is still required for this slice.
 - GitHub Actions #111 for prior head 94a5cb passed all steps: https://github.com/ijoolaie/empire-of-companies/actions/runs/42350040612.
 - Current planter changes are local only; not yet committed or pushed. PR #3 remains Draft and unmerged.
+
+## Latest continuation - window transom detail
+- Added one horizontal transom to each of the three rear window panes, visually dividing the glazing into upper/lower sections without changing window openings or navigation space.
+- Added `data-office-window-transom-count=3` and a Playwright assertion.
+- Local verification: unit tests 22/22; production build passed (466 modules; existing Vite >500 kB chunk warning); focused office-shell browser regression 1/1.
+- Latest planter-detail head `598c9b4` passed GitHub Actions #112 in full, including browser regression: https://github.com/ijoolaie/empire-of-companies/actions/runs/42350677749.
+- PR #3 description now records the passing CI #112 and current verification. Physical-device visual/GPU acceptance remains open.
