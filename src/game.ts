@@ -120,7 +120,13 @@ export class OfficeGame {
   canvas.setAttribute('data-office-light-count',String(environmentCounts.lights));
   const rug=MeshBuilder.CreateGround('rug',{width:4.2,height:2.6},this.scene);rug.position.set(0,.075,1.45);rug.material=mat('rugmat',new Color3(.16,.29,.43));
   const leaf=mat('plant-leaf',new Color3(.18,.42,.29)),potMat=mat('planter',new Color3(.76,.65,.48));
-  for(const [x,z] of [[-4,3],[4,-2]]){const pot=MeshBuilder.CreateCylinder('pot',{height:.55,diameter:.55},this.scene);pot.position.set(x,.34,z);pot.material=potMat;for(let i=0;i<5;i++){const l=MeshBuilder.CreateSphere('leaf',{diameter:.48,segments:6},this.scene);l.scaling.set(.65,1.6,.65);l.position.set(x+Math.cos(i*1.25)*.22,.82,z+Math.sin(i*1.25)*.22);l.material=leaf;}}
+  for(const [plantIndex,[x,z]] of [[-4,3],[4,-2]].entries()){
+   const pot=MeshBuilder.CreateCylinder('pot',{height:.55,diameter:.55},this.scene);pot.position.set(x,.34,z);pot.material=potMat;
+   const foliage:Mesh[]=[];
+   for(let i=0;i<5;i++){const l=MeshBuilder.CreateSphere('leaf',{diameter:.48,segments:6},this.scene);l.scaling.set(.65,1.6,.65);l.position.set(x+Math.cos(i*1.25)*.22,.82,z+Math.sin(i*1.25)*.22);l.material=leaf;foliage.push(l);}
+   const canopy=Mesh.MergeMeshes(foliage,true,true);if(canopy){canopy.name='plant-foliage-'+plantIndex;canopy.material=leaf;}
+  }
+  canvas.setAttribute('data-office-plant-foliage-mesh-count',String(this.scene.meshes.filter(mesh=>mesh.name.startsWith('plant-foliage-')).length));
   this.addDesk(-2,-1);this.addDesk(1,-1);
   // Office architecture and furniture are static; freeze their world matrices so Babylon can skip per-frame recomputation.
   this.scene.meshes.forEach(mesh=>mesh.freezeWorldMatrix());

@@ -7,7 +7,7 @@ Last verified: 2026-11-07
 - Default branch: `main`; latest merged baseline: `7914290` (PR #2).
 - Current work branch: `feat/p4-office-environment`.
 - Local workspace: `C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies`.
-- Latest pushed head: `7628d55bbe5bb19251f0c3d6032aefad5e47cab1` (`perf: merge static worker shoe meshes`); PR #3 contains 23 commits. GitHub Actions run #107 for the latest branch head passed install, build, unit tests, Chromium installation and browser regression: https://github.com/ijoolaie/empire-of-companies/actions/runs/42344605316. PR #3 remains open, Draft, mergeable and unmerged.
+- Latest pushed head: `b64a164e6ea4cabe7adf0136d54bac506b76fe34` (`perf: reuse office book materials`); CI #109 passed all steps. PR #3 remains open, Draft, mergeable and unmerged.
 
 ## Product decisions
 - Browser-first 3D office/company management game, Babylon.js + TypeScript + Vite.
@@ -57,3 +57,10 @@ Last verified: 2026-11-07
 - Added data-office-book-material-count=4 diagnostic and browser regression assertion.
 - Verification: unit tests 22/22; production build passed; Playwright 19/19 passed. Baseline materials decreased from 50 to 46; 20-worker fixture decreased from 62 to 58. Existing Vite chunk-size warning remains.
 - CI #108 for previous docs head passed all steps. Current optimization is locally verified and awaiting CI.
+
+## Latest continuation - merged plant foliage
+- Combined five static leaf meshes per planter into one canopy mesh; the two planters now contribute two foliage meshes instead of ten (8 fewer scene meshes).
+- Added `data-office-plant-foliage-mesh-count=2` and a Playwright assertion.
+- Verification on current local tree: unit tests 22/22; production build passed; browser regression 19/19; `git diff --check` passed. The 20-worker profile reports 633 meshes (down from 641 after the shoe merge); materials 58, lights 5. Timing remains noisy and no FPS claim is made.
+- Visual review via preview could not be completed because the preview process was not reachable from the browser capture; real-device and headed visual review remain open.
+- These latest changes are local and not yet committed/pushed; CI is pending.

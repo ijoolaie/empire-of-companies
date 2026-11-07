@@ -19,7 +19,7 @@ https://github.com/ijoolaie/empire-of-companies
 - Local path: `C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies`.
 - Baseline main commit: `7914290` (PR #2 merged).
 - Current branch: `feat/p4-office-environment`.
-- Latest code head: `7628d55bbe5bb19251f0c3d6032aefad5e47cab1` (`perf: merge static worker shoe meshes`); latest branch head: `1c4b7fe48ed4ef9283e28195a060dc4614b890ad` (`docs: record verified P4 CI status`). CI run #106 passed dependency installation, build, unit tests, Chromium installation and browser regression: https://github.com/ijoolaie/empire-of-companies/actions/runs/42265597027.
+- Latest code head: `b64a164e6ea4cabe7adf0136d54bac506b76fe34` (`perf: reuse office book materials`); CI #109 passed. PR #3 remains open, Draft and unmerged.
 - Static office geometry and furniture world matrices are frozen; worker animation updates at 30 Hz; both static shoes are merged per worker. Latest commit is pushed and CI #106 is green.
 - PR #3 remains open, Draft and unmerged. PR URL: https://github.com/ijoolaie/empire-of-companies/pull/3.
 
@@ -57,3 +57,10 @@ https://github.com/ijoolaie/empire-of-companies
 - Added data-office-book-material-count=4 diagnostic and a browser regression assertion.
 - Verification: unit tests 22/22; production build passed; Playwright 19/19 passed. Baseline materials decreased from 50 to 46; 20-worker fixture decreased from 62 to 58.
 - CI #108 for prior docs head passed. Current optimization is locally verified and awaits CI.
+
+## Latest continuation - merged plant foliage
+- Static leaves are merged per planter: 10 leaf meshes become 2 canopy meshes, saving 8 scene meshes.
+- Added canvas diagnostic `data-office-plant-foliage-mesh-count=2` and regression coverage.
+- Local verification: unit tests 22/22, build passed, Playwright 19/19, diff check passed. Latest 20-worker scene profile: 633 meshes, 58 materials, 5 lights. CPU timings vary between runs; no FPS improvement is claimed.
+- The preview process could not be reached for a screenshot, so visual review is still pending. Do not claim a visual inspection was completed.
+- Current foliage changes and this handoff update are local only; commit/push and CI verification remain next. PR #3 stays Draft and unmerged.
