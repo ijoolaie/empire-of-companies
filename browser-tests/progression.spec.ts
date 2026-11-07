@@ -670,11 +670,12 @@ test('mobile build-mode toolbar keeps all five actions inside narrow viewports',
         const rect = button.getBoundingClientRect();
         return { left: rect.left, right: rect.right, top: rect.top, bottom: rect.bottom };
       });
-      return { width: document.documentElement.clientWidth, toolbarLeft: toolbar.left, toolbarRight: toolbar.right, buttons };
+      return { width: document.documentElement.clientWidth, toolbarLeft: toolbar.left, toolbarRight: toolbar.right, toolbarTop: toolbar.top, panelBottom: document.querySelector('.panel').getBoundingClientRect().bottom, buttons };
     });
     expect(metrics.buttons).toHaveLength(5);
     expect(metrics.toolbarLeft).toBeGreaterThanOrEqual(0);
     expect(metrics.toolbarRight).toBeLessThanOrEqual(metrics.width);
+    expect(metrics.panelBottom).toBeLessThanOrEqual(metrics.toolbarTop);
     for (const button of metrics.buttons) {
       expect(button.left).toBeGreaterThanOrEqual(0);
       expect(button.right).toBeLessThanOrEqual(metrics.width);

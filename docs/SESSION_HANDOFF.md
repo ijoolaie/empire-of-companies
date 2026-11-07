@@ -154,3 +154,10 @@ https://github.com/ijoolaie/empire-of-companies
 - Added a Playwright test for desk-placement mode at 390x844, 375x667 and 320x568; it verifies all five toolbar actions remain within viewport bounds.
 - Focused browser test 1/1, unit tests 24/24, production build and diff check pass. New test awaits commit/push and CI.
 - Keep PR #3 Draft and unmerged; physical-device touch/visual acceptance remains open.
+## Latest continuation - mobile panel/toolbar separation
+- Extended the mobile desk-placement browser regression to assert the progression panel does not overlap the toolbar, in addition to keeping all five toolbar actions within the viewport at 390x844, 375x667 and 320x568.
+- Fixed the overlap by increasing the mobile panel's bottom clearance (90px at widths <=600px; 132px at widths <=380px) and adjusting its maximum height accordingly.
+- Local verification on this exact tree: unit tests 24/24; production build passed (469 modules; main JS 1,179.75 kB minified / 292.64 kB gzip; existing Vite >500 kB warning remains); full Playwright suite 24/24 passed in 2.9 minutes; `git diff --check` passed.
+- Scene profile in this run: 0/5/10/12/20 workers reported 467/511/566/588/676 meshes; materials 52/64/64/64/64; lights 5 throughout. Headless SwiftShader CPU timing is diagnostic only, not a physical-device performance claim.
+- CI #124 passed on the previous pushed head `f118e2a`; this mobile panel/toolbar fix is local and requires its own commit, push and CI run.
+- Physical-device touch/visual/GPU acceptance remains open. PR #3 remains Draft, open and unmerged.
