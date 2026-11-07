@@ -93,3 +93,10 @@ https://github.com/ijoolaie/empire-of-companies
 - Local validation: 22/22 unit tests, production build passed (existing Vite chunk warning), focused office-shell browser regression 1/1.
 - Previous head `598c9b4` is fully green on GitHub Actions #112; the transom slice is being committed/pushed next and requires its own CI run.
 - PR #3 remains Draft, open and unmerged; real-device visual/GPU acceptance remains outstanding.
+
+## Latest continuation - window grid detail
+- Added a centered vertical mullion to each of the three rear window panes; the three windows now have a four-pane grid with their existing transoms and edge mullions.
+- Browser regression asserts exactly three center mullions.
+- Local validation: 22/22 unit tests, production build passed (existing Vite chunk warning), focused office-shell browser regression 1/1, diff check passed.
+- Previous head `592257c` is fully green on GitHub Actions #113. The new center-mullion commit needs its own CI.
+- PR #3 remains Draft, open and unmerged; real-device visual/GPU acceptance remains outstanding.

@@ -87,3 +87,11 @@ Last verified: 2026-11-07
 - Local verification: unit tests 22/22; production build passed (466 modules; existing Vite >500 kB chunk warning); focused office-shell browser regression 1/1.
 - Latest planter-detail head `598c9b4` passed GitHub Actions #112 in full, including browser regression: https://github.com/ijoolaie/empire-of-companies/actions/runs/42350677749.
 - PR #3 description now records the passing CI #112 and current verification. Physical-device visual/GPU acceptance remains open.
+
+## Latest continuation - window grid detail
+- Added one central vertical mullion to each of the three rear windows, creating a consistent four-pane grid with the existing edge mullions and horizontal transom.
+- Added `data-office-window-center-mullion-count=3` and a Playwright assertion.
+- Local verification: unit tests 22/22; production build passed (existing Vite >500 kB chunk warning); focused office-shell browser regression 1/1; `git diff --check` passed.
+- Previous head `592257c` passed GitHub Actions #113 in full, including browser regression: https://github.com/ijoolaie/empire-of-companies/actions/runs/42351343608.
+- Latest central-mullion change is committed/pushed separately and requires its own CI run.
+- PR #3 remains Draft, open and unmerged. Physical-device visual/GPU acceptance remains open.
