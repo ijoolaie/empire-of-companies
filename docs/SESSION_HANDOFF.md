@@ -141,3 +141,10 @@ https://github.com/ijoolaie/empire-of-companies
 - Reset-camera label is localized in English and Persian; browser regression checks that drag changes the view, reset restores all three camera values, and the accessible label changes with the UI language.
 - Local verification: unit tests 24/24; production build passed (469 modules; main JS 1,179.75 kB minified / 292.62 kB gzip; existing Vite >500 kB chunk warning remains); focused camera test 1/1; browser suite excluding the long scene-profile test 22/22; diff check passed. The scene-profile test was not rerun in this slice; it passed in CI #121 on the preceding code head.
 - Current camera-reset slice is local only; commit/push and its own CI remain next. PR #3 remains Draft and unmerged; physical-device visual/GPU acceptance remains open.
+
+
+## Latest continuation - Persian camera-reset accessibility label
+- Corrected the Persian camera-reset accessible name. The previous source used escaped backslashes, so the rendered accessible label was not actual Persian text. The existing browser assertion already checks the exact Persian accessible name.
+- Verified the exact Persian accessible name in the existing browser regression and checked its Unicode code points in the source (Arabic/Persian letters U+0628...U+0646).
+- Local verification: unit tests 24/24; production build passed (469 modules; main bundle 1,179.75 kB minified / 292.62 kB gzip; existing Vite chunk warning remains); focused camera browser regression 1/1 passed, including English and Persian accessible-name assertions; git diff --check passed.
+- This correction is local pending commit/push and CI. PR #3 remains Draft and unmerged.

@@ -124,3 +124,9 @@ Last verified: 2026-11-07
 - Reset restores default alpha/beta/radius and target and clears camera inertia.
 - Local verification: unit tests 24/24; production build passed (469 modules; main JS 1,179.75 kB minified / 292.62 kB gzip); Playwright excluding the long scene-profile test 22/22; scene-profile test not rerun locally in this slice. Existing Vite chunk warning remains.
 - Current change is local pending commit/push and CI. Physical-device GPU/visual acceptance remains open.
+
+
+## Latest P4 correction - Persian camera reset label
+- Fixed the camera-reset accessible label to render actual Persian text; the existing browser regression verifies the exact Persian accessible name.
+- Local verification: 24/24 unit tests; production build passed; focused camera browser regression 1/1; diff check passed. Existing Vite chunk-size warning remains.
+- Correction is local pending commit/push and CI. Physical-device review remains open.
