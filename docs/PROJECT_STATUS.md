@@ -59,7 +59,7 @@ Last verified: 2026-11-07
 - CI #108 for previous docs head passed all steps. Current optimization is locally verified and awaiting CI.
 
 ## Latest continuation - accessible account dialog
-- The player-account sign-in/register dialog now exposes `role=dialog`, `aria-modal=true`, a labelled/described relationship, and a translated accessible close-button name.
+- The player-account sign-in/register dialog now exposes `role=dialog`, `aria-modal=true`, a labelled/described relationship, a translated accessible close-button name, and explicit accessible names for the email/password fields.
 - Keyboard behavior: initial focus moves to the email field; Tab/Shift+Tab stay inside the dialog; Escape and backdrop/close-button dismissal return focus to the account opener.
 - Added a Playwright regression for modal semantics, focus trapping and focus restoration.
 - Local verification: unit tests 22/22; production build passed (466 modules; main JS 1,164.34 kB minified / 288.20 kB gzip; existing Vite chunk-size warning remains); focused browser regression 1/1; `git diff --check` passed.

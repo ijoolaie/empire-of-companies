@@ -108,7 +108,7 @@ https://github.com/ijoolaie/empire-of-companies
 - This slice is locally verified and awaits commit/push and GitHub Actions. PR #3 remains Draft and unmerged; physical-device visual/GPU acceptance remains open.
 
 ## Latest continuation - accessible account dialog
-- The sign-in/register dialog now has modal semantics (`role=dialog`, `aria-modal=true`, labelled/described relationships) and a translated accessible close-button label.
+- The sign-in/register dialog now has modal semantics (`role=dialog`, `aria-modal=true`, labelled/described relationships), a translated accessible close-button label, and explicit accessible names for email/password inputs.
 - Initial focus moves to email; Tab/Shift+Tab remain inside the dialog; Escape, backdrop click and close button restore focus to the account opener.
 - Added Playwright coverage for dialog semantics, focus trapping and focus restoration.
 - Local verification: unit tests 22/22; production build passed (466 modules; main JS 1,164.34 kB minified / 288.20 kB gzip; existing Vite chunk warning); focused browser test 1/1; diff check passed.
