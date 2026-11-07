@@ -63,4 +63,11 @@ Last verified: 2026-11-07
 - Added `data-office-plant-foliage-mesh-count=2` and a Playwright assertion.
 - Verification on current local tree: unit tests 22/22; production build passed; browser regression 19/19; `git diff --check` passed. The 20-worker profile reports 633 meshes (down from 641 after the shoe merge); materials 58, lights 5. Timing remains noisy and no FPS claim is made.
 - Visual review via preview could not be completed because the preview process was not reachable from the browser capture; real-device and headed visual review remain open.
-- These latest changes are local and not yet committed/pushed; CI is pending.
+- Committed and pushed as `6b52839f8b189b99b86d2ae56f0ed4f9d3341d34` (`perf: merge static office plant foliage`). GitHub Actions run #110 passed all steps: https://github.com/ijoolaie/empire-of-companies/actions/runs/42348858343. PR #3 remains Draft and unmerged.
+
+## Latest continuation - emissive ceiling panels
+- Added a subtle emissive component to the three existing ceiling-panel materials; no additional geometry or lights were introduced.
+- Added `data-office-ceiling-panel-count=3` and a Playwright assertion.
+- Local verification on this tree: unit tests 22/22; production build passed (existing Vite chunk-size warning); Playwright 19/19 passed; `git diff --check` passed.
+- Latest 20-worker profile: average CPU frame 11.949 ms, p95 27.5 ms, max 79.3 ms; 633 meshes, 58 materials, 5 lights. Headless SwiftShader timings are diagnostic only.
+- Physical-device and headed visual/GPU review remain open. PR #3 stays Draft and unmerged.

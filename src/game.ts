@@ -106,8 +106,9 @@ export class OfficeGame {
   for(const [index,x,z] of [[0,-2.8,-.8],[1,2.8,-.8],[2,0,2.4]] as const){
    const lamp=new PointLight('office-fill-'+index,new Vector3(x,2.1,z),this.scene);lamp.diffuse=warmLight;lamp.intensity=.22;lamp.range=8;
   }
-  const ceilingPanel=mat('ceiling-panel',new Color3(.88,.91,.93));
+  const ceilingPanel=mat('ceiling-panel',new Color3(.88,.91,.93));ceilingPanel.emissiveColor=new Color3(.28,.32,.38);
   for(const x of [-3,0,3]){const panel=MeshBuilder.CreateBox('ceiling-light-panel',{width:1.05,height:.045,depth:.38},this.scene);panel.position.set(x,2.26,.2);panel.material=ceilingPanel;}
+  canvas.setAttribute('data-office-ceiling-panel-count',String(this.scene.meshes.filter(mesh=>mesh.name==='ceiling-light-panel').length));
   const environmentCounts={
    walls:this.scene.meshes.filter(mesh=>['back-wall','side-wall','right-wall','front-wall-left','front-wall-right'].includes(mesh.name)).length,
    windows:this.scene.meshes.filter(mesh=>mesh.name==='window-pane').length,

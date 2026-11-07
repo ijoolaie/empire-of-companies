@@ -64,3 +64,17 @@ https://github.com/ijoolaie/empire-of-companies
 - Local verification: unit tests 22/22, build passed, Playwright 19/19, diff check passed. Latest 20-worker scene profile: 633 meshes, 58 materials, 5 lights. CPU timings vary between runs; no FPS improvement is claimed.
 - The preview process could not be reached for a screenshot, so visual review is still pending. Do not claim a visual inspection was completed.
 - Current foliage changes and this handoff update are local only; commit/push and CI verification remain next. PR #3 stays Draft and unmerged.
+
+## Latest verified continuation — plant foliage
+- Commit `6b52839f8b189b99b86d2ae56f0ed4f9d3341d34` pushed to `feat/p4-office-environment`.
+- Five static leaves per planter are merged into one canopy; total foliage meshes are 2 rather than 10.
+- Local verification: unit tests 22/22, production build, Playwright 19/19, diff check all passed. GitHub Actions run #110 passed install, build, unit tests, Chromium install and browser regression: https://github.com/ijoolaie/empire-of-companies/actions/runs/42348858343.
+- 20-worker fixture scene meshes: 633; materials: 58; lights: 5. Mesh reduction is not an FPS claim.
+- Fresh screenshot/visual check was not completed; physical-device GPU review remains open.
+- PR #3 is still Draft and unmerged.
+
+## Latest continuation - emissive ceiling panels
+- Added subtle emissive material response to the three existing ceiling panels and a diagnostic/assertion for exactly three panels.
+- Local verification: unit tests 22/22; production build passed; Playwright 19/19 passed; diff check passed. The 20-worker fixture reports 633 meshes, 58 materials and 5 lights.
+- The previous browser run's 19/19 suite completed in 1.9 minutes with exit code 0. Headless SwiftShader timings are diagnostic only; no FPS claim.
+- Next: commit/push this slice and verify GitHub Actions. PR #3 remains Draft and unmerged; physical-device/visual review remains open.
