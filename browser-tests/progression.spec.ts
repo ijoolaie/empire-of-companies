@@ -116,6 +116,7 @@ test('office shell has an open entrance, framed windows and layered lighting', a
   await expect(canvas).toHaveAttribute('data-office-furniture-count', '5');
   await expect(canvas).toHaveAttribute('data-office-book-material-count', '4');
   await expect(canvas).toHaveAttribute('data-office-plant-foliage-mesh-count', '2');
+  await expect(canvas).toHaveAttribute('data-office-planter-detail-count', '4');
   await expect(canvas).toHaveAttribute('data-office-entry-detail-count', '9');
   await expect(canvas).toHaveAttribute('data-office-notice-board-mesh-count', '8');
   await expect(canvas).toHaveAttribute('data-office-notice-board-mounted', 'rear-wall');

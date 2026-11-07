@@ -19,7 +19,7 @@ https://github.com/ijoolaie/empire-of-companies
 - Local path: `C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies`.
 - Baseline main commit: `7914290` (PR #2 merged).
 - Current branch: `feat/p4-office-environment`.
-- Latest code head: `b64a164e6ea4cabe7adf0136d54bac506b76fe34` (`perf: reuse office book materials`); CI #109 passed. PR #3 remains open, Draft and unmerged.
+- Latest verified code head: `f94a5cbf47cc2bbea7b336749c9d9c2ba3705640`; CI #111 passed all steps. Current local planter-detail slice is not yet committed. PR #3 remains open, Draft and unmerged.
 - Static office geometry and furniture world matrices are frozen; worker animation updates at 30 Hz; both static shoes are merged per worker. Latest commit is pushed and CI #106 is green.
 - PR #3 remains open, Draft and unmerged. PR URL: https://github.com/ijoolaie/empire-of-companies/pull/3.
 
@@ -78,3 +78,11 @@ https://github.com/ijoolaie/empire-of-companies
 - Local verification: unit tests 22/22; production build passed; Playwright 19/19 passed; diff check passed. The 20-worker fixture reports 633 meshes, 58 materials and 5 lights.
 - The previous browser run's 19/19 suite completed in 1.9 minutes with exit code 0. Headless SwiftShader timings are diagnostic only; no FPS claim.
 - Next: commit/push this slice and verify GitHub Actions. PR #3 remains Draft and unmerged; physical-device/visual review remains open.
+
+
+## Latest continuation - planter finishing details
+- Added soil surfaces and decorative rims to both planters; four meshes total, no navigation geometry changed.
+- Added browser diagnostic data-office-planter-detail-count=4; the focused office-shell browser regression passes.
+- Local unit tests 22/22 and production build pass. Full Playwright invocation passed 14 tests before reaching the long scene-profile test and hitting the local 120-second process limit; the targeted office-shell test was rerun and passed. CI verification for this new slice remains pending.
+- Previous pushed head 94a5cb passed GitHub Actions #111: https://github.com/ijoolaie/empire-of-companies/actions/runs/42350040612.
+- Current changes are local only. Keep PR #3 Draft and unmerged.

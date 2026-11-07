@@ -7,7 +7,7 @@ Last verified: 2026-11-07
 - Default branch: `main`; latest merged baseline: `7914290` (PR #2).
 - Current work branch: `feat/p4-office-environment`.
 - Local workspace: `C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies`.
-- Latest pushed head: `b64a164e6ea4cabe7adf0136d54bac506b76fe34` (`perf: reuse office book materials`); CI #109 passed all steps. PR #3 remains open, Draft, mergeable and unmerged.
+- Latest pushed head before current local slice: `f94a5cb` (`feat: add emissive ceiling light panels`); CI #111 passed all steps. PR #3 remains open, Draft, mergeable and unmerged.
 
 ## Product decisions
 - Browser-first 3D office/company management game, Babylon.js + TypeScript + Vite.
@@ -71,3 +71,12 @@ Last verified: 2026-11-07
 - Local verification on this tree: unit tests 22/22; production build passed (existing Vite chunk-size warning); Playwright 19/19 passed; `git diff --check` passed.
 - Latest 20-worker profile: average CPU frame 11.949 ms, p95 27.5 ms, max 79.3 ms; 633 meshes, 58 materials, 5 lights. Headless SwiftShader timings are diagnostic only.
 - Physical-device and headed visual/GPU review remain open. PR #3 stays Draft and unmerged.
+
+
+## Latest continuation - planter finishing details
+- Added a dark soil surface and decorative rim to each of the two existing planters (four meshes total); foliage remains merged into two canopy meshes.
+- Added data-office-planter-detail-count=4 and a browser regression assertion.
+- Local verification: unit tests 22/22; production build passed (466 modules; existing Vite >500 kB chunk warning); targeted office-shell Playwright regression passed 1/1.
+- A full Playwright invocation reached 14 passing tests but exceeded the local 120-second process limit during the long scene-profiling test; the targeted office-shell test was rerun independently and passed. Full browser CI verification is still required for this slice.
+- GitHub Actions #111 for prior head 94a5cb passed all steps: https://github.com/ijoolaie/empire-of-companies/actions/runs/42350040612.
+- Current planter changes are local only; not yet committed or pushed. PR #3 remains Draft and unmerged.
