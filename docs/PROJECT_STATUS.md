@@ -5,9 +5,9 @@ Last verified: 2026-11-07
 ## Repository
 - GitHub: https://github.com/ijoolaie/empire-of-companies
 - Default branch: `main`; latest merged baseline: `7914290` (PR #2).
-- Current work branch: `feat/p4-office-environment`; latest pushed code head `7e4c048` (camera-reset Persian accessible-label fix).
+- Current work branch: `feat/p4-office-environment`; latest pushed code head `d85373d` (mobile panel/toolbar overlap fix).
 - Local workspace: `C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies`.
-- Latest pushed code head: `7e4c048` (`fix: render Persian camera reset label`); CI #123 passed build, unit tests and browser regression. PR #3 remains open, Draft, mergeable and unmerged.
+- Latest pushed code head: `d85373d` (`fix: prevent mobile panel toolbar overlap`); CI #125 passed build, unit tests, Chromium installation and browser regression. PR #3 remains open, Draft, mergeable and unmerged.
 
 ## Product decisions
 - Browser-first 3D office/company management game, Babylon.js + TypeScript + Vite.
