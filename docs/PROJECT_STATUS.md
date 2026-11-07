@@ -150,4 +150,4 @@ Last verified: 2026-11-07
 - Extended the mobile build-mode regression to assert the notification stays in the panel below the top bar and no floating toast is present. The touch-placement regression now checks the inline notification.
 - Local verification on this tree: unit tests 24/24; production build passed (469 modules; main JS 1,179.78 kB minified / 292.63 kB gzip; existing Vite >500 kB warning remains); full Playwright suite 24/24 passed in 2.9 minutes; `git diff --check` passed. Targeted responsive/camera/office suite 6/6 passed.
 - The 320x568, 375x667 and 390x844 build-mode samples have no horizontal overflow; all five actions remain inside the viewport and the panel stays above the toolbar. No browser page/console errors were recorded by the visual-check script.
-- Commit `ba64876` is local and ready to push; GitHub Actions verification is pending. Physical-device headed desktop/mobile and GPU acceptance remain open. PR #3 remains Draft and unmerged.
+- Code commit `ba64876` is pushed; branch head `85112bd` is under CI #127. Physical-device headed desktop/mobile and GPU acceptance remain open. PR #3 remains Draft and unmerged.

@@ -168,4 +168,4 @@ https://github.com/ijoolaie/empire-of-companies
 - Added assertions to the mobile build-mode regression that the inline notice is visible, below the top bar, and no `.toast` remains. Updated the two-tap touch-placement regression to check the inline notice.
 - Verification: unit tests 24/24; production build passed (469 modules; main JS 1,179.78 kB minified / 292.63 kB gzip; existing Vite chunk warning); full Playwright suite 24/24 passed in 2.9 minutes; focused responsive/camera/office suite 6/6 passed; diff check passed.
 - Viewport checks: 390x844, 375x667, 320x568 in desk-placement mode; all five toolbar actions stay within viewport, no horizontal overflow, panel remains above toolbar, notification is contained in the panel. Visual-check script reported no browser page/console errors.
-- Commit `ba64876` is created locally; push and CI verification remain next. PR #3 remains Draft and unmerged. Physical-device headed desktop/mobile and GPU acceptance remain outstanding.
+- Code commit `ba64876` is pushed; branch head `85112bd` is under CI #127. PR #3 remains Draft and unmerged. Physical-device headed desktop/mobile and GPU acceptance remain outstanding.
