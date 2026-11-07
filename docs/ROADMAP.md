@@ -1,49 +1,48 @@
 # Product Roadmap — Empire of Companies
 
-Last reviewed: 2026-11-06 — P3 mobile panel compacted and progression remains accessible; P4 worker visible in desktop/mobile default views; Babylon imports/material reuse optimized
+Last reviewed: 2026-11-06
 
 ## Product direction
-A browser-first, 3D idle office/company management game. The player starts with a small office, hires workers, creates production capacity, earns money, upgrades operations, and expands into a multi-company empire.
+A browser-first 3D idle office/company management game. The player starts with a small office, hires workers, creates production capacity, earns money, upgrades operations, and expands into a multi-company empire.
 
 ## Product principles
-- Babylon.js + TypeScript; procedural meshes and code-authored art first. Do not make Blender a prerequisite.
+- Babylon.js + TypeScript; procedural meshes and code-authored art first. Blender is not a prerequisite.
 - Persian and English from the beginning; RTL/LTR must be tested.
 - Game progress and saves stay on the player's device. No cloud save or sync.
 - Supabase Auth is identity only; never put service-role/secret keys in the browser.
 - Browser/PWA first. Android packaging with Capacitor only after the browser build is stable.
-- GitHub repository is Public by explicit user approval.
-- Ship small playable increments. A feature is not complete until it is implemented and verified.
+- GitHub repository is public by explicit user approval.
+- Ship small playable increments. A feature is not complete until implemented and verified.
 
 ## Phases and exit criteria
 
 ### P0 — Project continuity and baseline (complete)
-Deliverables: roadmap, architecture/decisions, current status, session handoff, reliable build workflow.
-Exit: repository documents the current truth; CI reaches a successful build.
+Roadmap, architecture/decisions, status, handoff and reliable build workflow.
 
 ### P1 — Reproducible development build (complete)
-Tasks: establish Node version, dependency lockfile, clean npm ci workflow; verify TypeScript/Vite build.
-Exit: clean install and npm run build pass locally and in GitHub Actions.
+Clean dependency install, lockfile, TypeScript/Vite build and CI.
 
 ### P2 — Playable core loop (complete)
-Tasks: typed game state and economy; timed income; build desks; hire workers; upgrades; local save/load; bounded offline earnings.
-Exit: a new player can complete the core loop, refresh, and retain valid progress without cloud storage; income and costs are deterministic and testable.
+Economy, build desks, hire workers, upgrades, local save/load and bounded offline earnings.
 
-### P3 — Game progression and UX (active)
-Tasks: onboarding/tutorial; goals and milestones; levels; unlocks; feedback; responsive controls; accessibility; complete Persian/English UI.
-Exit: first-session flow is understandable and all core screens work in both languages and directions.
+### P3 — Progression and UX (implemented; maintenance only)
+Onboarding/tutorial, ordered milestones, XP/levels, rewards, Persian/English, responsive controls and accessible progression dialog. Reopen only for defects or targeted UX improvements.
 
-### P4 — Content and visual identity (active — first worker slice)
-Tasks: procedural office kit; worker variants; equipment; company types; floor/room expansion; visual polish; asset licensing register.
-Current: procedural seated worker models are created for staffed desks; hiring adds a visible worker model and subtle idle/typing motion. Lower-body placement is oriented toward the desk. Babylon materials are reused across desks and workers with four shirt palette variants. Manual Chromium review fixed default-view worker occlusion by changing camera alpha; the worker is visible at 1280x720 and 375x667. The mobile info panel collapses XP/objective details while keeping tutorial and progression access. This is an initial slice, not completion of P4.
-Exit: a coherent content slice with documented asset provenance and acceptable performance.
+### P4 — Content and visual identity (active)
+- Procedural workers, appearance variants, arrival/idle animations and desk equipment are implemented.
+- Current slice adds an office shell with side/front walls, a clear entrance, framed windows, trim, ceiling panels, warm fill lights, a bookcase/books, a wall clock, framed wall art, per-desk paper/mug/pen accessories, a geometric entrance emblem and a near-flush entry mat.
+- Headless Chromium/SwiftShader screenshots were reviewed at desktop (900×600) and mobile (390×844), including alternate orbit views; no obvious geometry clipping or entrance obstruction was observed. Real-device GPU review remains open.
+- Next: refine furniture layout, visual hierarchy, lighting and material contrast, validating each slice at desktop/mobile sizes and alternate camera angles.
+- Exit: coherent visual content slice, acceptable performance and documented asset provenance.
 
 ### P5 — Account and settings
-Tasks: verify Supabase email sign-up/sign-in; session handling; password reset; redirect URLs; account/settings UI.
-Exit: account lifecycle verified. Game save remains local and account deletion/sign-out does not silently erase local progress.
+Verify Supabase email sign-up/sign-in, session restore, password reset, redirect URLs and account/settings UI. Account identity must not silently migrate or sync local game saves.
 
 ### P6 — Quality, PWA and release
-Tasks: automated tests; browser/device QA; performance budgets; PWA install/offline behavior; backup/export/import of local save; Capacitor Android build and smoke test.
-Exit: release checklist passes and known limitations are documented.
+Automated unit/integration/browser tests, device QA, performance budgets, PWA install/offline behavior, local-save export/import, Capacitor Android build and smoke test.
+
+### P7 — Business simulation (design and implement after the office content slice)
+Departments, products, demand, inputs/outputs, salaries, operating expenses, pricing, contracts, R&D, multiple companies and holding overview.
 
 ## Prioritization
-P1 reproducibility and P2 core gameplay are complete and verified. P3 progression/UX remains active, and the first P4 procedural worker slice has started. Keep each task small enough to verify; defer deep business simulation and Android packaging until the browser experience is stable.
+P0–P2 are complete. P3 is implemented and merged. P4 is active. Finish and visually validate a coherent office environment before deep business simulation, authentication, PWA or Android packaging.
