@@ -143,3 +143,11 @@ Last verified: 2026-11-07
 - Scene profile in this run: 0/5/10/12/20 workers reported 467/511/566/588/676 meshes; materials 52/64/64/64/64; lights 5 throughout. Headless SwiftShader CPU timing is diagnostic only, not a physical-device performance claim.
 - CI #124 passed on the previous pushed head `f118e2a`; this mobile panel/toolbar fix is local and requires its own commit, push and CI run.
 - Physical-device touch/visual/GPU acceptance remains open. PR #3 remains Draft, open and unmerged.
+
+## Latest continuation - responsive notification placement and visual acceptance
+- Headless Chromium visual captures reviewed at desktop 1440x900 and mobile 390x844; desk-placement mode also reviewed at 320x568. The office shell, entrance, windows, desks, workers and furniture render without obvious clipping in these captures. This is simulated-browser review, not physical-device acceptance.
+- Found that the placement-guide notification floated over the wrapped top bar on narrow mobile screens. Moved notifications into the existing scrollable office panel and added a polite live-region status; removed the floating toast layer.
+- Extended the mobile build-mode regression to assert the notification stays in the panel below the top bar and no floating toast is present. The touch-placement regression now checks the inline notification.
+- Local verification on this tree: unit tests 24/24; production build passed (469 modules; main JS 1,179.78 kB minified / 292.63 kB gzip; existing Vite >500 kB warning remains); full Playwright suite 24/24 passed in 2.9 minutes; `git diff --check` passed. Targeted responsive/camera/office suite 6/6 passed.
+- The 320x568, 375x667 and 390x844 build-mode samples have no horizontal overflow; all five actions remain inside the viewport and the panel stays above the toolbar. No browser page/console errors were recorded by the visual-check script.
+- Changes are local pending commit/push and CI. Physical-device headed desktop/mobile and GPU acceptance remain open. PR #3 remains Draft and unmerged.

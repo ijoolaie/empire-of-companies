@@ -161,3 +161,11 @@ https://github.com/ijoolaie/empire-of-companies
 - Scene profile in this run: 0/5/10/12/20 workers reported 467/511/566/588/676 meshes; materials 52/64/64/64/64; lights 5 throughout. Headless SwiftShader CPU timing is diagnostic only, not a physical-device performance claim.
 - CI #124 passed on the previous pushed head `f118e2a`; this mobile panel/toolbar fix is local and requires its own commit, push and CI run.
 - Physical-device touch/visual/GPU acceptance remains open. PR #3 remains Draft, open and unmerged.
+
+## Latest continuation - responsive notification placement and visual acceptance
+- Captured and inspected headless Chromium desktop 1440x900, mobile 390x844 and narrow build-mode 320x568 views. The office shell and furniture render without obvious geometry clipping in the inspected captures; do not treat this as real-device/GPU acceptance.
+- Fixed the narrow-mobile placement-guide overlap: notifications now render as an accessible `role=status` live region inside the scrollable office panel rather than a floating toast over the wrapped top bar.
+- Added assertions to the mobile build-mode regression that the inline notice is visible, below the top bar, and no `.toast` remains. Updated the two-tap touch-placement regression to check the inline notice.
+- Verification: unit tests 24/24; production build passed (469 modules; main JS 1,179.78 kB minified / 292.63 kB gzip; existing Vite chunk warning); full Playwright suite 24/24 passed in 2.9 minutes; focused responsive/camera/office suite 6/6 passed; diff check passed.
+- Viewport checks: 390x844, 375x667, 320x568 in desk-placement mode; all five toolbar actions stay within viewport, no horizontal overflow, panel remains above toolbar, notification is contained in the panel. Visual-check script reported no browser page/console errors.
+- Current changes await commit/push and CI. PR #3 remains Draft and unmerged. Physical-device headed desktop/mobile and GPU acceptance remain outstanding.

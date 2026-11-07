@@ -647,7 +647,8 @@ test('touch desk placement previews on the first tap and commits on the second t
 
   expect(validPoint).toBeDefined();
   await expect(canvas).toHaveAttribute('data-desk-placement-preview-visible', 'true');
-  await expect(page.locator('.toast')).toContainText('Tap the same spot again');
+  await expect(page.locator('.panel .panel-notice')).toContainText('Tap the same spot again');
+  await expect(page.locator('.toast')).toHaveCount(0);
   let saved = await page.evaluate(key => JSON.parse(localStorage.getItem(key)), SAVE_KEY);
   expect(saved.desks).toHaveLength(2);
   expect(saved.cash).toBe(12000);
@@ -664,18 +665,23 @@ test('mobile build-mode toolbar keeps all five actions inside narrow viewports',
     await page.setViewportSize(viewport);
     await page.goto('/');
     await page.locator('#build').click();
+    await expect(page.locator('.panel .panel-notice')).toBeVisible();
+    await expect(page.locator('.toast')).toHaveCount(0);
     const metrics = await page.evaluate(() => {
       const toolbar = document.querySelector('.toolbar').getBoundingClientRect();
+      const topbar = document.querySelector('.topbar').getBoundingClientRect();
+      const notice = document.querySelector('.panel-notice').getBoundingClientRect();
       const buttons = [...document.querySelectorAll('.toolbar .action')].map(button => {
         const rect = button.getBoundingClientRect();
         return { left: rect.left, right: rect.right, top: rect.top, bottom: rect.bottom };
       });
-      return { width: document.documentElement.clientWidth, toolbarLeft: toolbar.left, toolbarRight: toolbar.right, toolbarTop: toolbar.top, panelBottom: document.querySelector('.panel').getBoundingClientRect().bottom, buttons };
+      return { width: document.documentElement.clientWidth, toolbarLeft: toolbar.left, toolbarRight: toolbar.right, toolbarTop: toolbar.top, topbarBottom: topbar.bottom, noticeTop: notice.top, panelBottom: document.querySelector('.panel').getBoundingClientRect().bottom, buttons };
     });
     expect(metrics.buttons).toHaveLength(5);
     expect(metrics.toolbarLeft).toBeGreaterThanOrEqual(0);
     expect(metrics.toolbarRight).toBeLessThanOrEqual(metrics.width);
     expect(metrics.panelBottom).toBeLessThanOrEqual(metrics.toolbarTop);
+    expect(metrics.noticeTop).toBeGreaterThan(metrics.topbarBottom);
     for (const button of metrics.buttons) {
       expect(button.left).toBeGreaterThanOrEqual(0);
       expect(button.right).toBeLessThanOrEqual(metrics.width);
