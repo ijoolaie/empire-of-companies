@@ -9,12 +9,15 @@ import {PointLight} from '@babylonjs/core/Lights/pointLight';
 import {MeshBuilder} from '@babylonjs/core/Meshes/meshBuilder';
 import {Mesh} from '@babylonjs/core/Meshes/mesh';
 import {StandardMaterial} from '@babylonjs/core/Materials/standardMaterial';
+import {DynamicTexture} from '@babylonjs/core/Materials/Textures/dynamicTexture';
+import {ShadowGenerator} from '@babylonjs/core/Lights/Shadows/shadowGenerator';
+import '@babylonjs/core/Lights/Shadows/shadowGeneratorSceneComponent';
 import {Color3,Color4} from '@babylonjs/core/Maths/math.color';
 import {TransformNode} from '@babylonjs/core/Meshes/transformNode';
 import {planWorkerArrivalPath} from './navigation';
 
 export class OfficeGame {
- engine:Engine; scene:Scene; camera:ArcRotateCamera; floor:any; placementPreview:any; placementMaterials:Record<string,StandardMaterial>={}; canPreviewDesk?:(x:number,z:number)=>boolean; onTouchPlacementPreview?:()=>void; touchPlacementTarget:{x:number;z:number}|null=null; desks:TransformNode[]=[]; workers:TransformNode[]=[]; workerArms:Array<[any,any]>=[]; workerHeads:any[]=[]; workerLegs:Array<[any,any]>=[]; workerShins:Array<[any,any]>=[]; workerWalkStartedAt:number[]=[]; workerWalkPaths:Vector3[][]=[]; workerWalkPathLengths:number[][]=[]; workerWalkPathTotalLengths:number[]=[]; materials:Record<string,StandardMaterial>={}; placing=false; onFloorTap?:(x:number,z:number)=>boolean;
+ engine:Engine; scene:Scene; camera:ArcRotateCamera; floor:any; placementPreview:any; placementMaterials:Record<string,StandardMaterial>={}; canPreviewDesk?:(x:number,z:number)=>boolean; onTouchPlacementPreview?:()=>void; touchPlacementTarget:{x:number;z:number}|null=null; desks:TransformNode[]=[]; workers:TransformNode[]=[]; workerArms:Array<[any,any]>=[]; workerHeads:any[]=[]; workerLegs:Array<[any,any]>=[]; workerShins:Array<[any,any]>=[]; workerWalkStartedAt:number[]=[]; workerWalkPaths:Vector3[][]=[]; workerWalkPathLengths:number[][]=[]; workerWalkPathTotalLengths:number[]=[]; materials:Record<string,StandardMaterial>={}; surfaceTextures:Record<string,DynamicTexture>={}; shadowGenerator!:ShadowGenerator; placing=false; onFloorTap?:(x:number,z:number)=>boolean;
  constructor(canvas:HTMLCanvasElement){
   this.engine=new Engine(canvas,true,{preserveDrawingBuffer:false,stencil:true,adaptToDeviceRatio:true});
   this.scene=new Scene(this.engine);this.scene.clearColor=new Color4(.72,.83,.91,1);
@@ -24,17 +27,20 @@ export class OfficeGame {
   canvas.setAttribute('data-camera-beta-min','0.7');canvas.setAttribute('data-camera-beta-max','1.35');canvas.setAttribute('data-camera-radius-min','10');canvas.setAttribute('data-camera-radius-max','22');
   this.camera.onViewMatrixChangedObservable.add(syncCameraState);syncCameraState();
   this.camera.attachControl(canvas,true);
-  new HemisphericLight('ambient',new Vector3(0,1,0),this.scene).intensity=.85;
-  const sun=new DirectionalLight('sun',new Vector3(-.5,-1,.4),this.scene);sun.position=new Vector3(8,12,-8);sun.intensity=.55;
+  new HemisphericLight('ambient',new Vector3(0,1,0),this.scene).intensity=.72;
+  const sun=new DirectionalLight('sun',new Vector3(-.5,-1,.4),this.scene);sun.position=new Vector3(8,12,-8);sun.intensity=1.05;
+  this.shadowGenerator=new ShadowGenerator(1024,sun);this.shadowGenerator.useBlurExponentialShadowMap=true;this.shadowGenerator.blurKernel=14;this.shadowGenerator.setDarkness(.28);this.shadowGenerator.bias=.0005;this.shadowGenerator.normalBias=.025;
+  this.scene.imageProcessingConfiguration.exposure=1.12;this.scene.imageProcessingConfiguration.contrast=1.12;
   const mat=(name:string,c:Color3)=>this.getMaterial(name,c);
   const ground=MeshBuilder.CreateGround('ground',{width:22,height:18},this.scene);ground.material=mat('groundmat',new Color3(.55,.62,.64));
-  this.floor=MeshBuilder.CreateGround('office-floor',{width:10,height:8},this.scene);this.floor.position.y=.04;this.floor.material=mat('tile',new Color3(.72,.78,.83));
+  this.floor=MeshBuilder.CreateGround('office-floor',{width:10,height:8},this.scene);this.floor.position.y=.04;this.floor.material=mat('tile',new Color3(.72,.78,.83));this.floor.receiveShadows=true;
+  const floorTexture=this.createSurfaceTexture('floor-stone-texture','rgb(177,190,198)','rgb(190,201,207)',900);floorTexture.uScale=2;floorTexture.vScale=2;(this.floor.material as StandardMaterial).diffuseTexture=floorTexture;
   // Fine, recessed-looking grout lines give the open office floor a subtle one-metre tile layout.
   const floorGrout=mat('floor-grout',new Color3(.62,.69,.74));
   for(let x=-4.5;x<=4.5;x+=1){const joint=MeshBuilder.CreateBox('office-floor-joint',{width:.012,height:.006,depth:8},this.scene);joint.position.set(x,.045,0);joint.material=floorGrout;}
   for(let z=-3.5;z<=3.5;z+=1){const joint=MeshBuilder.CreateBox('office-floor-joint',{width:10,height:.006,depth:.012},this.scene);joint.position.set(0,.045,z);joint.material=floorGrout;}
   canvas.setAttribute('data-office-floor-joint-count',String(this.scene.meshes.filter(mesh=>mesh.name==='office-floor-joint').length));
-  const wall=mat('wall',new Color3(.82,.87,.9));
+  const wall=mat('wall',new Color3(.82,.87,.9));(wall as StandardMaterial).diffuseTexture=this.createSurfaceTexture('wall-plaster-texture','rgb(220,226,228)','rgb(232,236,237)',700);
   const back=MeshBuilder.CreateBox('back-wall',{width:10,height:2.3,depth:.18},this.scene);back.position.set(0,1.15,-4);back.material=wall;
   const side=MeshBuilder.CreateBox('side-wall',{width:.18,height:2.3,depth:8},this.scene);side.position.set(-5,1.15,0);side.material=wall;
   const right=MeshBuilder.CreateBox('right-wall',{width:.18,height:2.3,depth:8},this.scene);right.position.set(5,1.15,0);right.material=wall;
@@ -147,7 +153,9 @@ export class OfficeGame {
   canvas.setAttribute('data-office-planter-detail-count',String(this.scene.meshes.filter(mesh=>mesh.name==='planter-soil'||mesh.name==='planter-rim').length));
   this.addDesk(-2,-1);this.addDesk(1,-1);
   // Office architecture and furniture are static; freeze their world matrices so Babylon can skip per-frame recomputation.
-  this.scene.meshes.forEach(mesh=>mesh.freezeWorldMatrix());
+  const shadowCasterNames=new Set(['back-wall','side-wall','right-wall','front-wall-left','front-wall-right','entrance-header','office-bookcase','office-wall-clock','office-wall-art-frame','office-wall-art-panel','office-notice-board','notice-board-cork','waiting-bench-seat','waiting-bench-back','waiting-bench-support','pot','desk-top','desk-leg','chair-seat','chair-back','monitor']);
+  const shadowReceiverNames=new Set(['ground','office-floor','rug','back-wall','side-wall','right-wall','front-wall-left','front-wall-right']);
+  this.scene.meshes.forEach(mesh=>{if(mesh.material&&(shadowCasterNames.has(mesh.name)||mesh.name.startsWith('plant-foliage-')))this.shadowGenerator.addShadowCaster(mesh);mesh.receiveShadows=shadowReceiverNames.has(mesh.name);mesh.freezeWorldMatrix();});
   this.placementMaterials.valid=this.getMaterial('placement-valid',new Color3(.16,.72,.34));
   this.placementMaterials.invalid=this.getMaterial('placement-invalid',new Color3(.82,.2,.18));
   this.placementPreview=MeshBuilder.CreateBox('desk-placement-preview',{width:1.5,height:.025,depth:1.45},this.scene);
@@ -276,13 +284,14 @@ export class OfficeGame {
    canvas?.setAttribute('data-scene-material-count',String(this.scene.materials.length));
    canvas?.setAttribute('data-scene-light-count',String(this.scene.lights.length));
   });
+  let initialMaterialDiagnosticsReady=false;this.scene.onAfterRenderObservable.add(()=>{if(!initialMaterialDiagnosticsReady){initialMaterialDiagnosticsReady=true;canvas.setAttribute('data-scene-material-count',String(this.scene.materials.length));}});
   this.engine.runRenderLoop(()=>this.scene.render());window.addEventListener('resize',()=>this.engine.resize());
  }
  resetCamera(){this.camera.inertialAlphaOffset=0;this.camera.inertialBetaOffset=0;this.camera.inertialRadiusOffset=0;this.camera.alpha=Math.PI/4;this.camera.beta=1.05;this.camera.radius=15;this.camera.setTarget(Vector3.Zero());}
  setPlacing(active:boolean){this.placing=active;if(!active)this.touchPlacementTarget=null;this.engine.getRenderingCanvas()?.setAttribute("data-desk-placement-active",String(active));if(!active&&this.placementPreview){this.placementPreview.isVisible=false;this.engine.getRenderingCanvas()?.setAttribute("data-desk-placement-preview-visible","false");this.engine.getRenderingCanvas()?.setAttribute("data-desk-placement-valid","false");}}
  addDesk(x:number,z:number){
   const root=new TransformNode('desk-root',this.scene);root.position.set(x,.08,z);
-  const wood=this.getMaterial('deskwood',new Color3(.88,.9,.91));
+  const wood=this.getMaterial('deskwood',new Color3(.72,.52,.34));(wood as StandardMaterial).diffuseTexture=this.createSurfaceTexture('walnut-wood-texture','rgb(112,70,42)','rgb(151,101,65)',420);
   const top=MeshBuilder.CreateBox('desk-top',{width:1.5,height:.13,depth:.75},this.scene);top.parent=root;top.position.y=.85;top.material=wood;
   for(const dx of [-.62,.62])for(const dz of [-.25,.25]){const leg=MeshBuilder.CreateBox('desk-leg',{width:.08,height:.82,depth:.08},this.scene);leg.parent=root;leg.position.set(dx,.41,dz);leg.material=wood;}
   const chair=this.getMaterial('chair',new Color3(.12,.24,.38));
@@ -303,7 +312,7 @@ export class OfficeGame {
   const drawer=MeshBuilder.CreateBox('desk-drawer-unit',{width:.32,height:.48,depth:.52},this.scene);drawer.parent=root;drawer.position.set(-.43,.42,-.02);drawer.material=drawerMat;
   const drawerHandle=MeshBuilder.CreateBox('desk-drawer-handle',{width:.12,height:.025,depth:.035},this.scene);drawerHandle.parent=root;drawerHandle.position.set(-.43,.53,.26);drawerHandle.material=deskAccent;
   root.freezeWorldMatrix();
-  root.getChildMeshes().forEach(mesh=>mesh.freezeWorldMatrix());
+  root.getChildMeshes().forEach(mesh=>{if(['desk-top','desk-leg','chair-seat','chair-back','monitor'].includes(mesh.name))this.shadowGenerator.addShadowCaster(mesh);mesh.freezeWorldMatrix();});
   this.desks.push(root);
   this.engine.getRenderingCanvas()?.setAttribute('data-desk-detail-mesh-count',String(this.desks.length*4));
   this.engine.getRenderingCanvas()?.setAttribute('data-desk-accessory-mesh-count',String(this.desks.length*3));
@@ -382,7 +391,8 @@ export class OfficeGame {
    this.workerArms.push([arms[0],arms[1]]);
    this.workerLegs.push([thighs[0],thighs[1]]);
    this.workerShins.push([shins[0],shins[1]]);
-   this.workers.push(worker);
+   worker.getChildMeshes().forEach(mesh=>{if(/^(worker-torso|worker-head|worker-hair|worker-thigh|worker-shin|worker-arm|worker-shoes)-/.test(mesh.name))this.shadowGenerator.addShadowCaster(mesh);});
+    this.workers.push(worker);
   }
   this.engine.getRenderingCanvas()?.setAttribute('data-worker-model-count',String(this.workers.length));
   this.engine.getRenderingCanvas()?.setAttribute('data-worker-appearance-variant-count',String(new Set(this.workers.map((_,index)=>index%4)).size));
@@ -392,11 +402,18 @@ export class OfficeGame {
   this.engine.getRenderingCanvas()?.setAttribute('data-worker-necktie-mesh-count',String(this.workers.length));
   this.engine.getRenderingCanvas()?.setAttribute('data-scene-material-count',String(this.scene.materials.length));
  }
- getMaterial(name:string,color:Color3){
+ createSurfaceTexture(name:string,base:string,accent:string,detailCount:number){
+  const existing=this.surfaceTextures[name];if(existing)return existing;
+  const texture=new DynamicTexture(name,{width:512,height:512},this.scene,false);
+  const context=texture.getContext();context.fillStyle=base;context.fillRect(0,0,512,512);
+  let seed=name.length*7919;const random=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;};
+  for(let i=0;i<detailCount;i++){const x=random()*512,y=random()*512;context.globalAlpha=.035+random()*.055;context.fillStyle=accent;context.fillRect(x,y,1+random()*5,1+random()*3);}
+  context.globalAlpha=1;texture.update(false);this.surfaceTextures[name]=texture;return texture;
+ } getMaterial(name:string,color:Color3){
   const existing=this.materials[name];
   if(existing)return existing;
   const material=new StandardMaterial(name,this.scene);
-  material.diffuseColor=color;
+  material.diffuseColor=color;material.specularColor=new Color3(.16,.18,.2);material.specularPower=48;
   this.materials[name]=material;
   return material;
  }
