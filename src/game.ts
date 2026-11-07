@@ -278,6 +278,7 @@ export class OfficeGame {
   });
   this.engine.runRenderLoop(()=>this.scene.render());window.addEventListener('resize',()=>this.engine.resize());
  }
+ resetCamera(){this.camera.inertialAlphaOffset=0;this.camera.inertialBetaOffset=0;this.camera.inertialRadiusOffset=0;this.camera.alpha=Math.PI/4;this.camera.beta=1.05;this.camera.radius=15;this.camera.setTarget(Vector3.Zero());}
  setPlacing(active:boolean){this.placing=active;if(!active)this.touchPlacementTarget=null;this.engine.getRenderingCanvas()?.setAttribute("data-desk-placement-active",String(active));if(!active&&this.placementPreview){this.placementPreview.isVisible=false;this.engine.getRenderingCanvas()?.setAttribute("data-desk-placement-preview-visible","false");this.engine.getRenderingCanvas()?.setAttribute("data-desk-placement-valid","false");}}
  addDesk(x:number,z:number){
   const root=new TransformNode('desk-root',this.scene);root.position.set(x,.08,z);

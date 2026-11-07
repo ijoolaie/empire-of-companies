@@ -7,7 +7,7 @@ Last verified: 2026-11-07
 - Default branch: `main`; latest merged baseline: `7914290` (PR #2).
 - Current work branch: `feat/p4-office-environment`.
 - Local workspace: `C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies`.
-- Latest pushed head before current local slice: `f94a5cb` (`feat: add emissive ceiling light panels`); CI #111 passed all steps. PR #3 remains open, Draft, mergeable and unmerged.
+- Latest pushed head before current camera-reset slice: `dc23e96` (`feat: preview and validate desk placement`); CI #121 passed build, unit tests and full browser regression. Current camera-reset slice is local pending commit/push. PR #3 remains open, Draft, mergeable and unmerged.
 
 ## Product decisions
 - Browser-first 3D office/company management game, Babylon.js + TypeScript + Vite.
@@ -117,3 +117,10 @@ Last verified: 2026-11-07
 - Local verification: unit tests 24/24; production build passed (469 modules; main JS 1,179.21 kB minified / 292.47 kB gzip; existing Vite >500 kB chunk warning remains); focused desktop/touch tests 2/2; full browser suite 23/23; git diff --check passed.
 - Previous pushed head 3242c54 passed GitHub Actions #120, including build, unit tests and browser regression: https://github.com/ijoolaie/empire-of-companies/actions/runs/42353651375. This new placement-preview slice is local only and still needs its own commit/push and CI.
 - PR #3 remains Draft and unmerged. Real-device touch and visual/GPU acceptance remain outstanding.
+
+
+## Latest P4 UX slice - camera reset
+- Added a top-bar camera-reset control with an accessible label, localized in English and Persian.
+- Reset restores default alpha/beta/radius and target and clears camera inertia.
+- Local verification: unit tests 24/24; production build passed (469 modules; main JS 1,179.75 kB minified / 292.62 kB gzip); Playwright excluding the long scene-profile test 22/22; scene-profile test not rerun locally in this slice. Existing Vite chunk warning remains.
+- Current change is local pending commit/push and CI. Physical-device GPU/visual acceptance remains open.

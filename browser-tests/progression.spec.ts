@@ -498,6 +498,8 @@ test('office camera responds to pointer drag while keeping tilt and zoom bounded
   const bounds = await canvas.boundingBox();
   expect(bounds).not.toBeNull();
   const initialAlpha = Number(await canvas.getAttribute('data-camera-alpha'));
+  const initialBeta = Number(await canvas.getAttribute('data-camera-beta'));
+  const initialRadius = Number(await canvas.getAttribute('data-camera-radius'));
   const betaMin = Number(await canvas.getAttribute('data-camera-beta-min'));
   const betaMax = Number(await canvas.getAttribute('data-camera-beta-max'));
   const radiusMin = Number(await canvas.getAttribute('data-camera-radius-min'));
@@ -515,6 +517,15 @@ test('office camera responds to pointer drag while keeping tilt and zoom bounded
   expect(beta).toBeLessThanOrEqual(betaMax);
   expect(radius).toBeGreaterThanOrEqual(radiusMin);
   expect(radius).toBeLessThanOrEqual(radiusMax);
+
+  const reset = page.locator('#camera-reset');
+  await expect(reset).toHaveAttribute('aria-label', 'Reset camera view');
+  await reset.click();
+  await expect.poll(async () => Number(await canvas.getAttribute('data-camera-alpha'))).toBe(initialAlpha);
+  await expect.poll(async () => Number(await canvas.getAttribute('data-camera-beta'))).toBe(initialBeta);
+  await expect.poll(async () => Number(await canvas.getAttribute('data-camera-radius'))).toBe(initialRadius);
+  await page.locator('#lang').click();
+  await expect(reset).toHaveAttribute('aria-label', 'بازنشانی نمای دوربین');
 });
 
 test('three rapid arrivals find valid paths in alternate desk layouts', async ({ browser }) => {

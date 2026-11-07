@@ -19,7 +19,7 @@ https://github.com/ijoolaie/empire-of-companies
 - Local path: `C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies`.
 - Baseline main commit: `7914290` (PR #2 merged).
 - Current branch: `feat/p4-office-environment`.
-- Latest verified code head: `f94a5cbf47cc2bbea7b336749c9d9c2ba3705640`; CI #111 passed all steps. Current local planter-detail slice is not yet committed. PR #3 remains open, Draft and unmerged.
+- Latest verified pushed code head before the camera-reset slice: `dc23e96fa6338e34daae7b24b3c2267136bcea7d`; GitHub Actions #121 passed build, unit tests and full browser regression. Current camera-reset slice is local pending verification/commit. PR #3 remains open, Draft and unmerged.
 - Static office geometry and furniture world matrices are frozen; worker animation updates at 30 Hz; both static shoes are merged per worker. Latest commit is pushed and CI #106 is green.
 - PR #3 remains open, Draft and unmerged. PR URL: https://github.com/ijoolaie/empire-of-companies/pull/3.
 
@@ -134,3 +134,10 @@ https://github.com/ijoolaie/empire-of-companies
 - Local verification: unit tests 24/24; production build passed (469 modules; main JS 1,179.21 kB minified / 292.47 kB gzip; existing Vite >500 kB chunk warning remains); focused desktop/touch tests 2/2; full browser suite 23/23; git diff --check passed.
 - Previous pushed head 3242c54 passed GitHub Actions #120, including build, unit tests and browser regression: https://github.com/ijoolaie/empire-of-companies/actions/runs/42353651375. This new placement-preview slice is local only and still needs its own commit/push and CI.
 - PR #3 remains Draft and unmerged. Real-device touch and visual/GPU acceptance remain outstanding.
+
+
+## Latest continuation - camera reset control
+- Added a visible, accessible camera-reset control in the top bar. It restores the default orbit angle, tilt, radius and target, and clears pending camera inertia.
+- Reset-camera label is localized in English and Persian; browser regression checks that drag changes the view, reset restores all three camera values, and the accessible label changes with the UI language.
+- Local verification: unit tests 24/24; production build passed (469 modules; main JS 1,179.75 kB minified / 292.62 kB gzip; existing Vite >500 kB chunk warning remains); focused camera test 1/1; browser suite excluding the long scene-profile test 22/22; diff check passed. The scene-profile test was not rerun in this slice; it passed in CI #121 on the preceding code head.
+- Current camera-reset slice is local only; commit/push and its own CI remain next. PR #3 remains Draft and unmerged; physical-device visual/GPU acceptance remains open.
