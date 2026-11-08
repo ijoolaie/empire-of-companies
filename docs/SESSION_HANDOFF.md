@@ -302,3 +302,8 @@ Implemented in src/game.ts:
 Browser regression now asserts the new premium scene details and lighting counts. Local production build and unit tests passed; focused office-shell browser regression passed. Full Playwright browser regression passed: 28/28 tests (3.5 minutes). The subsequent git diff --check whitespace cleanup is recorded in this handoff.
 
 Do not treat this pass as final P4 acceptance. The game remains procedural/low-poly in places; further asset/material/character refinement and headed physical-device review remain. Do not start P5, do not merge PR #3, and keep it Draft/open until the user explicitly authorizes merge after acceptance.
+
+Screenshot review artifact:
+- artifacts/office-premium-pass.jpg — final 1280x720 Chromium capture of the updated default office.
+- Headless capture reported no page errors and confirmed 31 premium detail meshes, 3 pendants and 8 lights.
+- This is a visual review artifact only; it does not replace headed physical-device/GPU/touch acceptance.

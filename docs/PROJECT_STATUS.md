@@ -264,3 +264,5 @@ Last verified: 2026-11-08
 P4 graphics work has moved from planning into implementation. First procedural premium baseline pass is in the working tree: slate exterior ground, brighter ivory floor and city glazing, navy/champagne-gold architectural details, pendant fixtures/warm point lights, and lower cutaway front/right walls to expose more of the room. The side management panel and accepted camera composition were preserved.
 
 Local build and unit tests passed; focused office-shell browser regression passed. Full Playwright browser regression passed: 28/28 tests. This does not complete P4: visual refinement, final screenshot comparison, real headed/GPU/touch acceptance and explicit user sign-off remain open. P5 remains deferred.
+
+Screenshot review artifact: artifacts/office-premium-pass.jpg (1280x720 local Chromium capture; zero page errors). It is a headless visual diagnostic, not physical-device/GPU acceptance.
