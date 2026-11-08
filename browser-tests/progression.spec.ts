@@ -46,6 +46,7 @@ test('progression rewards are granted once and persist after reload', async ({ p
   await expect(page.locator('#game')).toHaveAttribute('data-desk-accessory-mesh-count', '9');
   await expect(page.locator('#game')).toHaveAttribute('data-desk-chair-detail-mesh-count', '9');
   await expect(page.locator('#game')).toHaveAttribute('data-desk-monitor-ui-count', '3');
+  await expect(page.locator('#game')).toHaveAttribute('data-desk-premium-detail-count', '22');
   await expect(page.locator('#game')).toHaveAttribute('data-worker-leg-mesh-count', '5');
   await expect(page.locator('#game')).toHaveAttribute('data-worker-necktie-mesh-count', '1');
   const materialCountBeforeHire = await page.locator('#game').getAttribute('data-scene-material-count');
@@ -165,6 +166,7 @@ test('each office desk includes a monitor stand, base, keyboard and mouse', asyn
   await expect(page.locator('#game')).toHaveAttribute('data-desk-storage-mesh-count', '6');
   await expect(page.locator('#game')).toHaveAttribute('data-desk-chair-detail-mesh-count', '9');
   await expect(page.locator('#game')).toHaveAttribute('data-desk-monitor-ui-count', '3');
+  await expect(page.locator('#game')).toHaveAttribute('data-desk-premium-detail-count', '22');
 });
 
 test('seated workers cycle through distinct typing, reviewing and thinking poses', async ({ page }) => {
@@ -351,6 +353,9 @@ test('main character is visible and worker models include facial features', asyn
   const canvas = page.locator('#game');
   await expect(canvas).toHaveAttribute('data-main-character-present', 'true');
   await expect(canvas).toHaveAttribute('data-main-character-role', 'player-founder');
+  await expect(canvas).toHaveAttribute('data-main-character-style', 'semi-realistic-business');
+  await expect(canvas).toHaveAttribute('data-worker-style', 'semi-realistic-business');
+  await expect(canvas).toHaveAttribute('data-worker-tailored-jacket-count', '2');
   await expect(canvas).toHaveAttribute('data-main-character-nameplate', 'true');
   await expect(canvas).toHaveAttribute('data-office-feature-wall-slat-count', '5');
   await expect(canvas).toHaveAttribute('data-worker-model-count', '2');

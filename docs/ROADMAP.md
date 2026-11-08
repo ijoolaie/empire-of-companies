@@ -114,3 +114,13 @@ Do not skip P4 acceptance to start authentication, deep simulation, PWA or Andro
 - [ ] Continue material/asset/character refinement against the approved reference direction.
 - [ ] Complete headed desktop/mobile, real GPU and touch acceptance.
 - [ ] Obtain user acceptance before P4 closure and any P5 work.
+
+## Latest continuation - premium furniture and semi-realistic character pass (local, not pushed)
+- Furniture pass: walnut desk edge banding, brass collars, ergonomic rounded lumbar/headrest cushions, upholstery seam accents, refined monitor bezel/camera, keyboard keycaps (merged into one mesh per desk) and mouse wheel. Existing room scale, camera framing and management panel were not changed.
+- Character pass: worker torsos now use smoother tailored silhouettes; jacket lapels and shirt fronts add layered clothing; heads use improved proportions and smoother geometry; hair uses side-part/fringe shapes rather than spiky anime locks; subtle beard details add variation. Founder hair was similarly refined while preserving movement controls, seated poses, arrival routing and desk assignment.
+- Added canvas diagnostics for the semi-realistic business character style and tailored-jacket counts, with Playwright assertions.
+- Local verification: production build passed (526 modules; main JS 1,364.46 kB minified / 337.53 kB gzip; existing >500 kB Vite chunk warning); unit tests 24/24; focused character/material/pose/20-worker profile tests 4/4; targeted furniture test 1/1; `git diff --check` passed.
+- The 20-worker headless profile in the focused run reported 1,177 meshes and 109 materials (8 lights); average frame sample 39.793 ms, p95 52.9 ms, max 162.8 ms. This is a diagnostic headless run, not a device FPS claim. The full browser suite is still running; two narrow-viewport tests have failed and require investigation. Do not mark full browser acceptance green.
+- Current changes are local only. PR #3 remains Draft/open/unmerged. Physical headed desktop/mobile and real-device GPU/touch acceptance remain outstanding.
+- Follow-up isolated rerun of the two narrow-viewport tests passed 2/2. The full 28-test run reported 26 passed and two transient browser-server/canvas startup failures (`#game` null and `ERR_CONNECTION_REFUSED`); the two failed tests passed when rerun alone. Full-suite acceptance is therefore not marked green pending a clean complete rerun.
+- Character screenshot saved locally as `artifacts/office-character-premium-pass.jpg` (1280x720 Chromium capture); this is a real app capture, not an AI concept render. Visual inspection on a headed physical device remains outstanding.
