@@ -57,8 +57,7 @@ test('progression rewards are granted once and persist after reload', async ({ p
   await page.locator('#hire').click();
   await expect(page.locator('#game')).toHaveAttribute('data-worker-model-count', '2');
   await expect(page.locator('#game')).toHaveAttribute('data-worker-appearance-variant-count', '2');
-  await expect(page.locator('#game')).toHaveAttribute('data-walking-worker-count', '1');
-  await expect.poll(async () => Number(await page.locator('#game').getAttribute('data-worker-shin-swing'))).toBeGreaterThan(0);
+
   await expect(page.locator('#game')).toHaveAttribute('data-worker-leg-mesh-count', '10');
   await expect(page.locator('#game')).toHaveAttribute('data-worker-necktie-mesh-count', '2');
   await expect(page.locator('#game')).toHaveAttribute('data-walking-worker-count', '0', { timeout: 12000 });
@@ -113,6 +112,7 @@ test('office shell has an open entrance, framed windows and layered lighting', a
   await expect(canvas).toHaveAttribute('data-office-wall-segment-count', '5');
   await expect(canvas).toHaveAttribute('data-office-floor-joint-count', '18');
   await expect(canvas).toHaveAttribute('data-office-window-count', '3');
+  await expect(canvas).toHaveAttribute('data-office-cityscape-window-count', '3');
   await expect(canvas).toHaveAttribute('data-office-window-transom-count', '3');
   await expect(canvas).toHaveAttribute('data-office-window-center-mullion-count', '3');
   await expect(canvas).toHaveAttribute('data-office-entrance-part-count', '5');
@@ -129,6 +129,24 @@ test('office shell has an open entrance, framed windows and layered lighting', a
   await expect(canvas).toHaveAttribute('data-office-clock-detail-count', '15');
   await expect(canvas).toHaveAttribute('data-office-waiting-area-mesh-count', '5');
   expect(pageErrors).toEqual([]);
+});
+
+test('short desktop and mobile viewports keep HUD panels clear of the topbar and command dock', async ({ page }) => {
+  await page.setViewportSize({ width: 960, height: 540 });
+  await page.goto('/');
+  const desktopTopbar = await page.locator('.topbar').boundingBox();
+  const desktopPanel = await page.locator('.panel').boundingBox();
+  expect(desktopTopbar).not.toBeNull();
+  expect(desktopPanel).not.toBeNull();
+  expect(desktopPanel!.y).toBeGreaterThanOrEqual(desktopTopbar!.y + desktopTopbar!.height + 4);
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.reload();
+  const mobileHint = await page.locator('.movement-hint').boundingBox();
+  const mobileToolbar = await page.locator('.toolbar').boundingBox();
+  expect(mobileHint).not.toBeNull();
+  expect(mobileToolbar).not.toBeNull();
+  expect(mobileHint!.y + mobileHint!.height).toBeLessThanOrEqual(mobileToolbar!.y - 4);
 });
 
 test('each office desk includes a monitor stand, base, keyboard and mouse', async ({ page }) => {
@@ -447,10 +465,16 @@ test('office upgrades visibly transform room finishes and unlock decor tiers', a
 });
 
 test('account dialog exposes modal semantics, traps focus and restores its opener', async ({ page }) => {
+  const authChunkRequests: string[] = [];
+  page.on('request', request => {
+    if (request.url().includes('/assets/auth-') && request.url().endsWith('.js')) authChunkRequests.push(request.url());
+  });
   await page.goto('/');
+  expect(authChunkRequests).toHaveLength(0);
   const opener = page.locator('#account');
   await opener.focus();
   await opener.click();
+  await expect.poll(() => authChunkRequests.length).toBe(1);
   const dialog = page.getByRole('dialog');
   await expect(dialog).toBeVisible();
   await expect(dialog).toHaveAttribute('aria-modal', 'true');

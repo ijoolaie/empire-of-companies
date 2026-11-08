@@ -207,3 +207,8 @@
 }
 
 @media(max-width:600px){.panel{bottom:150px}}
+
+/* Keep the executive panel below the two-row HUD on short desktop viewports. */
+@media(min-width:601px){.panel{max-height:calc(100vh - 220px)}}
+/* Keep the movement hint clear of the two-row mobile command dock. */
+@media(max-width:600px){.movement-hint{bottom:118px}}
