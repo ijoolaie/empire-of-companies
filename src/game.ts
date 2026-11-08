@@ -17,7 +17,7 @@ import {TransformNode} from '@babylonjs/core/Meshes/transformNode';
 import {planWorkerArrivalPath} from './navigation';
 
 export class OfficeGame {
- engine:Engine; scene:Scene; camera:ArcRotateCamera; floor:any; placementPreview:any; placementMaterials:Record<string,StandardMaterial>={}; canPreviewDesk?:(x:number,z:number)=>boolean; onTouchPlacementPreview?:()=>void; touchPlacementTarget:{x:number;z:number}|null=null; desks:TransformNode[]=[]; mainCharacter:TransformNode|null=null; workers:TransformNode[]=[]; workerArms:Array<[any,any]>=[]; workerHeads:any[]=[]; workerLegs:Array<[any,any]>=[]; workerShins:Array<[any,any]>=[]; workerWalkStartedAt:number[]=[]; workerWalkPaths:Vector3[][]=[]; workerWalkPathLengths:number[][]=[]; workerWalkPathTotalLengths:number[]=[]; materials:Record<string,StandardMaterial>={}; surfaceTextures:Record<string,DynamicTexture>={}; shadowGenerator!:ShadowGenerator; placing=false; onFloorTap?:(x:number,z:number)=>boolean;
+ engine:Engine; scene:Scene; camera:ArcRotateCamera; floor:any; placementPreview:any; placementMaterials:Record<string,StandardMaterial>={}; canPreviewDesk?:(x:number,z:number)=>boolean; onTouchPlacementPreview?:()=>void; touchPlacementTarget:{x:number;z:number}|null=null; desks:TransformNode[]=[]; mainCharacter:TransformNode|null=null; playerKeys=new Set<string>(); playerArms:Mesh[]=[]; playerLegs:Mesh[]=[]; playerShoes:Mesh[]=[]; playerHeadMesh:Mesh|null=null; officeUpgradeDecor:Array<{mesh:Mesh;requiredLevel:number}>=[]; officeVisualTier=1; workers:TransformNode[]=[]; workerArms:Array<[any,any]>=[]; workerHeads:any[]=[]; workerLegs:Array<[any,any]>=[]; workerShins:Array<[any,any]>=[]; workerWalkStartedAt:number[]=[]; workerWalkPaths:Vector3[][]=[]; workerWalkPathLengths:number[][]=[]; workerWalkPathTotalLengths:number[]=[]; materials:Record<string,StandardMaterial>={}; surfaceTextures:Record<string,DynamicTexture>={}; shadowGenerator!:ShadowGenerator; placing=false; onFloorTap?:(x:number,z:number)=>boolean;
  constructor(canvas:HTMLCanvasElement){
   this.engine=new Engine(canvas,true,{preserveDrawingBuffer:false,stencil:true,adaptToDeviceRatio:true});
   this.scene=new Scene(this.engine);this.scene.clearColor=new Color4(.72,.83,.91,1);
@@ -26,7 +26,7 @@ export class OfficeGame {
   const syncCameraState=()=>{for(const [name,value] of [['alpha',this.camera.alpha.toFixed(3)],['beta',this.camera.beta.toFixed(3)],['radius',this.camera.radius.toFixed(2)]] as const){const key='data-camera-'+name;if(canvas.getAttribute(key)!==value)canvas.setAttribute(key,value);}};
   canvas.setAttribute('data-camera-beta-min','0.7');canvas.setAttribute('data-camera-beta-max','1.35');canvas.setAttribute('data-camera-radius-min','10');canvas.setAttribute('data-camera-radius-max','22');
   this.camera.onViewMatrixChangedObservable.add(syncCameraState);syncCameraState();
-  this.camera.attachControl(canvas,true);
+  this.camera.attachControl(canvas,true);this.camera.inputs.removeByType("ArcRotateCameraKeyboardMoveInput");
   new HemisphericLight('ambient',new Vector3(0,1,0),this.scene).intensity=.72;
   const sun=new DirectionalLight('sun',new Vector3(-.5,-1,.4),this.scene);sun.position=new Vector3(8,12,-8);sun.intensity=1.05;
   this.shadowGenerator=new ShadowGenerator(1024,sun);this.shadowGenerator.useBlurExponentialShadowMap=true;this.shadowGenerator.blurKernel=14;this.shadowGenerator.setDarkness(.28);this.shadowGenerator.bias=.0005;this.shadowGenerator.normalBias=.025;
@@ -151,11 +151,11 @@ export class OfficeGame {
   }
   canvas.setAttribute('data-office-plant-foliage-mesh-count',String(this.scene.meshes.filter(mesh=>mesh.name.startsWith('plant-foliage-')).length));
   canvas.setAttribute('data-office-planter-detail-count',String(this.scene.meshes.filter(mesh=>mesh.name==='planter-soil'||mesh.name==='planter-rim').length));
-  this.addDesk(-2,-1);this.addDesk(1,-1);this.createMainCharacter();
+  this.addDesk(-2,-1);this.addDesk(1,-1);this.createMainCharacter();this.createOfficeUpgradeDecor();
   // Office architecture and furniture are static; freeze their world matrices so Babylon can skip per-frame recomputation.
   const shadowCasterNames=new Set(['back-wall','side-wall','right-wall','front-wall-left','front-wall-right','entrance-header','office-bookcase','office-wall-clock','office-wall-art-frame','office-wall-art-panel','office-notice-board','notice-board-cork','player-feature-wall-panel','player-feature-wall-slat','player-feature-wall-emblem','waiting-bench-seat','waiting-bench-back','waiting-bench-support','pot','desk-top','desk-leg','chair-frame','chair-upholstery','chair-base','monitor']);
   const shadowReceiverNames=new Set(['ground','office-floor','rug','back-wall','side-wall','right-wall','front-wall-left','front-wall-right']);
-  this.scene.meshes.forEach(mesh=>{if(mesh.material&&(shadowCasterNames.has(mesh.name)||mesh.name.startsWith('plant-foliage-')))this.shadowGenerator.addShadowCaster(mesh);mesh.receiveShadows=shadowReceiverNames.has(mesh.name);mesh.freezeWorldMatrix();});
+  this.scene.meshes.forEach(mesh=>{if(mesh.material&&(shadowCasterNames.has(mesh.name)||mesh.name.startsWith('plant-foliage-')))this.shadowGenerator.addShadowCaster(mesh);mesh.receiveShadows=shadowReceiverNames.has(mesh.name);if(!mesh.name.startsWith('player-')||mesh.name.startsWith('player-feature-wall-'))mesh.freezeWorldMatrix();});
   this.placementMaterials.valid=this.getMaterial('placement-valid',new Color3(.16,.72,.34));
   this.placementMaterials.invalid=this.getMaterial('placement-invalid',new Color3(.82,.2,.18));
   this.placementPreview=MeshBuilder.CreateBox('desk-placement-preview',{width:1.5,height:.025,depth:1.45},this.scene);
@@ -210,14 +210,29 @@ export class OfficeGame {
   this.scene.onBeforeRenderObservable.add(()=>{
    const now=performance.now();
    if(profileEnabled)frameStartedAt=now;
-   if(now-lastWorkerUpdateAt<workerUpdateIntervalMs)return;
+   if(this.mainCharacter){
+    const active=document.activeElement as HTMLElement|null;const editing=!!active&&(/^(INPUT|TEXTAREA|SELECT)$/.test(active.tagName)||active.isContentEditable);
+    const forward=(this.playerKeys.has('KeyW')||this.playerKeys.has('ArrowUp')?1:0)-(this.playerKeys.has('KeyS')||this.playerKeys.has('ArrowDown')?1:0);
+    const strafe=(this.playerKeys.has('KeyD')||this.playerKeys.has('ArrowRight')?1:0)-(this.playerKeys.has('KeyA')||this.playerKeys.has('ArrowLeft')?1:0);
+    const moving=!editing&&!this.placing&&!document.querySelector('.modal-backdrop')&&(forward!==0||strafe!==0);
+    const delta=Math.min(.05,this.engine.getDeltaTime()/1000);
+    if(moving){
+     const magnitude=Math.hypot(strafe,forward)||1;const dx=strafe/magnitude*2.7*delta,dz=-forward/magnitude*2.7*delta;const current=this.mainCharacter.position;
+     const obstacles=[...this.desks.map(d=>({x:d.position.x,z:d.position.z+.22,halfWidth:.84,halfDepth:1.05})),{x:4.48,z:-.55,halfWidth:.48,halfDepth:.9},{x:4.84,z:2.55,halfWidth:.16,halfDepth:1.02},{x:-4,z:3,halfWidth:.38,halfDepth:.38},{x:4,z:-2,halfWidth:.38,halfDepth:.38},{x:-4.48,z:1.1,halfWidth:.48,halfDepth:.9},{x:-4.8,z:-1.65,halfWidth:.18,halfDepth:.65}];
+     const blocked=(x:number,z:number)=>Math.abs(x)>4.62||z< -3.62||z>3.72||obstacles.some(o=>Math.abs(x-o.x)<o.halfWidth+.22&&Math.abs(z-o.z)<o.halfDepth+.22);
+     const nextX=current.x+dx,nextZ=current.z+dz;if(!blocked(nextX,current.z))current.x=nextX;if(!blocked(current.x,nextZ))current.z=nextZ;
+     this.mainCharacter.rotation.y=Math.atan2(strafe,-forward);const stride=Math.sin(now*.012)*.72;
+     this.playerLegs.forEach((leg,index)=>leg.rotation.x=(index===0?1:-1)*stride);this.playerArms.forEach((arm,index)=>arm.rotation.x=(index===0?-1:1)*stride*.42);this.playerShoes.forEach((shoe,index)=>shoe.position.y=.13+Math.max(0,(index===0?1:-1)*stride)*.045);
+    }else{this.playerLegs.forEach(leg=>leg.rotation.x*=.72);this.playerArms.forEach(arm=>arm.rotation.x*=.72);}
+    const playerCanvas=this.engine.getRenderingCanvas();if(moving){playerCanvas?.setAttribute('data-player-x',this.mainCharacter.position.x.toFixed(2));playerCanvas?.setAttribute('data-player-z',this.mainCharacter.position.z.toFixed(2));playerCanvas?.setAttribute('data-player-facing-yaw',this.mainCharacter.rotation.y.toFixed(3));this.playerHeadMesh?.computeWorldMatrix(true);if(this.playerHeadMesh)playerCanvas?.setAttribute('data-player-head-world-x',this.playerHeadMesh.getAbsolutePosition().x.toFixed(2));}if(playerCanvas?.getAttribute('data-player-moving')!==String(moving))playerCanvas?.setAttribute('data-player-moving',String(moving));
+   }   if(now-lastWorkerUpdateAt<workerUpdateIntervalMs)return;
    lastWorkerUpdateAt=now;
    const time=now*.001;
    let walkingCount=0,shinSwing=0;
    this.workers.forEach((worker,index)=>{
     worker.position.y=.08+Math.sin(time*2+index*.8)*.018;
     const elapsed=(now-this.workerWalkStartedAt[index])/1000;
-    const progress=Math.min(1,Math.max(0,elapsed/1.6));
+    const progress=Math.min(1,Math.max(0,elapsed/3.2));
     if(progress<1){
      walkingCount++;
      const stride=Math.sin(time*10+index*.9);
@@ -230,7 +245,7 @@ export class OfficeGame {
      while(segment<lengths.length-1&&remaining>lengths[segment]){remaining-=lengths[segment];segment++;}
      const from=path[segment]??Vector3.Zero(),to=path[segment+1]??from;
      const segmentProgress=lengths[segment]>0?Math.min(1,remaining/lengths[segment]):1;
-     Vector3.LerpToRef(from,to,segmentProgress,worker.position);
+     Vector3.LerpToRef(from,to,segmentProgress,worker.position);if(segmentProgress<1){const directionX=to.x-from.x,directionZ=to.z-from.z;if(directionX*directionX+directionZ*directionZ>.0001)worker.rotation.y=Math.atan2(directionX,directionZ);}else worker.rotation.y=Math.PI/4;
      const legs=this.workerLegs[index],shins=this.workerShins[index],arms=this.workerArms[index];
      if(legs){legs[0].rotation.x=stride*.38;legs[1].rotation.x=-stride*.38;legs[0].position.z=.48+stride*.08;legs[1].position.z=.48-stride*.08;}
      if(shins){shins[0].rotation.x=-stride*.24;shins[1].rotation.x=stride*.24;shinSwing=Math.max(shinSwing,Math.abs(stride*.24));}
@@ -337,7 +352,7 @@ export class OfficeGame {
   return root;
  }
  createMainCharacter(){
-  const root=new TransformNode('main-character-player',this.scene);root.position.set(4.3,.08,3.55);root.rotation.y=0;this.mainCharacter=root;
+  const root=new TransformNode('main-character-player',this.scene);root.position.set(.75,.08,2.75);root.rotation.y=Math.PI/4;this.mainCharacter=root;
   const skin=this.getMaterial('player-skin',new Color3(.72,.48,.34));
   const hair=this.getMaterial('player-hair',new Color3(.075,.065,.06));
   const jacket=this.getMaterial('player-jacket',new Color3(.12,.2,.29));
@@ -348,28 +363,32 @@ export class OfficeGame {
   const body=MeshBuilder.CreateCapsule('player-jacket-body',{height:.78,radius:.23,tessellation:10},this.scene);body.parent=root;body.position.y=1.08;body.scaling.set(1.05,1,.72);body.material=jacket;
   const shirtFront=MeshBuilder.CreateBox('player-shirt-front',{width:.19,height:.58,depth:.035},this.scene);shirtFront.parent=root;shirtFront.position.set(0,1.12,.205);shirtFront.material=shirt;
   const tie=MeshBuilder.CreateBox('player-tie',{width:.07,height:.32,depth:.035},this.scene);tie.parent=root;tie.position.set(0,1.12,.23);tie.material=gold;
+  const playerArms:Mesh[]=[],playerLegs:Mesh[]=[],playerShoes:Mesh[]=[];
   for(const side of [-1,1]){
    const lapel=MeshBuilder.CreateBox('player-lapel',{width:.105,height:.42,depth:.045},this.scene);lapel.parent=root;lapel.position.set(side*.105,1.22,.225);lapel.rotation.z=side*.32;lapel.material=jacket;
-   const arm=MeshBuilder.CreateCapsule('player-arm',{height:.66,radius:.09,tessellation:8},this.scene);arm.parent=root;arm.position.set(side*.29,1.08,.015);arm.rotation.z=side*.12;arm.material=jacket;
+   const arm=MeshBuilder.CreateCapsule('player-arm',{height:.66,radius:.09,tessellation:8},this.scene);arm.parent=root;arm.position.set(side*.29,1.08,.015);arm.rotation.z=side*.12;arm.material=jacket;playerArms.push(arm);
    const cuff=MeshBuilder.CreateCylinder('player-cuff',{height:.12,diameter:.19,tessellation:10},this.scene);cuff.parent=root;cuff.position.set(side*.32,.78,.04);cuff.rotation.z=Math.PI/2;cuff.material=shirt;
    const hand=MeshBuilder.CreateSphere('player-hand',{diameter:.17,segments:8},this.scene);hand.parent=root;hand.position.set(side*.33,.68,.05);hand.material=skin;
-   const leg=MeshBuilder.CreateCapsule('player-leg',{height:.72,radius:.115,tessellation:8},this.scene);leg.parent=root;leg.position.set(side*.13,.43,0);leg.material=trousers;
-   const shoe=MeshBuilder.CreateBox('player-shoe',{width:.22,height:.13,depth:.38},this.scene);shoe.parent=root;shoe.position.set(side*.13,.13,.08);shoe.material=shoes;
+   const leg=MeshBuilder.CreateCapsule('player-leg',{height:.72,radius:.115,tessellation:8},this.scene);leg.parent=root;leg.position.set(side*.13,.43,0);leg.material=trousers;playerLegs.push(leg);
+   const shoe=MeshBuilder.CreateBox('player-shoe',{width:.22,height:.13,depth:.38},this.scene);shoe.parent=root;shoe.position.set(side*.13,.13,.08);shoe.material=shoes;playerShoes.push(shoe);
   }
   const neck=MeshBuilder.CreateCylinder('player-neck',{height:.18,diameter:.16,tessellation:10},this.scene);neck.parent=root;neck.position.y=1.51;neck.material=skin;
-  const head=MeshBuilder.CreateSphere('player-head',{diameter:.39,segments:16},this.scene);head.parent=root;head.position.y=1.72;head.scaling.set(.92,1.12,.9);head.material=skin;
+  const head=MeshBuilder.CreateSphere('player-head',{diameter:.39,segments:16},this.scene);head.parent=root;head.position.y=1.72;head.scaling.set(.92,1.12,.9);head.material=skin;this.playerHeadMesh=head;
   const hairCap=MeshBuilder.CreateSphere('player-hair-cap',{diameter:.405,segments:12},this.scene);hairCap.parent=root;hairCap.position.set(0,1.87,-.015);hairCap.scaling.set(1,.58,.95);hairCap.material=hair;
   const fringe=MeshBuilder.CreateSphere('player-hair-fringe',{diameter:.22,segments:10},this.scene);fringe.parent=root;fringe.position.set(-.075,1.86,.145);fringe.scaling.set(1.25,.5,.55);fringe.material=hair;
-  const white=this.getMaterial('player-eye-white',new Color3(.96,.94,.88));const iris=this.getMaterial('player-iris',new Color3(.19,.28,.25));const pupil=this.getMaterial('player-pupil',new Color3(.025,.03,.035));
+  this.playerArms=playerArms;this.playerLegs=playerLegs;this.playerShoes=playerShoes;
+  const white=this.getMaterial('player-eye-white',new Color3(.99,.98,.94));const iris=this.getMaterial('player-iris',new Color3(.18,.38,.62));const pupil=this.getMaterial('player-pupil',new Color3(.018,.025,.05));const sparkle=this.getMaterial('player-eye-sparkle',new Color3(1,1,1));const blush=this.getMaterial('player-blush',new Color3(.9,.34,.39));[skin,hair,jacket,shirt,trousers,shoes,gold,white,iris,pupil,sparkle,blush].forEach(material=>{material.specularColor=new Color3(.025,.03,.05);material.specularPower=8;});
   for(const side of [-1,1]){
-   const eye=MeshBuilder.CreateSphere('player-eye',{diameter:.072,segments:10},this.scene);eye.parent=root;eye.position.set(side*.078,1.735,.165);eye.scaling.z=.42;eye.material=white;
-   const irisMesh=MeshBuilder.CreateSphere('player-iris',{diameter:.04,segments:8},this.scene);irisMesh.parent=root;irisMesh.position.set(side*.078,1.735,.194);irisMesh.scaling.z=.4;irisMesh.material=iris;
-   const pupilMesh=MeshBuilder.CreateSphere('player-pupil',{diameter:.021,segments:8},this.scene);pupilMesh.parent=root;pupilMesh.position.set(side*.078,1.735,.208);pupilMesh.scaling.z=.4;pupilMesh.material=pupil;
+   const eye=MeshBuilder.CreateSphere('player-eye',{diameter:.12,segments:12},this.scene);eye.parent=root;eye.position.set(side*.078,1.735,.178);eye.scaling.z=.42;eye.material=white;
+   const irisMesh=MeshBuilder.CreateSphere('player-iris',{diameter:.072,segments:10},this.scene);irisMesh.parent=root;irisMesh.position.set(side*.078,1.735,.222);irisMesh.scaling.z=.4;irisMesh.material=iris;
+   const pupilMesh=MeshBuilder.CreateSphere('player-pupil',{diameter:.038,segments:8},this.scene);pupilMesh.parent=root;pupilMesh.position.set(side*.078,1.735,.242);pupilMesh.scaling.z=.4;pupilMesh.material=pupil;const glint=MeshBuilder.CreateSphere('player-eye-glint',{diameter:.022,segments:6},this.scene);glint.parent=root;glint.position.set(side*.06,1.755,.258);glint.material=sparkle;
    const brow=MeshBuilder.CreateBox('player-eyebrow',{width:.09,height:.02,depth:.025},this.scene);brow.parent=root;brow.position.set(side*.078,1.79,.17);brow.rotation.z=side*.08;brow.material=hair;
    const ear=MeshBuilder.CreateSphere('player-ear',{diameter:.09,segments:8},this.scene);ear.parent=root;ear.position.set(side*.18,1.7,0);ear.scaling.set(.55,1,.65);ear.material=skin;
   }
+  for(const side of [-1,1]){const cheek=MeshBuilder.CreateSphere('player-anime-blush',{diameter:.065,segments:8},this.scene);cheek.parent=root;cheek.position.set(side*.125,1.665,.177);cheek.scaling.set(1,.35,.25);cheek.material=blush;}
   const nose=MeshBuilder.CreateSphere('player-nose',{diameter:.07,segments:10},this.scene);nose.parent=root;nose.position.set(0,1.69,.2);nose.scaling.set(.65,.85,.8);nose.material=skin;
   const mouth=MeshBuilder.CreateBox('player-mouth',{width:.09,height:.014,depth:.02},this.scene);mouth.parent=root;mouth.position.set(0,1.625,.17);mouth.material=this.getMaterial('player-mouth',new Color3(.32,.12,.12));
+  const hairHighlight=this.getMaterial('player-hair-highlight',new Color3(.12,.2,.31));for(let spike=0;spike<5;spike++){const lock=MeshBuilder.CreateCylinder('player-anime-hair-lock',{height:.3+(spike%2)*.08,diameterTop:.008,diameterBottom:.15,tessellation:6},this.scene);lock.parent=root;lock.position.set((spike-2)*.085,1.99,-.015);lock.rotation.z=(spike-2)*-.2;lock.material=spike===1||spike===3?hairHighlight:hair;}
   const beard=this.getMaterial('player-beard',new Color3(.16,.12,.1));const chin=MeshBuilder.CreateSphere('player-beard-chin',{diameter:.2,segments:10},this.scene);chin.parent=root;chin.position.set(0,1.59,.105);chin.scaling.set(.9,.38,.65);chin.material=beard;
   const badge=MeshBuilder.CreateBox('player-identity-badge',{width:.16,height:.2,depth:.025},this.scene);badge.parent=root;badge.position.set(-.16,1.08,.235);badge.material=gold;
   const badgeDot=MeshBuilder.CreateSphere('player-badge-mark',{diameter:.055,segments:8},this.scene);badgeDot.parent=root;badgeDot.position.set(-.16,1.1,.255);badgeDot.material=shirt;  const nameplateTexture=new DynamicTexture('player-nameplate-texture',{width:256,height:64},this.scene,false);const nameplateContext=nameplateTexture.getContext();nameplateContext.fillStyle='#14283a';nameplateContext.fillRect(0,0,256,64);nameplateContext.strokeStyle='#c9a66b';nameplateContext.lineWidth=5;nameplateContext.strokeRect(3,3,250,58);nameplateContext.fillStyle='#f3e7cf';nameplateContext.font='bold 28px Arial';nameplateContext.fillText('FOUNDER',60,42);nameplateTexture.update(false);
@@ -379,19 +398,23 @@ export class OfficeGame {
   const featureSlat=this.getMaterial('player-feature-wall-slat',new Color3(.62,.43,.28));for(let slat=0;slat<5;slat++){const detail=MeshBuilder.CreateBox('player-feature-wall-slat',{width:.035,height:1.88,depth:.07},this.scene);detail.position.set(4.9,1.15,1.82+slat*.36);detail.material=featureSlat;}
   const wallEmblem=MeshBuilder.CreateBox('player-feature-wall-emblem',{width:.035,height:.34,depth:.52},this.scene);wallEmblem.position.set(4.92,1.88,2.55);wallEmblem.material=gold;
   this.engine.getRenderingCanvas()?.setAttribute('data-office-feature-wall-slat-count','5');
-  const shadowMeshes=root.getChildMeshes();shadowMeshes.forEach(mesh=>this.shadowGenerator.addShadowCaster(mesh));
-  const canvas=this.engine.getRenderingCanvas();canvas?.setAttribute('data-main-character-present','true');canvas?.setAttribute('data-main-character-role','player-founder');canvas?.setAttribute('data-main-character-nameplate','true');canvas?.setAttribute('data-main-character-face-detail-count',String(shadowMeshes.filter(mesh=>/player-(eye|iris|pupil|eyebrow|ear|nose|mouth)/.test(mesh.name)).length));
+  const shadowMeshes=root.getChildMeshes();shadowMeshes.forEach(mesh=>{this.shadowGenerator.addShadowCaster(mesh);if(['player-jacket-body','player-head','player-hair-cap','player-hair-fringe','player-leg','player-arm'].includes(mesh.name)){mesh.renderOutline=true;mesh.outlineWidth=.012;mesh.outlineColor=new Color3(.055,.075,.13);}});
+  this.playerKeys.clear();const movementKeys=new Set(['KeyW','KeyA','KeyS','KeyD','ArrowUp','ArrowDown','ArrowLeft','ArrowRight']);
+  const onPlayerKeyDown=(event:KeyboardEvent)=>{const key=event.code;if(!movementKeys.has(key))return;const target=event.target as HTMLElement|null;if(target&&(/^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName)||target.isContentEditable))return;if(this.placing||document.querySelector('.modal-backdrop'))return;this.playerKeys.add(key);event.preventDefault();};
+  const onPlayerKeyUp=(event:KeyboardEvent)=>{this.playerKeys.delete(event.code);};
+  window.addEventListener('keydown',onPlayerKeyDown);window.addEventListener('keyup',onPlayerKeyUp);window.addEventListener('blur',()=>this.playerKeys.clear());
+  const canvas=this.engine.getRenderingCanvas();canvas?.setAttribute('data-main-character-present','true');canvas?.setAttribute('data-main-character-role','player-founder');canvas?.setAttribute('data-player-controls','WASD+ArrowKeys');canvas?.setAttribute('data-player-facing-camera','true');canvas?.setAttribute('data-player-x',root.position.x.toFixed(2));canvas?.setAttribute('data-player-z',root.position.z.toFixed(2));canvas?.setAttribute('data-main-character-nameplate','true');canvas?.setAttribute('data-main-character-face-detail-count',String(shadowMeshes.filter(mesh=>/player-(eye|iris|pupil|eyebrow|ear|nose|mouth)/.test(mesh.name)).length));
  }
  syncWorkers(count:number,animateNewWorkers=true){
   const target=Math.max(0,Math.min(Math.floor(count),this.desks.length));
   while(this.workers.length>target){const worker=this.workers.pop()!;this.workerArms.pop();this.workerHeads.pop();this.workerLegs.pop();this.workerShins.pop();this.workerWalkStartedAt.pop();this.workerWalkPaths.pop();this.workerWalkPathLengths.pop();this.workerWalkPathTotalLengths.pop();worker.dispose();}
   while(this.workers.length<target){
    const index=this.workers.length,desk=this.desks[index],worker=new TransformNode('worker-'+(index+1),this.scene);
-   worker.parent=desk;
-   const fixedObstacles=[{x:-4,z:3,halfWidth:.48,halfDepth:.48},{x:4,z:-2,halfWidth:.48,halfDepth:.48},{x:4.48,z:-.55,halfWidth:.38,halfDepth:.95},{x:4.3,z:3.55,halfWidth:.38,halfDepth:.38},{x:-4.48,z:1.1,halfWidth:.48,halfDepth:.9},{x:-5,z:0,halfWidth:.09,halfDepth:4},{x:0,z:-4,halfWidth:5,halfDepth:.09}];
+   worker.parent=desk;worker.rotation.y=Math.PI/4;
+   const fixedObstacles=[{x:-4,z:3,halfWidth:.48,halfDepth:.48},{x:4,z:-2,halfWidth:.48,halfDepth:.48},{x:4.48,z:-.55,halfWidth:.38,halfDepth:.95},{x:.75,z:2.75,halfWidth:.38,halfDepth:.38},{x:-4.48,z:1.1,halfWidth:.48,halfDepth:.9},{x:-5,z:0,halfWidth:.09,halfDepth:4},{x:0,z:-4,halfWidth:5,halfDepth:.09}];
    if(animateNewWorkers){
     this.workers.forEach((existing,existingIndex)=>{
-     if(performance.now()-this.workerWalkStartedAt[existingIndex]>=1600)return;
+     if(performance.now()-this.workerWalkStartedAt[existingIndex]>=3200)return;
      const existingDesk=this.desks[existingIndex],existingPath=this.workerWalkPaths[existingIndex]??[];
      for(let segment=1;segment<existingPath.length;segment++){
       const from=existingPath[segment-1],to=existingPath[segment];
@@ -422,7 +445,7 @@ export class OfficeGame {
    this.workerWalkPaths.push(vectorPath);
    this.workerWalkPathLengths.push(segmentLengths);
    this.workerWalkPathTotalLengths.push(segmentLengths.reduce((sum,length)=>sum+length,0));
-   worker.position.copyFrom(vectorPath[0]);this.workerWalkStartedAt.push(performance.now()-(animateNewWorkers?0:1600));
+   worker.position.copyFrom(vectorPath[0]);
    const skinColors=[new Color3(.78,.55,.39),new Color3(.56,.34,.23),new Color3(.91,.71,.55),new Color3(.38,.23,.17)];
    const hairColors=[new Color3(.12,.1,.1),new Color3(.32,.17,.08),new Color3(.55,.34,.16),new Color3(.72,.68,.58)];
    const shirtColors=[new Color3(.16,.48,.72),new Color3(.22,.58,.43),new Color3(.62,.36,.68),new Color3(.78,.48,.2)];
@@ -436,29 +459,31 @@ export class OfficeGame {
    const tie=this.getMaterial('worker-tie-'+variant,tieColors[variant]);
    const torso=MeshBuilder.CreateCylinder('worker-torso-'+index,{height:.48,diameterTop:.34,diameterBottom:.42,tessellation:8},this.scene);torso.parent=worker;torso.position.set(0,1.03,.65);torso.material=shirt;
    const necktie=MeshBuilder.CreateBox('worker-necktie-'+index,{width:.075,height:.22,depth:.025},this.scene);necktie.parent=worker;necktie.position.set(0,1.02,.435);necktie.material=tie;
-   const head=MeshBuilder.CreateSphere('worker-head-'+index,{diameter:.34,segments:10},this.scene);head.parent=worker;head.position.set(0,1.43,.55);head.material=skin;this.workerHeads.push(head);
-   const hairCap=MeshBuilder.CreateSphere('worker-hair-'+index,{diameter:.35,segments:8},this.scene);hairCap.parent=worker;hairCap.scaling.y=[.42,.5,.58,.46][variant];hairCap.scaling.x=[1,.96,1.04,.92][variant];hairCap.position.set(0,1.57,.55);hairCap.material=hair;
+   const headRoot=new TransformNode('worker-head-root-'+index,this.scene);headRoot.parent=worker;headRoot.position.set(0,1.43,.55);
+   const head=MeshBuilder.CreateSphere('worker-head-'+index,{diameter:.34,segments:10},this.scene);head.parent=headRoot;head.position.set(0,0,0);head.material=skin;this.workerHeads.push(headRoot);
+   const hairCap=MeshBuilder.CreateSphere('worker-hair-'+index,{diameter:.35,segments:8},this.scene);hairCap.parent=headRoot;hairCap.scaling.y=[.42,.5,.58,.46][variant];hairCap.scaling.x=[1,.96,1.04,.92][variant];hairCap.position.set(0,.14,0);hairCap.material=hair;
    // Readable facial features turn the former blank head spheres into identifiable people.
    const eyeWhite=this.getMaterial('worker-eye-white',new Color3(.94,.92,.86));
    const iris=this.getMaterial('worker-iris-'+variant,[new Color3(.18,.32,.25),new Color3(.28,.2,.13),new Color3(.16,.28,.4),new Color3(.34,.25,.18)][variant]);
    const pupil=this.getMaterial('worker-pupil',new Color3(.035,.045,.055));
-   const features:Mesh[]=[];
+   const features:Mesh[]=[];const blush=skin;const sparkle=eyeWhite;
    for(const side of [-1,1]){
-    const eye=MeshBuilder.CreateSphere('worker-eye-'+index+'-'+side,{diameter:.064,segments:8},this.scene);eye.parent=worker;eye.position.set(side*.066,1.445,.704);eye.scaling.z=.42;eye.material=eyeWhite;features.push(eye);
-    const irisMesh=MeshBuilder.CreateSphere('worker-iris-'+index+'-'+side,{diameter:.034,segments:8},this.scene);irisMesh.parent=worker;irisMesh.position.set(side*.066,1.445,.729);irisMesh.scaling.z=.42;irisMesh.material=iris;features.push(irisMesh);
-    const pupilMesh=MeshBuilder.CreateSphere('worker-pupil-'+index+'-'+side,{diameter:.018,segments:6},this.scene);pupilMesh.parent=worker;pupilMesh.position.set(side*.066,1.445,.742);pupilMesh.scaling.z=.4;pupilMesh.material=pupil;features.push(pupilMesh);
-    const brow=MeshBuilder.CreateBox('worker-brow-'+index+'-'+side,{width:.075,height:.018,depth:.025},this.scene);brow.parent=worker;brow.position.set(side*.066,1.493,.704);brow.rotation.z=side*.08;brow.material=hair;features.push(brow);
-    const ear=MeshBuilder.CreateSphere('worker-ear-'+index+'-'+side,{diameter:.085,segments:8},this.scene);ear.parent=worker;ear.position.set(side*.166,1.43,.55);ear.scaling.set(.55,1,.62);ear.material=skin;features.push(ear);
+    const eye=MeshBuilder.CreateSphere('worker-eye-'+index+'-'+side,{diameter:.096,segments:10},this.scene);eye.parent=headRoot;eye.position.set(side*.066,.015,.17);eye.scaling.z=.42;eye.material=eyeWhite;features.push(eye);
+    const irisMesh=MeshBuilder.CreateSphere('worker-iris-'+index+'-'+side,{diameter:.054,segments:10},this.scene);irisMesh.parent=headRoot;irisMesh.position.set(side*.066,.015,.198);irisMesh.scaling.z=.42;irisMesh.material=iris;features.push(irisMesh);
+    const pupilMesh=MeshBuilder.CreateSphere('worker-pupil-'+index+'-'+side,{diameter:.03,segments:8},this.scene);pupilMesh.parent=headRoot;pupilMesh.position.set(side*.066,.015,.215);pupilMesh.scaling.z=.4;pupilMesh.material=pupil;features.push(pupilMesh);const glint=MeshBuilder.CreateSphere('worker-eye-glint-'+index+'-'+side,{diameter:.018,segments:6},this.scene);glint.parent=headRoot;glint.position.set(side*.055,.03,.23);glint.material=sparkle;features.push(glint);
+    const brow=MeshBuilder.CreateBox('worker-brow-'+index+'-'+side,{width:.075,height:.018,depth:.025},this.scene);brow.parent=headRoot;brow.position.set(side*.066,.063,.154);brow.rotation.z=side*.08;brow.material=hair;features.push(brow);
+    const ear=MeshBuilder.CreateSphere('worker-ear-'+index+'-'+side,{diameter:.085,segments:8},this.scene);ear.parent=headRoot;ear.position.set(side*.166,0,0);ear.scaling.set(.55,1,.62);ear.material=skin;features.push(ear);
    }
-   const nose=MeshBuilder.CreateSphere('worker-nose-'+index,{diameter:.065,segments:8},this.scene);nose.parent=worker;nose.position.set(0,1.405,.718);nose.scaling.set(.62,.8,.72);nose.material=skin;features.push(nose);
-   const mouth=MeshBuilder.CreateBox('worker-mouth-'+index,{width:.075,height:.012,depth:.018},this.scene);mouth.parent=worker;mouth.position.set(0,1.365,.704);mouth.material=this.getMaterial('worker-mouth',new Color3(.36,.13,.13));features.push(mouth);
-   const fringe=MeshBuilder.CreateSphere('worker-fringe-'+index,{diameter:.19,segments:8},this.scene);fringe.parent=worker;fringe.position.set(-.045,1.565,.675);fringe.scaling.set(1.2,.42,.58);fringe.material=hair;features.push(fringe);   // Merge same-material face parts into a handful of meshes to keep 20-worker scenes affordable.
-   const faceMaterials=[eyeWhite,iris,pupil,hair,skin,this.materials['worker-mouth']];
+   for(const side of [-1,1]){const cheek=MeshBuilder.CreateSphere('worker-anime-blush-'+index+'-'+side,{diameter:.055,segments:6},this.scene);cheek.parent=headRoot;cheek.position.set(side*.115,-.045,.158);cheek.scaling.set(1,.35,.22);cheek.material=blush;features.push(cheek);}
+   const nose=MeshBuilder.CreateSphere('worker-nose-'+index,{diameter:.065,segments:8},this.scene);nose.parent=headRoot;nose.position.set(0,-.025,.168);nose.scaling.set(.62,.8,.72);nose.material=skin;features.push(nose);
+   const mouth=MeshBuilder.CreateBox('worker-mouth-'+index,{width:.075,height:.012,depth:.018},this.scene);mouth.parent=headRoot;mouth.position.set(0,-.065,.154);mouth.material=this.getMaterial('worker-mouth',new Color3(.36,.13,.13));features.push(mouth);
+   const fringe=MeshBuilder.CreateSphere('worker-fringe-'+index,{diameter:.19,segments:8},this.scene);fringe.parent=headRoot;fringe.position.set(-.045,.135,.125);fringe.scaling.set(1.2,.42,.58);fringe.material=hair;features.push(fringe);for(let lockIndex=0;lockIndex<3;lockIndex++){const lock=MeshBuilder.CreateCylinder('worker-anime-hair-lock-'+index+'-'+lockIndex,{height:.2,diameterTop:.006,diameterBottom:.105,tessellation:6},this.scene);lock.parent=headRoot;lock.position.set((lockIndex-1)*.105,.26,-.02);lock.rotation.z=(lockIndex-1)*-.22;lock.material=hair;features.push(lock);}   // Merge same-material face parts into a handful of meshes to keep 20-worker scenes affordable.
+   const faceMaterials=[...new Set([eyeWhite,iris,pupil,hair,skin,this.materials['worker-mouth']])];
    faceMaterials.forEach((material,groupIndex)=>{
     const parts=features.filter(mesh=>mesh.material===material);if(!parts.length)return;
     if(parts.length===1){parts[0].name='worker-face-detail-'+index+'-'+groupIndex;return;}
     parts.forEach(mesh=>{mesh.parent=null;});
-    const merged=Mesh.MergeMeshes(parts,true,true);if(merged){merged.name='worker-face-detail-'+index+'-'+groupIndex;merged.parent=worker;merged.material=material;}
+    const merged=Mesh.MergeMeshes(parts,true,true);if(merged){merged.name='worker-face-detail-'+index+'-'+groupIndex;merged.parent=headRoot;merged.material=material;}
    });
    // Seated legs: thighs extend toward the desk, with lower legs and shoes below the desktop.
    const thighs:any[]=[],shins:any[]=[],shoeMeshes:any[]=[];
@@ -476,10 +501,10 @@ export class OfficeGame {
    this.workerArms.push([arms[0],arms[1]]);
    this.workerLegs.push([thighs[0],thighs[1]]);
    this.workerShins.push([shins[0],shins[1]]);
-   worker.getChildMeshes().forEach(mesh=>{if(/^(worker-torso|worker-head|worker-hair|worker-face-detail|worker-thigh|worker-shin|worker-arm|worker-shoes)-/.test(mesh.name))this.shadowGenerator.addShadowCaster(mesh);});
-    this.workers.push(worker);
+   worker.getChildMeshes().forEach(mesh=>{if(/^(worker-head|worker-hair)-/.test(mesh.name)){mesh.renderOutline=true;mesh.outlineWidth=.01;mesh.outlineColor=new Color3(.055,.075,.13);}if(/^(worker-torso|worker-head|worker-hair|worker-face-detail|worker-thigh|worker-shin|worker-arm|worker-shoes)-/.test(mesh.name))this.shadowGenerator.addShadowCaster(mesh);});
+    this.workerWalkStartedAt.push(performance.now()-(animateNewWorkers?0:3200));this.workers.push(worker);
   }
-  this.engine.getRenderingCanvas()?.setAttribute('data-worker-model-count',String(this.workers.length));
+  this.engine.getRenderingCanvas()?.setAttribute('data-worker-model-count',String(this.workers.length));this.engine.getRenderingCanvas()?.setAttribute('data-worker-facing-camera','true');
   this.engine.getRenderingCanvas()?.setAttribute('data-worker-appearance-variant-count',String(new Set(this.workers.map((_,index)=>index%4)).size));
   this.engine.getRenderingCanvas()?.setAttribute('data-worker-idle-pose-types',['typing','reviewing','thinking'].filter((_,pose)=>this.workers.some((__,index)=>index%3===pose)).join(','));
   this.engine.getRenderingCanvas()?.setAttribute('data-worker-arrival-waypoint-counts',this.workerWalkPaths.map(path=>String(path.length)).join(','));
@@ -488,7 +513,48 @@ export class OfficeGame {
   this.engine.getRenderingCanvas()?.setAttribute('data-worker-face-detail-mesh-count',String(this.scene.meshes.filter(mesh=>mesh.name.startsWith('worker-face-detail-')).length));
   this.engine.getRenderingCanvas()?.setAttribute('data-scene-material-count',String(this.scene.materials.length));
  }
- createMonitorDisplayTexture(){
+ createOfficeUpgradeDecor(){
+  const add=(mesh:Mesh,requiredLevel:number)=>{mesh.isPickable=false;mesh.setEnabled(false);this.officeUpgradeDecor.push({mesh,requiredLevel});};
+  const beam=this.getMaterial('office-upgrade-beam',new Color3(.3,.24,.18));
+  const gold=this.getMaterial('office-upgrade-gold',new Color3(.72,.55,.3));
+  const lamp=this.getMaterial('office-upgrade-lamp',new Color3(.94,.8,.53));lamp.emissiveColor=new Color3(.22,.14,.055);
+  const bulb=this.getMaterial('office-upgrade-bulb',new Color3(1,.88,.62));bulb.emissiveColor=new Color3(.8,.52,.2);
+  const beamMesh=MeshBuilder.CreateBox('office-upgrade-ceiling-beam',{width:9.1,height:.09,depth:.13},this.scene);beamMesh.position.set(0,2.23,-2.55);beamMesh.material=beam;add(beamMesh,2);
+  for(const x of [-2.35,0,2.35]){
+   const cable=MeshBuilder.CreateCylinder('office-upgrade-pendant-cable',{height:.29,diameter:.018,tessellation:8},this.scene);cable.position.set(x,2.04,-2.55);cable.material=gold;add(cable,2);
+   const shade=MeshBuilder.CreateCylinder('office-upgrade-pendant-shade',{height:.12,diameter:.32,tessellation:16},this.scene);shade.position.set(x,1.835,-2.55);shade.material=lamp;add(shade,2);
+   const glow=MeshBuilder.CreateSphere('office-upgrade-pendant-bulb',{diameter:.105,segments:8},this.scene);glow.position.set(x,1.75,-2.55);glow.material=bulb;add(glow,2);
+  }
+  const displayFrameMat=this.getMaterial('office-upgrade-display-frame',new Color3(.18,.24,.31));
+  const displayMat=this.getMaterial('office-upgrade-display',new Color3(.025,.1,.17));displayMat.emissiveColor=new Color3(.025,.11,.19);
+  const graphMat=this.getMaterial('office-upgrade-display-graph',new Color3(.28,.75,.78));graphMat.emissiveColor=new Color3(.08,.32,.34);
+  const frame=MeshBuilder.CreateBox('office-upgrade-display-frame',{width:.9,height:.92,depth:.09},this.scene);frame.position.set(2.35,1.58,-3.84);frame.material=displayFrameMat;add(frame,3);
+  const screen=MeshBuilder.CreateBox('office-upgrade-display-screen',{width:.78,height:.78,depth:.035},this.scene);screen.position.set(2.35,1.58,-3.775);screen.material=displayMat;add(screen,3);
+  for(let i=0;i<3;i++){const bar=MeshBuilder.CreateBox('office-upgrade-display-bar',{width:.2+i*.08,height:.025,depth:.018},this.scene);bar.position.set(2.25+i*.12,1.4+i*.13,-3.75);bar.material=graphMat;add(bar,3);}
+  const rugGold=this.getMaterial('office-upgrade-rug-border',new Color3(.72,.56,.32));
+  for(const [name,width,depth,x,z] of [['front',4.2,.035,0,.15],['back',4.2,.035,0,2.75],['left',.035,2.6,-2.1,1.45],['right',.035,2.6,2.1,1.45]] as const){const strip=MeshBuilder.CreateBox('office-upgrade-rug-'+name,{width,height:.018,depth},this.scene);strip.position.set(x,.086,z);strip.material=rugGold;add(strip,3);}
+  const plaqueFrame=MeshBuilder.CreateBox('office-upgrade-executive-plaque-frame',{width:.08,height:.92,depth:1.18},this.scene);plaqueFrame.position.set(4.83,1.5,.85);plaqueFrame.material=displayFrameMat;add(plaqueFrame,4);
+  const plaque=MeshBuilder.CreateBox('office-upgrade-executive-plaque',{width:.035,height:.76,depth:1.02},this.scene);plaque.position.set(4.775,1.5,.85);plaque.material=gold;add(plaque,4);
+  const emblem=MeshBuilder.CreateBox('office-upgrade-executive-emblem',{width:.025,height:.22,depth:.38},this.scene);emblem.position.set(4.75,1.68,.85);emblem.material=lamp;add(emblem,4);
+ }
+ applyOfficeLevel(level:number){
+  const tier=Math.max(1,Math.min(4,Math.floor(level)||1));this.officeVisualTier=tier;
+  const colors:Record<string,Color3>={
+   wall:tier===1?new Color3(.82,.87,.9):tier===2?new Color3(.9,.88,.8):tier===3?new Color3(.93,.89,.8):new Color3(.96,.9,.8),
+   tile:tier===1?new Color3(.72,.78,.83):tier===2?new Color3(.82,.82,.76):tier===3?new Color3(.86,.83,.75):new Color3(.9,.86,.78),
+   'architectural-trim':tier===1?new Color3(.34,.43,.51):tier===2?new Color3(.48,.38,.25):tier===3?new Color3(.68,.53,.31):new Color3(.78,.63,.36),
+   rugmat:tier===1?new Color3(.16,.29,.43):tier===2?new Color3(.18,.28,.4):tier===3?new Color3(.24,.2,.38):new Color3(.27,.18,.35),
+   deskwood:tier===1?new Color3(.72,.52,.34):tier===2?new Color3(.9,.78,.6):tier===3?new Color3(.98,.86,.65):new Color3(1,.9,.72),
+   chair:tier===1?new Color3(.12,.24,.38):tier===2?new Color3(.16,.31,.43):tier===3?new Color3(.24,.22,.42):new Color3(.3,.2,.4),
+   'chair-fabric':tier===1?new Color3(.18,.31,.42):tier===2?new Color3(.18,.36,.49):tier===3?new Color3(.26,.3,.5):new Color3(.3,.26,.45),
+   'chair-metal':tier<3?new Color3(.42,.49,.54):tier===3?new Color3(.7,.56,.33):new Color3(.8,.66,.4),
+   'bookcase-wood':tier<3?new Color3(.43,.32,.24):new Color3(.55,.37,.22),
+   'desk-accent':tier<3?new Color3(.34,.4,.46):new Color3(.65,.5,.28)
+  };
+  for(const [name,color] of Object.entries(colors))this.materials[name]?.diffuseColor.copyFrom(color);
+  let visible=0;for(const item of this.officeUpgradeDecor){const enabled=tier>=item.requiredLevel;item.mesh.setEnabled(enabled);if(enabled)visible++;}
+  const canvas=this.engine.getRenderingCanvas();canvas?.setAttribute('data-office-visual-tier',String(tier));canvas?.setAttribute('data-office-upgrade-decor-count',String(visible));
+ } createMonitorDisplayTexture(){
   const existing=this.surfaceTextures['monitor-ui-display'];if(existing)return existing;
   const texture=new DynamicTexture('monitor-ui-display',{width:512,height:512},this.scene,false);
   const ctx=texture.getContext();

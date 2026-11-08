@@ -335,8 +335,49 @@ test('main character is visible and worker models include facial features', asyn
   await expect.poll(async () => Number(await canvas.getAttribute('data-worker-face-detail-mesh-count'))).toBeGreaterThanOrEqual(12);
   await expect.poll(async () => Number(await canvas.getAttribute('data-main-character-face-detail-count'))).toBeGreaterThanOrEqual(12);
 });
-test('scene profiling compares zero, five, ten, twelve and twenty-worker CPU/render resource metrics', async ({ page }) => {
-  test.setTimeout(150000);
+test('player founder faces the camera and moves with WASD and arrow keys', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 720 });
+  await seedSave(page, { version: 4, cash: 100000, workers: 0, level: 1, desks: [], lifetimeEarned: 0, lastSavedAt: Date.now(), playerXp: 0, completedObjectives: [], tutorialDismissed: true });
+  await page.goto('/');
+  const canvas = page.locator('#game');
+  await expect(canvas).toHaveAttribute('data-player-controls', 'WASD+ArrowKeys');
+  await expect(canvas).toHaveAttribute('data-player-facing-camera', 'true');
+  await expect(canvas).toHaveAttribute('data-worker-facing-camera', 'true');
+  await expect(page.locator('.movement-hint').first()).toContainText('WASD');
+  const initialZ = Number(await canvas.getAttribute('data-player-z'));
+  const initialX = Number(await canvas.getAttribute('data-player-x'));
+  const initialHeadX = Number(await canvas.getAttribute('data-player-head-world-x'));
+  const initialAlpha = await canvas.getAttribute('data-camera-alpha');
+  await page.keyboard.down('ArrowUp');
+  await expect.poll(async () => Number(await canvas.getAttribute('data-player-z'))).toBeLessThan(initialZ - 0.25);
+  await page.keyboard.up('ArrowUp');
+  await expect(canvas).toHaveAttribute('data-camera-alpha', initialAlpha!);
+  const afterForward = Number(await canvas.getAttribute('data-player-z'));
+  await page.keyboard.down('a');
+  await expect.poll(async () => Number(await canvas.getAttribute('data-player-x'))).toBeLessThan(initialX - 0.15);
+  await expect.poll(async () => Number(await canvas.getAttribute('data-player-head-world-x'))).toBeLessThan(initialHeadX - 0.1);
+  await page.keyboard.up('a');
+  await expect(canvas).toHaveAttribute('data-player-moving', 'false');
+  expect(afterForward).toBeLessThan(initialZ);
+});
+test('office upgrades visibly transform room finishes and unlock decor tiers', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 720 });
+  await seedSave(page, { version: 4, cash: 100000, workers: 0, level: 1, desks: [], lifetimeEarned: 0, lastSavedAt: Date.now(), playerXp: 0, completedObjectives: [], tutorialDismissed: true });
+  await page.goto('/');
+  const canvas = page.locator('#game');
+  await expect(canvas).toHaveAttribute('data-office-visual-tier', '1');
+  await expect(canvas).toHaveAttribute('data-office-upgrade-decor-count', '0');
+  await page.locator('#upgrade').click();
+  await expect(canvas).toHaveAttribute('data-office-visual-tier', '2');
+  await expect(canvas).toHaveAttribute('data-office-upgrade-decor-count', '10');
+  await page.locator('#upgrade').click();
+  await expect(canvas).toHaveAttribute('data-office-visual-tier', '3');
+  await expect(canvas).toHaveAttribute('data-office-upgrade-decor-count', '19');
+  await page.reload();
+  await expect(canvas).toHaveAttribute('data-office-visual-tier', '3');
+  await expect(canvas).toHaveAttribute('data-office-upgrade-decor-count', '19');
+});test('scene profiling compares zero, five, ten, twelve and twenty-worker CPU/render resource metrics', async ({ page }) => {
+  test.setTimeout(210000);
   await page.setViewportSize({ width: 1280, height: 720 });
   const desks = [-3, -1, 1, 3].flatMap(z => [-4, -2, 0, 2, 4].map(x => ({ x, z })));
   const save = workers => ({
