@@ -66,3 +66,40 @@ Do not skip P4 acceptance to start authentication, deep simulation, PWA or Andro
 - Local verification: production build passed (526 modules; main entry 1,357.13 kB minified / 335.68 kB gzip; existing Vite >500 kB chunk warning remains); unit tests 24/24; focused camera regression passed; full Playwright suite 28/28 in 3.6 minutes; `git diff --check` passed.
 - Scene profile remains 889 meshes / 100 materials / 5 lights at 20 workers. SwiftShader timing is diagnostic only; no GPU/FPS claim.
 - This camera slice is locally verified and awaits commit/push and its own hosted CI run. PR #3 remains Draft, open and unmerged. Headed physical-device visual/GPU/touch acceptance remains open; P4 is not accepted and P5 remains deferred.
+
+## 2026-11-08 — Authoritative handoff: approved premium graphics direction
+
+**User approval:** The user explicitly approved the generated premium Office Empire visual concept on 2026-11-08. Treat this as the active art-direction decision and do not ask for approval of the overall style again.
+
+### Approved target
+- Premium, high-end, cinematic 3D office; polished stone/marble, refined wood, glass and metal, carefully controlled reflections and believable material response.
+- Warm architectural/golden practical lighting balanced with cool city-window light; rich but readable contrast and soft, intentional shadows.
+- Professional anime-inspired founder and staff characters, consistent with the stylized 3D world (not photorealistic).
+- Executive dark-navy/glass HUD with restrained gold/brass highlights and limited cyan accents.
+- Large, aspirational office atmosphere and city skyline as the visual north star. Adapt the reference to the actual playable office, camera, game state and responsive layout; do not copy its fictional statistics, labels, or every UI panel literally.
+
+### User acceptance notes / constraints
+- The user accepted the current camera framing (item 1: yes) and said the second reviewed aspect was good (item 2: no change).
+- The side panel is visibly positioned toward the front of the environment. Preserve its current placement for now; do not move or redesign it without showing a focused preview and receiving approval.
+- The generated concept is an approved art-direction reference, not proof that the game already looks like it and not a pixel-perfect implementation spec.
+- The user expects the assistant to lead the professional design work: prepare a concrete visual proposal, show it, obtain approval, then implement that approved proposal. Do not substitute camera tweaks, diagnostics, or test work for the promised graphics design.
+- For each materially new visual treatment (environment, furniture/materials, lighting, characters, HUD/layout), show a preview first and wait for explicit approval before implementing that treatment. The overall premium art direction itself is already approved.
+
+### Next work — graphics first
+1. Audit the current rendered scene and identify the highest-impact visual gap against the approved reference.
+2. Prepare a specific, high-quality visual proposal for the existing playable office (not another generic mood board). Show the proposed composition/material/lighting/furniture treatment and explain exactly what will change.
+3. Wait for explicit user approval of that concrete proposal.
+4. Implement only the approved slice in Babylon.js/TypeScript, keeping gameplay, navigation, responsive HUD and performance constraints intact.
+5. Capture comparable desktop/mobile views; inspect them visually where possible. Run build, unit and browser regressions, git diff --check, then verify hosted CI for the pushed commit.
+6. Update this handoff and status with exact commit/test/CI evidence. Never describe a generated mockup or headless diagnostic as implemented visual acceptance.
+
+### Release gates remain unchanged
+- P4 graphics and real-device/headed desktop/mobile GPU/touch acceptance are not complete.
+- P5 Supabase identity/auth, PWA, Android and broader business simulation remain deferred until P4 is accepted.
+- PR #3 must remain Draft/open/unmerged. Never merge without the user's explicit instruction.
+
+### Repository checkpoint
+- Branch: feat/p4-office-environment
+- Local HEAD at this handoff: b652cfb654beb474ff2fcc5a15fe5ab7bce398dd (feat: refine office camera composition)
+- The camera composition refinement is implemented and pushed; it is not the promised premium graphics redesign.
+- PR #3: https://github.com/ijoolaie/empire-of-companies/pull/3

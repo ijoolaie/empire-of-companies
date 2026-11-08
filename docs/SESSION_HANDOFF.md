@@ -20,10 +20,10 @@ https://github.com/ijoolaie/empire-of-companies
 - Local path: `C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies`.
 - Baseline main commit: `7914290` (PR #2 merged).
 - Current branch: `feat/p4-office-environment`.
-- Latest pushed code commit: `c1e1a3e49878116844b35c124367fbb379189abd`.
+- Latest pushed code commit: `b652cfb654beb474ff2fcc5a15fe5ab7bce398dd` (camera composition refinement).
 - PR #3: https://github.com/ijoolaie/empire-of-companies/pull/3 — open, Draft, unmerged.
 - Worktree was clean after code push. Documentation update follows this code commit.
-- CI #132 on older commit a732457 had two browser failures (arrival-timing assertion and 120-frame profile timing). c1e1a3e includes test robustness fixes; hosted CI for this new head still needs verification.
+- CI #132 on older commit a732457 had two browser failures (arrival-timing assertion and 120-frame profile timing). c1e1a3e includes test robustness fixes; latest camera-composition head b652cfb has a green hosted CI run.
 
 ## Current verified checks
 - Production build: pass, 526 modules; main JS 1,356.84 kB minified / 335.59 kB gzip. Vite >500 kB chunk warning remains.
@@ -54,7 +54,8 @@ https://github.com/ijoolaie/empire-of-companies
 - Browser performance regression now profiles 0, 5, 10, 12 and 20 employees across a 20-desk stress layout. Latest SwiftShader sample: average CPU frame 7.353 / 8.824 / 9.856 / 13.328 / 12.145 ms; p95 17.5 / 20.0 / 18.9 / 40.9 / 26.9 ms; max spikes 63.0 / 74.3 / 67.1 / 78.4 / 89.9 ms; meshes 433 / 481 / 541 / 565 / 661; materials 50 / 62 / 62 / 62 / 62; lights remain 5. Timing is noisy/non-monotonic under headless SwiftShader and is diagnostic only, not real-device GPU acceptance.
 - The alternate-layout rapid-arrival browser test now validates generated waypoints and eventual arrival without requiring all workers to still be walking at the exact assertion instant; this removes a renderer-speed-dependent timing race.
 - Previous pushed head `706207b` passed GitHub Actions run #100 (build, unit tests and browser regression): https://github.com/ijoolaie/empire-of-companies/actions/runs/42246878178.
-- Latest local verification after static-transform freezing: unit tests 22/22; build passed (466 modules; main JS 1,160.42 kB minified / 287.29 kB gzip; existing Vite chunk warning); browser tests 19/19. SwiftShader profile for 0/5/10/12/20 workers: average CPU frame 7.410 / 9.484 / 9.679 / 11.414 / 13.210 ms; p95 17.5 / 22.6 / 16.2 / 21.8 / 27.4 ms; max 59.9 / 58.9 / 84.3 / 67.1 / 78.5 ms. Mesh counts 433 / 481 / 541 / 565 / 661; materials 50 / 62 / 62 / 62 / 62; lights 5 throughout. Results are noisy and do not establish a consistent CPU improvement versus the prior sample.\n- Hardware-accelerated headless Chromium profile confirmed the AMD Radeon Graphics adapter via ANGLE/D3D11 (not SwiftShader). Before animation throttling, for 0/5/10/12/20 workers, average CPU frame times were 7.280 / 8.085 / 8.793 / 8.975 / 10.491 ms; p95 8.6 / 11.4 / 10.2 / 10.0 / 12.0 ms; max spikes 53.4 / 48.9 / 62.2 / 64.2 / 77.0 ms. After limiting worker pose/path updates to 30 Hz, a repeat sample measured averages 7.335 / 7.740 / 8.563 / 8.608 / 9.404 ms; p95 9.1 / 8.8 / 9.0 / 9.6 / 11.5 ms; max spikes 53.7 / 51.6 / 64.8 / 67.9 / 64.7 ms. Meshes remain 433 / 481 / 541 / 565 / 661. The 20-worker average fell about 10.4% in this sample, but single-run results are noisy and do not establish a guaranteed gain. Worker animation now updates at 30 Hz; the regression suite verifies this setting and worker poses/arrival still pass. This is a hardware-backed headless run; headed desktop/mobile and user-device acceptance remain open.
+- Latest local verification after static-transform freezing: unit tests 22/22; build passed (466 modules; main JS 1,160.42 kB minified / 287.29 kB gzip; existing Vite chunk warning); browser tests 19/19. SwiftShader profile for 0/5/10/12/20 workers: average CPU frame 7.410 / 9.484 / 9.679 / 11.414 / 13.210 ms; p95 17.5 / 22.6 / 16.2 / 21.8 / 27.4 ms; max 59.9 / 58.9 / 84.3 / 67.1 / 78.5 ms. Mesh counts 433 / 481 / 541 / 565 / 661; materials 50 / 62 / 62 / 62 / 62; lights 5 throughout. Results are noisy and do not establish a consistent CPU improvement versus the prior sample.
+- Hardware-accelerated headless Chromium profile confirmed the AMD Radeon Graphics adapter via ANGLE/D3D11 (not SwiftShader). Before animation throttling, for 0/5/10/12/20 workers, average CPU frame times were 7.280 / 8.085 / 8.793 / 8.975 / 10.491 ms; p95 8.6 / 11.4 / 10.2 / 10.0 / 12.0 ms; max spikes 53.4 / 48.9 / 62.2 / 64.2 / 77.0 ms. After limiting worker pose/path updates to 30 Hz, a repeat sample measured averages 7.335 / 7.740 / 8.563 / 8.608 / 9.404 ms; p95 9.1 / 8.8 / 9.0 / 9.6 / 11.5 ms; max spikes 53.7 / 51.6 / 64.8 / 67.9 / 64.7 ms. Meshes remain 433 / 481 / 541 / 565 / 661. The 20-worker average fell about 10.4% in this sample, but single-run results are noisy and do not establish a guaranteed gain. Worker animation now updates at 30 Hz; the regression suite verifies this setting and worker poses/arrival still pass. This is a hardware-backed headless run; headed desktop/mobile and user-device acceptance remain open.
 - Worker-detail slice adds one color-varied necktie mesh per worker, reusing four cached materials across appearance variants. Local verification: unit tests 22/22, build passed (1,160.29 kB minified / 287.25 kB gzip; existing Vite chunk warning), browser tests 19/19, diff check passed. Commit `7251334`; this slice is committed and pushed.
 - Diff whitespace check: passed.
 - Automated office-shell mesh/light counts passed, including 8 notice-board meshes, 9 entrance-detail meshes and 9 desk-accessory meshes across the three-desk fixture.
@@ -248,3 +249,40 @@ https://github.com/ijoolaie/empire-of-companies
 - Local verification: production build passed (526 modules; main entry 1,357.13 kB minified / 335.68 kB gzip; existing Vite >500 kB chunk warning remains); unit tests 24/24; focused camera regression passed; full Playwright suite 28/28 in 3.6 minutes; `git diff --check` passed.
 - Scene profile remains 889 meshes / 100 materials / 5 lights at 20 workers. SwiftShader timing is diagnostic only; no GPU/FPS claim.
 - This camera slice is locally verified and awaits commit/push and its own hosted CI run. PR #3 remains Draft, open and unmerged. Headed physical-device visual/GPU/touch acceptance remains open; P4 is not accepted and P5 remains deferred.
+
+## 2026-11-08 — Authoritative handoff: approved premium graphics direction
+
+**User approval:** The user explicitly approved the generated premium Office Empire visual concept on 2026-11-08. Treat this as the active art-direction decision and do not ask for approval of the overall style again.
+
+### Approved target
+- Premium, high-end, cinematic 3D office; polished stone/marble, refined wood, glass and metal, carefully controlled reflections and believable material response.
+- Warm architectural/golden practical lighting balanced with cool city-window light; rich but readable contrast and soft, intentional shadows.
+- Professional anime-inspired founder and staff characters, consistent with the stylized 3D world (not photorealistic).
+- Executive dark-navy/glass HUD with restrained gold/brass highlights and limited cyan accents.
+- Large, aspirational office atmosphere and city skyline as the visual north star. Adapt the reference to the actual playable office, camera, game state and responsive layout; do not copy its fictional statistics, labels, or every UI panel literally.
+
+### User acceptance notes / constraints
+- The user accepted the current camera framing (item 1: yes) and said the second reviewed aspect was good (item 2: no change).
+- The side panel is visibly positioned toward the front of the environment. Preserve its current placement for now; do not move or redesign it without showing a focused preview and receiving approval.
+- The generated concept is an approved art-direction reference, not proof that the game already looks like it and not a pixel-perfect implementation spec.
+- The user expects the assistant to lead the professional design work: prepare a concrete visual proposal, show it, obtain approval, then implement that approved proposal. Do not substitute camera tweaks, diagnostics, or test work for the promised graphics design.
+- For each materially new visual treatment (environment, furniture/materials, lighting, characters, HUD/layout), show a preview first and wait for explicit approval before implementing that treatment. The overall premium art direction itself is already approved.
+
+### Next work — graphics first
+1. Audit the current rendered scene and identify the highest-impact visual gap against the approved reference.
+2. Prepare a specific, high-quality visual proposal for the existing playable office (not another generic mood board). Show the proposed composition/material/lighting/furniture treatment and explain exactly what will change.
+3. Wait for explicit user approval of that concrete proposal.
+4. Implement only the approved slice in Babylon.js/TypeScript, keeping gameplay, navigation, responsive HUD and performance constraints intact.
+5. Capture comparable desktop/mobile views; inspect them visually where possible. Run build, unit and browser regressions, git diff --check, then verify hosted CI for the pushed commit.
+6. Update this handoff and status with exact commit/test/CI evidence. Never describe a generated mockup or headless diagnostic as implemented visual acceptance.
+
+### Release gates remain unchanged
+- P4 graphics and real-device/headed desktop/mobile GPU/touch acceptance are not complete.
+- P5 Supabase identity/auth, PWA, Android and broader business simulation remain deferred until P4 is accepted.
+- PR #3 must remain Draft/open/unmerged. Never merge without the user's explicit instruction.
+
+### Repository checkpoint
+- Branch: feat/p4-office-environment
+- Local HEAD at this handoff: b652cfb654beb474ff2fcc5a15fe5ab7bce398dd (feat: refine office camera composition)
+- The camera composition refinement is implemented and pushed; it is not the promised premium graphics redesign.
+- PR #3: https://github.com/ijoolaie/empire-of-companies/pull/3
