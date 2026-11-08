@@ -203,3 +203,13 @@ https://github.com/ijoolaie/empire-of-companies
 ## UI HUD verification update - commit a732457
 - Full local Playwright browser suite completed: 27/27 passed in 5.4 minutes. The 20-worker scene profile passed locally: average CPU frame 11.249/12.318/15.100/17.776/22.370 ms for 0/5/10/12/20 workers; 20-worker p95 31.1 ms, 889 meshes, 100 materials and 5 lights (headless SwiftShader diagnostic only).
 - GitHub Actions #132 (run 42478680096) has passed production build and unit tests; hosted browser regression is still in progress at this update.
+
+
+## Approved Office Empire direction and next execution path — 2026-11-08
+- The user explicitly approved the premium cinematic semi-realistic/stylized office concept with anime-inspired characters and an executive HUD. Do not interpret the reference as photorealism.
+- Feasibility is high because the core Babylon.js scene, procedural office/furniture, founder/workers, upgrade tiers, lighting/material foundation, responsive bilingual HUD and interactions already exist.
+- Start with P4-A: verify the exact branch/worktree/head, run full local checks on that exact head, capture repeatable desktop/mobile views, inspect scene counts and production bundle composition. Do not add more decoration before this baseline.
+- Then execute P4-B composition/lighting, P4-C materials/environment, P4-D characters, P4-E HUD/readability, and P4-F optimization/device acceptance. Full details and exit criteria are in docs/VISUAL_DIRECTION_AND_IMPLEMENTATION_PLAN.md.
+- Latest recorded risk figures: 889 meshes / 100 materials / 5 lights in the 20-worker diagnostic; main JS about 1,355 kB minified / 335 kB gzip. Investigate bundle splitting and repeated scene assets. SwiftShader timings are not real GPU/FPS acceptance.
+- P5 Supabase, PWA, Android and deep business simulation remain blocked until P4 is accepted. PR #3 remains Draft and unmerged.
+- Documentation records the approved direction and priorities; no runtime code changed in this documentation pass.
