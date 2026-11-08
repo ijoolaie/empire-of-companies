@@ -21,15 +21,17 @@ A browser-first, bilingual 3D idle management game. The player starts with one s
 ## P4 — Approved Office Empire visual slice (active; top priority)
 The user approved the concept on 2026-11-08. Detailed feasibility, risks, implementation order and acceptance criteria are in [docs/VISUAL_DIRECTION_AND_IMPLEMENTATION_PLAN.md](VISUAL_DIRECTION_AND_IMPLEMENTATION_PLAN.md).
 
-### P4-A — Baseline and technical budget (next)
-- [ ] Reconfirm branch head and worktree state before code changes.
-- [ ] Run/confirm production build, unit suite and full browser suite on the exact head.
-- [ ] Capture consistent headed desktop and mobile scene views at fixed camera positions.
-- [ ] Record current mesh/material/light counts and bundle/chunk composition.
-- [ ] Identify top bundle contributors and safe lazy-loading/code-splitting candidates.
-- [ ] Separate software-renderer/CI diagnostics from real GPU/device evidence.
+### P4-A — Baseline and technical budget (complete locally on 2026-11-08)
+- [x] Reconfirm branch head and worktree state before code changes.
+- [x] Run/confirm production build, unit suite and full browser suite on the exact head (build pass; 24/24 unit; 28/28 browser).
+- [x] Capture desktop 960x540 and mobile 390x844 reference views (headless SwiftShader; physical device still pending).
+- [x] Record scene mesh/material/light counts and production bundle/chunk sizes.
+- [x] Identify the main Babylon.js chunk and defer Supabase auth loading to account interaction.
+- [x] Separate SwiftShader/CI diagnostics from real GPU/device evidence; real-device acceptance remains a P4-F gate.
 
-### P4-B — Visual composition and lighting
+### P4-B — Visual composition and lighting (active; first visual refinement pushed)
+
+Initial pass on c1e1a3e: warm limestone/ivory/navy/walnut palette, procedural city skyline texture on three window panes, short-desktop HUD spacing, and mobile movement-hint spacing. Next work is camera focal hierarchy, lighting/shadow tuning and headed visual review.
 - [ ] Refine camera framing and scene focal hierarchy.
 - [ ] Balance warm/cool lighting, exposure, shadow softness and contrast.
 - [ ] Ensure entrance, reception/founder, employee work area and windows read as one space.

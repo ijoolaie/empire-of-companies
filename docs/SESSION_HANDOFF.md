@@ -1,6 +1,6 @@
 # Session Handoff — Empire of Companies
 
-Last updated: 2026-11-07
+Last updated: 2026-11-08
 
 ## Mission
 Continue the browser-first 3D office/company management game:
@@ -14,15 +14,32 @@ https://github.com/ijoolaie/empire-of-companies
 - Local-only game saves. Supabase is identity-only, not cloud save/sync.
 - Do not merge PRs without explicit user approval.
 - User asked for practical execution and verified status, not schedules.
+- Approved visual direction: premium cinematic semi-realistic/stylized office, anime-inspired characters and executive HUD; not photorealism.
 
 ## Repository state
 - Local path: `C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies`.
 - Baseline main commit: `7914290` (PR #2 merged).
 - Current branch: `feat/p4-office-environment`.
-- Latest local code head: `ba64876` (`fix: keep placement notices inside mobile panel`); local unit/build/browser verification passed; GitHub Actions verification pending. PR #3 remains open, Draft and unmerged.
-- Static office geometry and furniture world matrices are frozen; worker animation updates at 30 Hz; both static shoes are merged per worker. Latest commit is pushed and CI #106 is green.
-- PR #3 remains open, Draft and unmerged. PR URL: https://github.com/ijoolaie/empire-of-companies/pull/3.
+- Latest pushed code commit: `c1e1a3e49878116844b35c124367fbb379189abd`.
+- PR #3: https://github.com/ijoolaie/empire-of-companies/pull/3 — open, Draft, unmerged.
+- Worktree was clean after code push. Documentation update follows this code commit.
+- CI #132 on older commit a732457 had two browser failures (arrival-timing assertion and 120-frame profile timing). c1e1a3e includes test robustness fixes; hosted CI for this new head still needs verification.
 
+## Current verified checks
+- Production build: pass, 526 modules; main JS 1,356.84 kB minified / 335.59 kB gzip. Vite >500 kB chunk warning remains.
+- Unit tests: 24/24 pass.
+- Full Playwright: 28/28 pass in 4.4 minutes.
+- git diff --check: pass.
+- 20-worker headless SwiftShader profile: 889 meshes, 100 materials, 5 lights; average CPU frame 27.163 ms, p95 43.5 ms, max 90 ms. This is not real GPU/FPS evidence.
+- Supabase auth is dynamically imported on account interaction; configured-build comparison reduced initial main bundle by about 60.22 kB gzip.
+- Desktop 960x540 and mobile 390x844 reference screenshots captured with headless Chromium/SwiftShader.
+
+## Current implementation and next steps
+- First visual refinement pushed: warm stone/ivory/navy/walnut palette; procedural city skyline texture on three window panes; short-desktop panel/topbar separation; mobile movement-hint/command-dock separation.
+- P4-A baseline/technical audit is complete locally.
+- Continue P4-B with camera composition/focal hierarchy and lighting/shadow tuning; then P4-C material response, P4-D character presentation, P4-E HUD/gameplay readability and P4-F performance/device acceptance.
+- Do not advance P5 Supabase Auth, PWA, Android or deep business simulation before P4 acceptance.
+- Real-device headed desktop/mobile visual review, GPU and touch acceptance remain outstanding.
 ## Current implementation
 - Core economy, desk placement, hiring, upgrades, local persistence and bounded offline earnings.
 - Progression schema v4, XP/levels, three ordered objectives, tutorial and accessible progression dialog.

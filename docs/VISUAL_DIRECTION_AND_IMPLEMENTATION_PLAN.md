@@ -107,3 +107,29 @@ Until P4 is accepted:
 - Real-device acceptance is separate from headless browser evidence.
 - Never claim FPS/GPU acceptance from SwiftShader or CI timing alone.
 - Keep PR #3 Draft and unmerged until P4 acceptance and explicit merge authorization.
+
+## 6. Verified implementation progress — 2026-11-08
+
+### P4-A baseline and technical budget — complete locally
+- Confirmed branch `feat/p4-office-environment`, pushed code commit `c1e1a3e49878116844b35c124367fbb379189abd`, and verified a clean worktree after push.
+- Production build passed: 526 modules. Latest unconfigured build main entry: 1,356.84 kB minified / 335.59 kB gzip. Vite's >500 kB warning remains and is tracked; the main Babylon.js scene still dominates the initial bundle.
+- Unit tests: 24/24 passed.
+- Full Playwright browser suite: 28/28 passed in 4.4 minutes, including the new short-viewport overlay check, lazy-auth loading check and scene-profile test.
+- `git diff --check`: passed.
+- Desktop and mobile reference captures were taken at 960x540 and 390x844 using headless Chromium + SwiftShader. These are layout/rendering references, not physical-device acceptance.
+- Latest 20-worker scene profile: 889 meshes, 100 materials, 5 lights; average CPU frame time 27.163 ms, p95 43.5 ms, max 90 ms. This is headless SwiftShader diagnostic data only, not real GPU/FPS evidence.
+- Reduced the profile sample window from 120 to 30 frames so the stress diagnostic completes reliably in the hosted/browser test environment.
+- Deferred Supabase SDK loading until the account UI is used. With a controlled build-time Supabase configuration, the initial main chunk fell from 1,585.18 kB / 395.16 kB gzip to 1,355.22 kB / 334.94 kB gzip; the 229.68 kB / 60.22 kB gzip auth chunk is requested only on account interaction. With no Supabase configuration, the auth chunk tree-shakes to a tiny stub.
+- CI #132 (run 42478680096, on older commit a732457) had two browser failures: a time-sensitive worker-arrival assertion and the 120-frame scene-profile timing metric. The tests were made less timing-sensitive and the sample window reduced. The new commit's hosted CI result must still be checked; local success is not a substitute.
+
+### First P4-B visual refinement — in progress
+- Introduced a warm limestone floor, ivory plaster, dark navy architectural trim, and coordinated walnut/navy furniture finishes.
+- Added a small procedural city-skyline texture across the three office window panes; no external image/model assets were added.
+- Fixed short-desktop overlap between the executive panel and top HUD, and moved the mobile movement hint above the command dock.
+- Added regression coverage for the three cityscape window panes and short desktop/mobile overlay separation.
+- Camera composition, richer material response, character presentation and physical-device visual review remain open.
+
+### Current release gates
+- PR #3 remains Draft, open and unmerged.
+- P4 remains active. P5 Supabase identity, PWA, Android and deep business simulation remain deferred.
+- Real-device GPU, touch and headed visual acceptance are still outstanding.

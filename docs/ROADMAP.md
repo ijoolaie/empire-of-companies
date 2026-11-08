@@ -34,9 +34,10 @@ Onboarding/tutorial, ordered milestones, XP/levels, rewards, Persian/English, re
 
 ### P4 — Approved office visual slice (active; highest priority)
 - Existing procedural office shell, founder/workers, four office tiers, lighting/shadows, procedural materials and executive HUD form the baseline.
-- Execute P4-A baseline/performance audit first; then composition/lighting, materials/environment, character presentation, HUD/gameplay readability and final performance/device acceptance.
+- P4-A baseline/performance audit is complete locally on commit c1e1a3e: build, 24 unit tests, 28 browser tests, bundle/scene metrics and desktop/mobile reference captures. Real-device GPU acceptance remains open.
+- P4-B is active. First visual pass adds warm stone/ivory/navy/walnut finishes, procedural city views in the three windows, and short-viewport HUD spacing fixes. Next: camera composition and lighting, then material response and character presentation.
 - Keep the scene premium and semi-realistic but stylized; no photorealism or paid-asset dependency.
-- Main risks: latest recorded 20-worker scene at 889 meshes / 100 materials / 5 lights, main JS bundle around 1,355 kB minified / 335 kB gzip, and outstanding physical-device GPU/touch acceptance.
+- Main risks: latest 20-worker scene at 889 meshes / 100 materials / 5 lights; main JS bundle 1,356.84 kB minified / 335.59 kB gzip with the Vite chunk warning still present; and outstanding physical-device GPU/touch acceptance.
 - Exit: coherent, attractive office scene, automated regressions green, bundle/scene complexity measured and controlled, and real-device acceptance documented.
 
 ### P5 — Account and settings

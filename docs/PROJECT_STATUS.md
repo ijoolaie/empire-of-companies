@@ -1,13 +1,13 @@
 # Project Status
 
-Last verified: 2026-11-07
+Last verified: 2026-11-08
 
 ## Repository
 - GitHub: https://github.com/ijoolaie/empire-of-companies
 - Default branch: `main`; latest merged baseline: `7914290` (PR #2).
-- Current work branch: `feat/p4-office-environment`; latest local code head `ba64876` (mobile notification placement fix; CI pending).
-- Local workspace: `C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies`.
-- Latest local code head: `ba64876` (`fix: keep placement notices inside mobile panel`); local unit/build/browser verification passed; GitHub Actions verification pending. PR #3 remains open, Draft, mergeable and unmerged.
+- Current work branch: `feat/p4-office-environment`; latest pushed code head: `c1e1a3e49878116844b35c124367fbb379189abd` (`feat: refine premium office environment and lazy-load auth`).
+- Local workspace: `C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies`; worktree was clean after the code push.
+- PR #3 remains open, Draft and unmerged. CI #132 on older commit a732457 failed two browser checks; c1e1a3e contains timing-robustness fixes, but its hosted CI result has not yet been verified.
 
 ## Product decisions
 - Browser-first 3D office/company management game, Babylon.js + TypeScript + Vite.
@@ -20,7 +20,7 @@ Last verified: 2026-11-07
 - P0/P1: complete.
 - P2: playable core loop complete and merged.
 - P3: progression, onboarding, responsive UX and accessibility slice implemented and merged.
-- P4: active; procedural workers, arrival, desk equipment, office shell, furniture details, entrance identity accents, static-transform freezing, 30 Hz worker animation updates and merged static shoe geometry are implemented. Full local and CI browser regressions pass. Real-device headed desktop/mobile visual and GPU review remain open.
+- P4: active. P4-A baseline is complete locally on c1e1a3e (build pass, 24/24 unit, 28/28 browser, desktop/mobile reference captures, bundle and scene metrics). First P4-B visual refinement is pushed: warm premium palette, procedural skyline window texture, HUD spacing fixes and deferred Supabase auth chunk. Hosted CI for c1e1a3e and real-device headed desktop/mobile GPU/touch review remain open.
 - P5: Supabase Auth lifecycle not yet verified.
 - P6: quality/release, PWA and Android packaging remain.
 
@@ -194,3 +194,13 @@ Last verified: 2026-11-07
 - Priority order: P4-A baseline/bundle/scene audit; P4-B composition and lighting; P4-C materials/environment; P4-D character presentation; P4-E HUD/gameplay readability; P4-F optimization and real-device acceptance.
 - No P5/PWA/Android/deep business simulation until P4 exit criteria pass. PR #3 remains Draft and unmerged. Physical-device GPU/touch review remains outstanding.
 - No runtime code changes are included in this documentation update.
+
+## 2026-11-08 implementation update
+- Commit pushed: c1e1a3e49878116844b35c124367fbb379189abd.
+- Build: 526 modules; main entry 1,356.84 kB minified / 335.59 kB gzip; Vite chunk warning remains.
+- Unit tests 24/24; full Playwright 28/28 in 4.4 minutes; git diff check passed.
+- Latest 20-worker SwiftShader profile: 889 meshes / 100 materials / 5 lights; average 27.163 ms, p95 43.5 ms, max 90 ms. Not real GPU evidence.
+- Auth SDK now loads on account interaction; configured build experiment reduced initial main chunk by 60.22 kB gzip.
+- First visual refinement: warm limestone/ivory/navy/walnut palette, procedural city view on three windows, short-desktop panel/topbar separation and mobile hint/toolbar separation.
+- CI #132's two failures were a time-sensitive worker-arrival assertion and a 120-frame profile timing timeout. Local regression fixes pass; new hosted CI is not yet confirmed.
+- PR #3 remains Draft/open/unmerged. P4 physical-device acceptance remains outstanding.
