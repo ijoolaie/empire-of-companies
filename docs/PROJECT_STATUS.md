@@ -181,3 +181,7 @@ Last verified: 2026-11-07
 - Local verification: production build passed (526 modules; existing Vite >500 kB chunk-size warning remains); unit tests 24/24 passed; focused responsive browser regressions 4/4 passed; diff check passed. A full 27-test browser run is currently running locally.
 - Previous GitHub Actions #131 completed with 26/27 browser tests passing; the sole failure was the 20-worker scene-profile CPU timing attribute remaining zero in the hosted Linux browser after 45 seconds. Build and unit tests passed. This is a headless performance-diagnostic issue, not a visual regression; do not report the run as green.
 - Changes are local only pending full browser-suite result, commit/push and a new CI run. PR #3 remains Draft, open and unmerged. Headed physical-device desktop/mobile visual and GPU acceptance remain open; P4 is not yet accepted.
+
+## UI HUD verification update - commit a732457
+- Full local Playwright browser suite completed: 27/27 passed in 5.4 minutes. The 20-worker scene profile passed locally: average CPU frame 11.249/12.318/15.100/17.776/22.370 ms for 0/5/10/12/20 workers; 20-worker p95 31.1 ms, 889 meshes, 100 materials and 5 lights (headless SwiftShader diagnostic only).
+- GitHub Actions #132 (run 42478680096) has passed production build and unit tests; hosted browser regression is still in progress at this update.
