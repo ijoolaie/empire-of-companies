@@ -1,18 +1,22 @@
 # Product Roadmap — Empire of Companies
 
-Last reviewed: 2026-11-06
+Last reviewed: 2026-11-08
 
 ## Product direction
 A browser-first 3D idle office/company management game. The player starts with a small office, hires workers, creates production capacity, earns money, upgrades operations, and expands into a multi-company empire.
 
+## Approved visual direction
+The user approved a premium, cinematic, semi-realistic office direction combined with anime-inspired characters and an executive management HUD. This is stylized 3D, not photorealism. See [Office Empire Visual Direction & Implementation Plan](VISUAL_DIRECTION_AND_IMPLEMENTATION_PLAN.md).
+
 ## Product principles
 - Babylon.js + TypeScript; procedural meshes and code-authored art first. Blender is not a prerequisite.
 - Persian and English from the beginning; RTL/LTR must be tested.
-- Game progress and saves stay on the player's device. No cloud save or sync.
+- Game progress and saves stay on the player's device; no cloud save or sync.
 - Supabase Auth is identity only; never put service-role/secret keys in the browser.
 - Browser/PWA first. Android packaging with Capacitor only after the browser build is stable.
 - GitHub repository is public by explicit user approval.
 - Ship small playable increments. A feature is not complete until implemented and verified.
+- Prefer visual quality through composition, lighting, silhouette and reusable materials over unbounded mesh/texture growth.
 
 ## Phases and exit criteria
 
@@ -23,26 +27,34 @@ Roadmap, architecture/decisions, status, handoff and reliable build workflow.
 Clean dependency install, lockfile, TypeScript/Vite build and CI.
 
 ### P2 — Playable core loop (complete)
-Economy, build desks, hire workers, upgrades, local save/load and bounded offline earnings.
+Economy, desk placement, hiring, upgrades, local save/load and bounded offline earnings.
 
 ### P3 — Progression and UX (implemented; maintenance only)
 Onboarding/tutorial, ordered milestones, XP/levels, rewards, Persian/English, responsive controls and accessible progression dialog. Reopen only for defects or targeted UX improvements.
 
-### P4 — Content and visual identity (active)
-- Procedural workers, appearance variants, arrival/idle animations and desk equipment are implemented.
-- Current slice adds an office shell with side/front walls, a clear entrance, framed windows, trim, ceiling panels, warm fill lights, a bookcase/books, a wall clock, framed wall art, per-desk paper/mug/pen accessories, a geometric entrance emblem and a near-flush entry mat.
-- Headless Chromium/SwiftShader screenshots were reviewed at desktop (900×600) and mobile (390×844), including alternate orbit views; no obvious geometry clipping or entrance obstruction was observed. Real-device GPU review remains open.
-- Next: refine furniture layout, visual hierarchy, lighting and material contrast, validating each slice at desktop/mobile sizes and alternate camera angles.
-- Exit: coherent visual content slice, acceptable performance and documented asset provenance.
+### P4 — Approved office visual slice (active; highest priority)
+- Existing procedural office shell, founder/workers, four office tiers, lighting/shadows, procedural materials and executive HUD form the baseline.
+- Execute P4-A baseline/performance audit first; then composition/lighting, materials/environment, character presentation, HUD/gameplay readability and final performance/device acceptance.
+- Keep the scene premium and semi-realistic but stylized; no photorealism or paid-asset dependency.
+- Main risks: latest recorded 20-worker scene at 889 meshes / 100 materials / 5 lights, main JS bundle around 1,355 kB minified / 335 kB gzip, and outstanding physical-device GPU/touch acceptance.
+- Exit: coherent, attractive office scene, automated regressions green, bundle/scene complexity measured and controlled, and real-device acceptance documented.
 
 ### P5 — Account and settings
-Verify Supabase email sign-up/sign-in, session restore, password reset, redirect URLs and account/settings UI. Account identity must not silently migrate or sync local game saves.
+Verify Supabase email sign-up/sign-in, session restore, password reset, redirect URLs and account/settings UI. Account identity must not silently migrate or sync local game saves. Do not advance P5 until P4 is accepted.
 
 ### P6 — Quality, PWA and release
 Automated unit/integration/browser tests, device QA, performance budgets, PWA install/offline behavior, local-save export/import, Capacitor Android build and smoke test.
 
-### P7 — Business simulation (design and implement after the office content slice)
-Departments, products, demand, inputs/outputs, salaries, operating expenses, pricing, contracts, R&D, multiple companies and holding overview.
+### P7 — Business simulation
+Departments, products, demand, inputs/outputs, salaries, operating expenses, pricing, contracts, R&D, multiple companies and holding overview. Expand after the approved office slice is stable.
 
 ## Prioritization
-P0–P2 are complete. P3 is implemented and merged. P4 is active. Finish and visually validate a coherent office environment before deep business simulation, authentication, PWA or Android packaging.
+1. P4-A baseline and technical/performance audit.
+2. P4-B visual composition and lighting.
+3. P4-C material consistency and environment finish.
+4. P4-D founder/worker presentation without heavy rigs or mesh explosion.
+5. P4-E HUD/gameplay readability and bilingual responsive QA.
+6. P4-F optimization, automated verification and real-device acceptance.
+7. Only after P4 exit: P5/P6/P7 sequencing based on release value.
+
+Do not skip P4 acceptance to start authentication, deep simulation, PWA or Android packaging.
