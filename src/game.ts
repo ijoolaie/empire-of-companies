@@ -27,10 +27,10 @@ export class OfficeGame {
   canvas.setAttribute('data-camera-beta-min','0.7');canvas.setAttribute('data-camera-beta-max','1.35');canvas.setAttribute('data-camera-radius-min','10');canvas.setAttribute('data-camera-radius-max','22');
   this.camera.onViewMatrixChangedObservable.add(syncCameraState);syncCameraState();
   this.camera.attachControl(canvas,true);this.camera.inputs.removeByType("ArcRotateCameraKeyboardMoveInput");
-  new HemisphericLight('ambient',new Vector3(0,1,0),this.scene).intensity=.72;
-  const sun=new DirectionalLight('sun',new Vector3(-.5,-1,.4),this.scene);sun.position=new Vector3(8,12,-8);sun.intensity=1.05;
-  this.shadowGenerator=new ShadowGenerator(1024,sun);this.shadowGenerator.useBlurExponentialShadowMap=true;this.shadowGenerator.blurKernel=14;this.shadowGenerator.setDarkness(.28);this.shadowGenerator.bias=.0005;this.shadowGenerator.normalBias=.025;
-  this.scene.imageProcessingConfiguration.exposure=1.12;this.scene.imageProcessingConfiguration.contrast=1.12;
+  const hemi=new HemisphericLight('ambient',new Vector3(0,1,0),this.scene);hemi.intensity=.58;hemi.diffuse=new Color3(1,.94,.84);hemi.groundColor=new Color3(.22,.25,.29);
+  const sun=new DirectionalLight('sun',new Vector3(-.5,-1,.4),this.scene);sun.position=new Vector3(8,12,-8);sun.intensity=.92;sun.diffuse=new Color3(1,.88,.72);
+  this.shadowGenerator=new ShadowGenerator(1024,sun);this.shadowGenerator.useBlurExponentialShadowMap=true;this.shadowGenerator.blurKernel=18;this.shadowGenerator.setDarkness(.28);this.shadowGenerator.bias=.0005;this.shadowGenerator.normalBias=.025;
+  this.scene.imageProcessingConfiguration.exposure=1.06;this.scene.imageProcessingConfiguration.contrast=1.16;
   const mat=(name:string,c:Color3)=>this.getMaterial(name,c);
   const ground=MeshBuilder.CreateGround('ground',{width:22,height:18},this.scene);ground.material=mat('groundmat',new Color3(.28,.33,.37));
   this.floor=MeshBuilder.CreateGround('office-floor',{width:10,height:8},this.scene);this.floor.position.y=.04;this.floor.material=mat('tile',new Color3(.72,.68,.59));this.floor.receiveShadows=true;
@@ -120,9 +120,9 @@ export class OfficeGame {
   for(const z of [.52,1.68]){const support=MeshBuilder.CreateBox('waiting-bench-support',{width:.12,height:.48,depth:.12},this.scene);support.position.set(-4.48,.28,z);support.material=benchWood;}
   canvas.setAttribute('data-office-waiting-area-mesh-count','5');
   canvas.setAttribute('data-office-furniture-count','5');
-  const warmLight=new Color3(1,.88,.7);
+  const warmLight=new Color3(1,.76,.52),coolLight=new Color3(.42,.64,.82);
   for(const [index,x,z] of [[0,-2.8,-.8],[1,2.8,-.8],[2,0,2.4]] as const){
-   const lamp=new PointLight('office-fill-'+index,new Vector3(x,2.1,z),this.scene);lamp.diffuse=warmLight;lamp.intensity=.22;lamp.range=8;
+   const lamp=new PointLight('office-fill-'+index,new Vector3(x,2.1,z),this.scene);lamp.diffuse=index===1?coolLight:warmLight;lamp.intensity=index===1?.14:.3;lamp.range=8;
   }
   const ceilingPanel=mat('ceiling-panel',new Color3(.84,.81,.74));ceilingPanel.emissiveColor=new Color3(.22,.18,.12);
   for(const x of [-3,0,3]){const panel=MeshBuilder.CreateBox('ceiling-light-panel',{width:1.05,height:.045,depth:.38},this.scene);panel.position.set(x,2.26,.2);panel.material=ceilingPanel;}

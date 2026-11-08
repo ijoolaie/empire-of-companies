@@ -35,7 +35,7 @@ Onboarding/tutorial, ordered milestones, XP/levels, rewards, Persian/English, re
 ### P4 — Approved office visual slice (active; highest priority)
 - Existing procedural office shell, founder/workers, four office tiers, lighting/shadows, procedural materials and executive HUD form the baseline.
 - P4-A baseline/performance audit is complete locally on commit c1e1a3e: build, 24 unit tests, 28 browser tests, bundle/scene metrics and desktop/mobile reference captures. Real-device GPU acceptance remains open.
-- P4-B is active. First visual pass adds warm stone/ivory/navy/walnut finishes, procedural city views in the three windows, and short-viewport HUD spacing fixes. Next: camera composition and lighting, then material response and character presentation.
+- P4-B is active. First visual pass adds warm stone/ivory/navy/walnut finishes, procedural city views in the three windows, and short-viewport HUD spacing fixes. A first warm/cool lighting and shadow-softness refinement is now locally verified (28/28 browser tests); camera focal hierarchy and alternate-angle review remain open.
 - Keep the scene premium and semi-realistic but stylized; no photorealism or paid-asset dependency.
 - Main risks: latest 20-worker scene at 889 meshes / 100 materials / 5 lights; main JS bundle 1,356.84 kB minified / 335.59 kB gzip with the Vite chunk warning still present; and outstanding physical-device GPU/touch acceptance.
 - Exit: coherent, attractive office scene, automated regressions green, bundle/scene complexity measured and controlled, and real-device acceptance documented.
@@ -50,7 +50,7 @@ Automated unit/integration/browser tests, device QA, performance budgets, PWA in
 Departments, products, demand, inputs/outputs, salaries, operating expenses, pricing, contracts, R&D, multiple companies and holding overview. Expand after the approved office slice is stable.
 
 ## Prioritization
-1. P4-A baseline and technical/performance audit.
+1. P4-A baseline and technical/performance audit (complete locally).
 2. P4-B visual composition and lighting.
 3. P4-C material consistency and environment finish.
 4. P4-D founder/worker presentation without heavy rigs or mesh explosion.

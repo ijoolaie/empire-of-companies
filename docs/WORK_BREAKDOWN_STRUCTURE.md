@@ -31,9 +31,9 @@ The user approved the concept on 2026-11-08. Detailed feasibility, risks, implem
 
 ### P4-B — Visual composition and lighting (active; first visual refinement pushed)
 
-Initial pass on c1e1a3e: warm limestone/ivory/navy/walnut palette, procedural city skyline texture on three window panes, short-desktop HUD spacing, and mobile movement-hint spacing. Next work is camera focal hierarchy, lighting/shadow tuning and headed visual review.
+Initial pass on c1e1a3e: warm limestone/ivory/navy/walnut palette, procedural city skyline texture on three window panes, short-desktop HUD spacing, and mobile movement-hint spacing. Lighting refinement is locally verified on the current uncommitted tree: warm hemispheric/sun lighting, two warm and one cool fill light, softer shadow kernel, and tighter exposure/contrast. Next: camera focal hierarchy and alternate-angle review. Latest local checks: build pass, 24/24 unit, 28/28 browser; SwiftShader only.
 - [ ] Refine camera framing and scene focal hierarchy.
-- [ ] Balance warm/cool lighting, exposure, shadow softness and contrast.
+- [x] Balance warm/cool lighting, exposure, shadow softness and contrast (first pass locally verified; final art-direction review still open).
 - [ ] Ensure entrance, reception/founder, employee work area and windows read as one space.
 - [ ] Prefer reuse/tuning of current lights over adding more lights.
 - [ ] Verify alternate camera angles and navigation clearance.

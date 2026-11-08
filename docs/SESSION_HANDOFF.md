@@ -230,3 +230,13 @@ https://github.com/ijoolaie/empire-of-companies
 - Latest recorded risk figures: 889 meshes / 100 materials / 5 lights in the 20-worker diagnostic; main JS about 1,355 kB minified / 335 kB gzip. Investigate bundle splitting and repeated scene assets. SwiftShader timings are not real GPU/FPS acceptance.
 - P5 Supabase, PWA, Android and deep business simulation remain blocked until P4 is accepted. PR #3 remains Draft and unmerged.
 - Documentation records the approved direction and priorities; no runtime code changed in this documentation pass.
+
+## 2026-11-08 — Lighting refinement continuation (current local tree)
+- Current branch remains `feat/p4-office-environment`; latest pushed code baseline is `c1e1a3e`, docs baseline `56c3884`. Only uncommitted runtime change at this checkpoint is the lighting/shadow tune in `src/game.ts`.
+- Warmed hemispheric and directional light diffuse colors, lowered their intensities slightly, balanced two warm fill lights with one restrained cool fill, softened shadow kernel 14 -> 18, and adjusted exposure/contrast. Existing light count remains 5.
+- Fixed TypeScript API use: Babylon light types expose `diffuse`, not `diffuseColor`.
+- Current local checks: `npm run build` pass (526 modules; main entry 1,356.98 kB minified / 335.65 kB gzip; Vite warning remains); `npm test` 24/24; full `npm run test:browser` 28/28 in 4.4m; `git diff --check` pass.
+- Scene profile: 20-worker 889 meshes / 100 materials / 5 lights, average 32.487 ms, p95 68.8 ms, max 91.9 ms in this SwiftShader run. Host-dependent diagnostic only, not GPU/FPS evidence.
+- Desktop 960x540 and mobile 390x844 captures reviewed in headless Chromium + SwiftShader; real-device/headed GPU and touch review remains outstanding.
+- GitHub Actions for c1e1a3e (42484005222) and docs 56c3884 (42484169340) are green. Push this lighting slice and inspect its own CI before considering it integrated.
+- Next P4-B work: camera focal hierarchy and alternate-angle review. Do not add new visual elements without showing a design preview first. Do not start P5 or merge PR #3.

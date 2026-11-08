@@ -204,3 +204,12 @@ Last verified: 2026-11-08
 - First visual refinement: warm limestone/ivory/navy/walnut palette, procedural city view on three windows, short-desktop panel/topbar separation and mobile hint/toolbar separation.
 - CI #132's two failures were a time-sensitive worker-arrival assertion and a 120-frame profile timing timeout. Local regression fixes pass; new hosted CI is not yet confirmed.
 - PR #3 remains Draft/open/unmerged. P4 physical-device acceptance remains outstanding.
+
+## 2026-11-08 lighting continuation (local; pending commit/push)
+- Refined existing light colors/intensities: warmer hemispheric and directional key light, two warm office fills and one restrained cool fill; no additional lights. Shadow blur kernel increased 14 -> 18; exposure 1.12 -> 1.06 and contrast 1.12 -> 1.16.
+- Corrected Babylon.js light color property names after TypeScript caught the invalid `diffuseColor` member; use `diffuse` for these light types.
+- Verification on current tree: production build passed (526 modules; main entry 1,356.98 kB minified / 335.65 kB gzip; Vite chunk warning remains); unit tests 24/24; full Playwright 28/28 in 4.4 minutes; `git diff --check` passed.
+- Headless SwiftShader scene profile (0/5/10/12/20 workers): average 16.747/17.463/26.603/27.937/32.487 ms CPU frame; 20-worker p95 68.8 ms; 889 meshes, 100 materials, 5 lights. Diagnostic only; not real GPU/FPS evidence.
+- Reviewed desktop 960x540 and mobile 390x844 headless Chromium captures. No obvious HUD overlap; physical device review remains open.
+- GitHub Actions runs for c1e1a3e and docs 56c3884 are both green (run IDs 42484005222 and 42484169340). The current lighting diff still needs a new CI run after push.
+- PR #3 remains Draft/open/unmerged. Camera focal hierarchy, alternate camera angles, physical-device GPU/touch acceptance remain open.

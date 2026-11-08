@@ -133,3 +133,16 @@ Until P4 is accepted:
 - PR #3 remains Draft, open and unmerged.
 - P4 remains active. P5 Supabase identity, PWA, Android and deep business simulation remain deferred.
 - Real-device GPU, touch and headed visual acceptance are still outstanding.
+
+## 7. Lighting refinement — locally verified 2026-11-08
+- Tuned the existing hemispheric light to a warmer diffuse response with a restrained cool ground contribution.
+- Shifted the directional key light to a warmer tint and slightly lower intensity; softened its existing blurred shadow kernel from 14 to 18.
+- Rebalanced the three existing office fill lights: two warm accents and one low-intensity cool counterbalance. No new lights were added; scene light count remains 5.
+- Reduced exposure slightly and increased contrast to keep the warm stone/ivory/navy palette from looking washed out.
+- Production build passed (526 modules; main entry 1,356.98 kB minified / 335.65 kB gzip; Vite >500 kB warning remains); unit tests 24/24; full Playwright 28/28 in 4.4 minutes; diff check passed.
+- Headless Chromium + SwiftShader screenshots reviewed at 960x540 and 390x844. These are visual/layout references only, not physical-device GPU acceptance.
+- Browser scene-profile diagnostic on this run: 0/5/10/12/20 workers averaged 16.747/17.463/26.603/27.937/32.487 ms CPU frame time; 20-worker p95 68.8 ms, 889 meshes, 100 materials, 5 lights. Timings vary substantially by host and are not FPS or device benchmarks.
+- GitHub Actions for the previous pushed code commit c1e1a3e (run 42484005222) and docs commit 56c3884 (run 42484169340) both completed successfully. The current lighting refinement is not yet covered by hosted CI until its new commit is pushed.
+
+### P4-B status
+The first warm/cool lighting and shadow-softness refinement is locally complete. Camera focal hierarchy and alternate-angle review remain open. Do not mark P4-B complete until composition is reviewed and validated at the relevant viewports.
