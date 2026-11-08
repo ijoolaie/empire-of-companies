@@ -191,3 +191,9 @@ The first warm/cool lighting and shadow-softness refinement is locally complete.
 - Local HEAD at this handoff: b652cfb654beb474ff2fcc5a15fe5ab7bce398dd (feat: refine office camera composition)
 - The camera composition refinement is implemented and pushed; it is not the promised premium graphics redesign.
 - PR #3: https://github.com/ijoolaie/empire-of-companies/pull/3
+
+## 2026-11-08 — Premium baseline graphics implementation
+
+The approved premium direction is now being applied to the playable default office tier, not reserved only for later upgrade levels. The first graphics pass adds champagne-gold architectural inlays, a navy/gold identity panel, a rug medallion, brass pendant fixtures, warm fill lights, brighter panoramic city glazing, a brighter ivory floor finish, and a textured slate exterior ground. The front and camera-facing right walls use a cutaway profile to expose more of the interior while retaining the established office footprint and accepted camera framing.
+
+The reference image itself is not stored in the repository; visual implementation is grounded in the approved reference direction described above. This pass is a first procedural-art pass, not a claim of photorealism or final graphics completion. Continue refining materials, furniture, characters, lighting/shadows and city backdrop in iterative screenshot comparisons.

@@ -286,3 +286,19 @@ https://github.com/ijoolaie/empire-of-companies
 - Local HEAD at this handoff: b652cfb654beb474ff2fcc5a15fe5ab7bce398dd (feat: refine office camera composition)
 - The camera composition refinement is implemented and pushed; it is not the promised premium graphics redesign.
 - PR #3: https://github.com/ijoolaie/empire-of-companies/pull/3
+
+## 2026-11-08 — Premium office graphics pass (in progress)
+
+User explicitly approved the premium visual direction and requested direct screenshot comparison followed by implementation. A real local Chromium screenshot was captured before changes. The exact approved reference image file is not present in the repository/workspace; implementation follows the approved reference direction already recorded here: premium semi-realistic office, warm lighting, ivory/limestone, navy, walnut and champagne-gold accents, panoramic city windows, anime-inspired founder/worker styling, and executive HUD.
+
+Implemented in src/game.ts:
+- Dark slate exterior ground with procedural stone texture; brighter ivory stone floor texture.
+- Brighter panoramic cityscape glazing.
+- New premium baseline scene details: champagne-gold floor/rug inlays, rug medallion, navy/gold brand panel, three brass pendant fixtures and three warm point lights.
+- Open cutaway presentation: front parapet walls reduced to 1.25m and right-side wall reduced to 1.85m; entrance sign/jambs adjusted to match. This reveals more of the office interior from the accepted camera framing.
+- Diagnostic attributes added for premium detail count, pendant count, light count and cutaway wall heights.
+- Existing side management panel and accepted camera framing were preserved.
+
+Browser regression now asserts the new premium scene details and lighting counts. Local production build and unit tests passed; focused office-shell browser regression passed. Full Playwright browser regression passed: 28/28 tests (3.5 minutes). The subsequent git diff --check whitespace cleanup is recorded in this handoff.
+
+Do not treat this pass as final P4 acceptance. The game remains procedural/low-poly in places; further asset/material/character refinement and headed physical-device review remain. Do not start P5, do not merge PR #3, and keep it Draft/open until the user explicitly authorizes merge after acceptance.

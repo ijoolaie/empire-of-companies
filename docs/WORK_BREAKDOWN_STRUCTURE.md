@@ -120,3 +120,9 @@ P5 Supabase Auth, P6 PWA/release, Android packaging, and deep P7 business simula
 - Local HEAD at this handoff: b652cfb654beb474ff2fcc5a15fe5ab7bce398dd (feat: refine office camera composition)
 - The camera composition refinement is implemented and pushed; it is not the promised premium graphics redesign.
 - PR #3: https://github.com/ijoolaie/empire-of-companies/pull/3
+
+## 2026-11-08 — P4 graphics implementation slice
+
+Completed in this slice: premium default-tier procedural details; warm pendant lighting; navy/gold identity panel and inlays; improved floor/exterior/city glazing palette; cutaway front/right wall presentation; regression coverage for the new scene attributes.
+
+Remaining: improve visual fidelity beyond procedural primitives, refine furniture/character/environment materials, inspect higher-resolution headed screenshots on a real GPU/device, and obtain user acceptance. Keep PR #3 Draft/open/unmerged. P5 is blocked on P4 acceptance.

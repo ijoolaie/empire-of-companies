@@ -103,3 +103,14 @@ Do not skip P4 acceptance to start authentication, deep simulation, PWA or Andro
 - Local HEAD at this handoff: b652cfb654beb474ff2fcc5a15fe5ab7bce398dd (feat: refine office camera composition)
 - The camera composition refinement is implemented and pushed; it is not the promised premium graphics redesign.
 - PR #3: https://github.com/ijoolaie/empire-of-companies/pull/3
+
+## 2026-11-08 — P4 premium graphics work
+
+- [x] Begin premium baseline procedural scene pass in the default office tier.
+- [x] Add navy/champagne-gold identity and floor/rug details.
+- [x] Add brass pendant fixtures and warm point lighting.
+- [x] Improve ivory floor, slate exterior ground and city-window brightness.
+- [x] Open the front/right cutaway walls for clearer gameplay visibility.
+- [ ] Continue material/asset/character refinement against the approved reference direction.
+- [ ] Complete headed desktop/mobile, real GPU and touch acceptance.
+- [ ] Obtain user acceptance before P4 closure and any P5 work.

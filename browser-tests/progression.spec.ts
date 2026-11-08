@@ -116,7 +116,11 @@ test('office shell has an open entrance, framed windows and layered lighting', a
   await expect(canvas).toHaveAttribute('data-office-window-transom-count', '3');
   await expect(canvas).toHaveAttribute('data-office-window-center-mullion-count', '3');
   await expect(canvas).toHaveAttribute('data-office-entrance-part-count', '5');
-  await expect(canvas).toHaveAttribute('data-office-light-count', '5');
+  await expect(canvas).toHaveAttribute('data-office-light-count', '8');
+  await expect(canvas).toHaveAttribute('data-office-premium-detail-count', '31');
+  await expect(canvas).toHaveAttribute('data-office-premium-pendant-count', '3');
+  await expect(canvas).toHaveAttribute('data-office-front-cutaway-wall-height', '1.25');
+  await expect(canvas).toHaveAttribute('data-office-right-cutaway-wall-height', '1.85');
   await expect(canvas).toHaveAttribute('data-office-ceiling-panel-count', '3');
   await expect(canvas).toHaveAttribute('data-office-furniture-count', '5');
   await expect(canvas).toHaveAttribute('data-office-book-material-count', '4');

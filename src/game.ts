@@ -33,9 +33,9 @@ export class OfficeGame {
   this.shadowGenerator=new ShadowGenerator(1024,sun);this.shadowGenerator.useBlurExponentialShadowMap=true;this.shadowGenerator.blurKernel=18;this.shadowGenerator.setDarkness(.28);this.shadowGenerator.bias=.0005;this.shadowGenerator.normalBias=.025;
   this.scene.imageProcessingConfiguration.exposure=1.06;this.scene.imageProcessingConfiguration.contrast=1.16;
   const mat=(name:string,c:Color3)=>this.getMaterial(name,c);
-  const ground=MeshBuilder.CreateGround('ground',{width:22,height:18},this.scene);ground.material=mat('groundmat',new Color3(.28,.33,.37));
+  const ground=MeshBuilder.CreateGround('ground',{width:22,height:18},this.scene);ground.material=mat('groundmat',new Color3(.72,.78,.83));(ground.material as StandardMaterial).diffuseTexture=this.createSurfaceTexture('exterior-stone-texture','rgb(76,89,101)','rgb(102,114,124)',1100);
   this.floor=MeshBuilder.CreateGround('office-floor',{width:10,height:8},this.scene);this.floor.position.y=.04;this.floor.material=mat('tile',new Color3(.72,.68,.59));this.floor.receiveShadows=true;
-  const floorTexture=this.createSurfaceTexture('floor-stone-texture','rgb(171,162,145)','rgb(190,181,163)',900);floorTexture.uScale=2;floorTexture.vScale=2;(this.floor.material as StandardMaterial).diffuseTexture=floorTexture;
+  const floorTexture=this.createSurfaceTexture('floor-stone-texture','rgb(205,198,184)','rgb(231,223,207)',1100);floorTexture.uScale=2;floorTexture.vScale=2;(this.floor.material as StandardMaterial).diffuseTexture=floorTexture;
   // Fine, recessed-looking grout lines give the open office floor a subtle one-metre tile layout.
   const floorGrout=mat('floor-grout',new Color3(.53,.49,.42));
   for(let x=-4.5;x<=4.5;x+=1){const joint=MeshBuilder.CreateBox('office-floor-joint',{width:.012,height:.006,depth:8},this.scene);joint.position.set(x,.045,0);joint.material=floorGrout;}
@@ -44,15 +44,16 @@ export class OfficeGame {
   const wall=mat('wall',new Color3(.83,.81,.75));(wall as StandardMaterial).diffuseTexture=this.createSurfaceTexture('wall-plaster-texture','rgb(216,211,198)','rgb(231,225,212)',700);
   const back=MeshBuilder.CreateBox('back-wall',{width:10,height:2.3,depth:.18},this.scene);back.position.set(0,1.15,-4);back.material=wall;
   const side=MeshBuilder.CreateBox('side-wall',{width:.18,height:2.3,depth:8},this.scene);side.position.set(-5,1.15,0);side.material=wall;
-  const right=MeshBuilder.CreateBox('right-wall',{width:.18,height:2.3,depth:8},this.scene);right.position.set(5,1.15,0);right.material=wall;
+  const right=MeshBuilder.CreateBox('right-wall',{width:.18,height:1.85,depth:8},this.scene);right.position.set(5,.925,0);right.material=wall;
   // The front wall is split around a wide, permanently open entrance so arrival paths stay unobstructed.
-  const frontLeft=MeshBuilder.CreateBox('front-wall-left',{width:3.75,height:2.3,depth:.18},this.scene);frontLeft.position.set(-3.125,1.15,4);frontLeft.material=wall;
-  const frontRight=MeshBuilder.CreateBox('front-wall-right',{width:3.75,height:2.3,depth:.18},this.scene);frontRight.position.set(3.125,1.15,4);frontRight.material=wall;
-  const entranceHeader=MeshBuilder.CreateBox('entrance-header',{width:2.5,height:.28,depth:.24},this.scene);entranceHeader.position.set(0,2.16,4);entranceHeader.material=wall;
+  const frontLeft=MeshBuilder.CreateBox('front-wall-left',{width:3.75,height:1.25,depth:.18},this.scene);frontLeft.position.set(-3.125,.625,4);frontLeft.material=wall;
+  const frontRight=MeshBuilder.CreateBox('front-wall-right',{width:3.75,height:1.25,depth:.18},this.scene);frontRight.position.set(3.125,.625,4);frontRight.material=wall;
+  canvas.setAttribute('data-office-front-cutaway-wall-height','1.25');canvas.setAttribute('data-office-right-cutaway-wall-height','1.85');
+  const entranceHeader=MeshBuilder.CreateBox('entrance-header',{width:2.5,height:.12,depth:.24},this.scene);entranceHeader.position.set(0,1.32,4);entranceHeader.material=wall;
   const trim=mat('architectural-trim',new Color3(.16,.22,.29));
-  for(const x of [-1.25,1.25]){const jamb=MeshBuilder.CreateBox('entrance-jamb',{width:.09,height:2.05,depth:.25},this.scene);jamb.position.set(x,1.025,4);jamb.material=trim;}
+  for(const x of [-1.25,1.25]){const jamb=MeshBuilder.CreateBox('entrance-jamb',{width:.09,height:1.2,depth:.25},this.scene);jamb.position.set(x,.6,4);jamb.material=trim;}
   const threshold=MeshBuilder.CreateBox('entrance-threshold',{width:2.5,height:.055,depth:.32},this.scene);threshold.position.set(0,.085,4);threshold.material=trim;
-  const glass=mat('panoramic-glass',new Color3(1,1,1));glass.alpha=1;glass.diffuseTexture=this.createCityscapeTexture();glass.disableLighting=true;glass.backFaceCulling=false;glass.emissiveColor=new Color3(.45,.45,.45);
+  const glass=mat('panoramic-glass',new Color3(1,1,1));glass.alpha=1;glass.diffuseTexture=this.createCityscapeTexture();glass.disableLighting=true;glass.backFaceCulling=false;glass.emissiveColor=new Color3(.95,.95,.95);
   const windowFrame=mat('window-frame',new Color3(.16,.22,.29));
   for(const x of [-3.2,-1.1,1.1]){
    const pane=MeshBuilder.CreatePlane('window-pane',{width:1.65,height:1.25,sideOrientation:Mesh.DOUBLESIDE},this.scene);pane.position.set(x,1.65,-3.5);pane.material=glass;pane.isPickable=false;
@@ -65,11 +66,11 @@ export class OfficeGame {
   for(const [name,width,depth,x,z] of [['back-baseboard',9.7,.07,0,-3.87],['left-baseboard',.07,7.7,-4.87,0],['right-baseboard',.07,7.7,4.87,0]] as const){
    const board=MeshBuilder.CreateBox(name,{width,height:.12,depth},this.scene);board.position.set(x,.16,z);board.material=baseboard;
   }
-  const entranceSign=MeshBuilder.CreateBox('entrance-sign',{width:1.15,height:.24,depth:.06},this.scene);entranceSign.position.set(0,2.32,3.82);entranceSign.material=trim;
+  const entranceSign=MeshBuilder.CreateBox('entrance-sign',{width:1.15,height:.24,depth:.06},this.scene);entranceSign.position.set(0,1.48,3.82);entranceSign.material=trim;
   // A simple three-bar emblem gives the entrance sign a readable focal point without text or external assets.
   const emblem=mat('entrance-emblem',new Color3(.82,.68,.42));
   for(const [index,height] of [.09,.15,.12].entries()){
-   const bar=MeshBuilder.CreateBox('sign-emblem-bar',{width:.07,height,depth:.025},this.scene);bar.position.set((index-1)*.16,2.32,3.775);bar.material=emblem;
+   const bar=MeshBuilder.CreateBox('sign-emblem-bar',{width:.07,height,depth:.025},this.scene);bar.position.set((index-1)*.16,1.48,3.775);bar.material=emblem;
   }
   // Keep the entry mat nearly flush with the floor so it cannot obstruct worker arrival paths.
   const entryMat=MeshBuilder.CreateGround('entry-mat',{width:1.85,height:.62},this.scene);entryMat.position.set(0,.078,3.42);entryMat.material=mat('entry-mat-fabric',new Color3(.1,.15,.22));
@@ -153,7 +154,7 @@ export class OfficeGame {
   }
   canvas.setAttribute('data-office-plant-foliage-mesh-count',String(this.scene.meshes.filter(mesh=>mesh.name.startsWith('plant-foliage-')).length));
   canvas.setAttribute('data-office-planter-detail-count',String(this.scene.meshes.filter(mesh=>mesh.name==='planter-soil'||mesh.name==='planter-rim').length));
-  this.addDesk(-2,-1);this.addDesk(1,-1);this.createMainCharacter();this.createOfficeUpgradeDecor();
+  this.addDesk(-2,-1);this.addDesk(1,-1);this.createMainCharacter();this.createOfficeUpgradeDecor();this.createPremiumOfficeDetails();
   // Office architecture and furniture are static; freeze their world matrices so Babylon can skip per-frame recomputation.
   const shadowCasterNames=new Set(['back-wall','side-wall','right-wall','front-wall-left','front-wall-right','entrance-header','office-bookcase','office-wall-clock','office-wall-art-frame','office-wall-art-panel','office-notice-board','notice-board-cork','player-feature-wall-panel','player-feature-wall-slat','player-feature-wall-emblem','waiting-bench-seat','waiting-bench-back','waiting-bench-support','pot','desk-top','desk-leg','chair-frame','chair-upholstery','chair-base','monitor']);
   const shadowReceiverNames=new Set(['ground','office-floor','rug','back-wall','side-wall','right-wall','front-wall-left','front-wall-right']);
@@ -515,6 +516,48 @@ export class OfficeGame {
   this.engine.getRenderingCanvas()?.setAttribute('data-worker-face-detail-mesh-count',String(this.scene.meshes.filter(mesh=>mesh.name.startsWith('worker-face-detail-')).length));
   this.engine.getRenderingCanvas()?.setAttribute('data-scene-material-count',String(this.scene.materials.length));
  }
+ createPremiumOfficeDetails(){
+  const gold=this.getMaterial('premium-champagne-gold',new Color3(.76,.61,.38));
+  gold.specularColor=new Color3(.9,.76,.52);gold.specularPower=96;
+  const navy=this.getMaterial('premium-navy-panel',new Color3(.075,.12,.18));
+  const ivory=this.getMaterial('premium-ivory-detail',new Color3(.88,.83,.72));
+  const glow=this.getMaterial('premium-warm-glow',new Color3(1,.79,.48));
+  glow.emissiveColor=new Color3(.85,.48,.16);
+  const add=(mesh:Mesh)=>{mesh.isPickable=false;mesh.receiveShadows=false;};
+  // Champagne inlay defines the room footprint against the darker exterior stone.
+  for(const [name,width,depth,x,z] of [
+   ['back',9.58,.045,0,-3.82],['front',9.58,.045,0,3.82],
+   ['left',.045,7.64,-4.78,0],['right',.045,7.64,4.78,0]
+  ] as const){const line=MeshBuilder.CreateBox('premium-floor-inlay-'+name,{width,height:.018,depth},this.scene);line.position.set(x,.058,z);line.material=gold;add(line);}
+  // Gold-capped cutaway parapets keep the office readable from the approved gameplay camera.
+  for(const [side,x] of [['left',-3.125],['right',3.125]] as const){const cap=MeshBuilder.CreateBox('premium-front-parapet-cap-'+side,{width:3.78,height:.045,depth:.22},this.scene);cap.position.set(x,1.265,4);cap.material=gold;add(cap);}
+  // A restrained second line gives the founder's rug a tailored, executive finish.
+  for(const [name,width,depth,x,z] of [
+   ['front',4.34,.028,0,.12],['back',4.34,.028,0,2.78],
+   ['left',.028,2.66,-2.17,1.45],['right',.028,2.66,2.17,1.45]
+  ] as const){const line=MeshBuilder.CreateBox('premium-rug-inlay-'+name,{width,height:.014,depth},this.scene);line.position.set(x,.087,z);line.material=gold;add(line);}
+  const medallion=MeshBuilder.CreateCylinder('premium-rug-medallion',{diameter:.46,height:.018,tessellation:32},this.scene);medallion.position.set(0,.09,1.45);medallion.material=gold;add(medallion);
+  const medallionCore=MeshBuilder.CreateCylinder('premium-rug-medallion-core',{diameter:.3,height:.02,tessellation:8},this.scene);medallionCore.position.set(0,.102,1.45);medallionCore.material=navy;add(medallionCore);
+  // Slim wall rails and a framed brand panel bring the architecture up to the approved navy-and-gold direction.
+  for(const [name,x] of [['left',-4.86],['right',4.86]] as const){
+   const rail=MeshBuilder.CreateBox('premium-wall-rail-'+name,{width:.045,height:.035,depth:7.62},this.scene);rail.position.set(x,.34,0);rail.material=gold;add(rail);
+  }
+  const brandPanel=MeshBuilder.CreateBox('premium-brand-panel',{width:.055,height:1.28,depth:.78},this.scene);brandPanel.position.set(-4.84,1.48,-2.95);brandPanel.material=navy;add(brandPanel);
+  for(const [name,y] of [['top',2.12],['bottom',.84]] as const){const edge=MeshBuilder.CreateBox('premium-brand-panel-edge-'+name,{width:.075,height:.035,depth:.86},this.scene);edge.position.set(-4.79,y,-2.95);edge.material=gold;add(edge);}
+  const brandMark=MeshBuilder.CreateTorus('premium-brand-mark',{diameter:.42,thickness:.035,tessellation:32},this.scene);brandMark.position.set(-4.79,1.55,-2.95);brandMark.rotation.y=Math.PI/2;brandMark.material=gold;add(brandMark);
+  const brandCore=MeshBuilder.CreateBox('premium-brand-core',{width:.035,height:.2,depth:.2},this.scene);brandCore.position.set(-4.77,1.55,-2.95);brandCore.material=ivory;add(brandCore);
+  // Three brass pendants and warm point lights add a layered executive-office lighting scheme.
+  for(const [index,x] of [-2.7,0,2.7].entries()){
+   const cable=MeshBuilder.CreateCylinder('premium-pendant-cable-'+index,{height:.32,diameter:.018,tessellation:8},this.scene);cable.position.set(x,2.02,-.65);cable.material=gold;add(cable);
+   const shade=MeshBuilder.CreateCylinder('premium-pendant-shade-'+index,{height:.13,diameter:.34,tessellation:24},this.scene);shade.position.set(x,1.79,-.65);shade.material=navy;add(shade);
+   const rim=MeshBuilder.CreateTorus('premium-pendant-rim-'+index,{diameter:.31,thickness:.022,tessellation:24},this.scene);rim.position.set(x,1.72,-.65);rim.material=gold;add(rim);
+   const bulb=MeshBuilder.CreateSphere('premium-pendant-bulb-'+index,{diameter:.095,segments:10},this.scene);bulb.position.set(x,1.69,-.65);bulb.material=glow;add(bulb);
+   const light=new PointLight('premium-pendant-light-'+index,new Vector3(x,1.72,-.65),this.scene);light.diffuse=new Color3(1,.76,.49);light.intensity=.18;light.range=5;
+  }
+  const canvas=this.engine.getRenderingCanvas();
+  canvas?.setAttribute('data-office-premium-detail-count',String(this.scene.meshes.filter(mesh=>mesh.name.startsWith('premium-')).length));
+  canvas?.setAttribute('data-office-premium-pendant-count','3');canvas?.setAttribute('data-office-light-count',String(this.scene.lights.length));
+ }
  createOfficeUpgradeDecor(){
   const add=(mesh:Mesh,requiredLevel:number)=>{mesh.isPickable=false;mesh.setEnabled(false);this.officeUpgradeDecor.push({mesh,requiredLevel});};
   const beam=this.getMaterial('office-upgrade-beam',new Color3(.3,.24,.18));
@@ -561,18 +604,18 @@ export class OfficeGame {
    const existing=this.surfaceTextures['cityscape-backdrop'];if(existing)return existing;
    const texture=new DynamicTexture('cityscape-backdrop',{width:512,height:256},this.scene,false);
    const ctx=texture.getContext();
-   const sky=ctx.createLinearGradient(0,0,0,256);sky.addColorStop(0,'#9bc3d3');sky.addColorStop(.58,'#d1d9cf');sky.addColorStop(1,'#e8cba1');ctx.fillStyle=sky;ctx.fillRect(0,0,512,256);
+   const sky=ctx.createLinearGradient(0,0,0,256);sky.addColorStop(0,'#6f9db7');sky.addColorStop(.58,'#c7d8d5');sky.addColorStop(1,'#f3c991');ctx.fillStyle=sky;ctx.fillRect(0,0,512,256);
    ctx.fillStyle='rgba(255,230,184,.72)';ctx.beginPath();ctx.arc(418,68,27,0,Math.PI*2);ctx.fill();
    const farBuildings:[number,number,number,number][]=[
     [0,116,42,140],[35,91,35,165],[66,128,52,128],[111,76,39,180],[146,110,45,146],[188,88,47,168],
     [230,121,36,135],[263,70,52,186],[311,105,43,151],[350,84,48,172],[394,116,39,140],[429,93,42,163],[468,126,44,130]
    ];
-   for(const [x,y,width,height] of farBuildings){ctx.fillStyle='#91adba';ctx.fillRect(x,y,width,height);ctx.fillStyle='rgba(255,224,170,.48)';for(let wx=x+7;wx<x+width-4;wx+=12)for(let wy=y+10;wy<y+height-5;wy+=15)ctx.fillRect(wx,wy,4,6);}
+   for(const [x,y,width,height] of farBuildings){ctx.fillStyle='#9db9c5';ctx.fillRect(x,y,width,height);ctx.fillStyle='rgba(255,224,170,.48)';for(let wx=x+7;wx<x+width-4;wx+=12)for(let wy=y+10;wy<y+height-5;wy+=15)ctx.fillRect(wx,wy,4,6);}
    const nearBuildings:[number,number,number,number][]=[
     [0,159,54,97],[47,137,48,119],[91,169,58,87],[145,132,51,124],[193,158,58,98],[247,143,50,113],
     [293,166,57,90],[346,132,54,124],[396,151,61,105],[453,140,59,116]
    ];
-   for(const [x,y,width,height] of nearBuildings){ctx.fillStyle='#506c80';ctx.fillRect(x,y,width,height);ctx.fillStyle='rgba(255,214,145,.64)';for(let wx=x+8;wx<x+width-5;wx+=13)for(let wy=y+11;wy<y+height-5;wy+=16)ctx.fillRect(wx,wy,5,7);}
+   for(const [x,y,width,height] of nearBuildings){ctx.fillStyle='#66879a';ctx.fillRect(x,y,width,height);ctx.fillStyle='rgba(255,214,145,.64)';for(let wx=x+8;wx<x+width-5;wx+=13)for(let wy=y+11;wy<y+height-5;wy+=16)ctx.fillRect(wx,wy,5,7);}
    ctx.fillStyle='#1b3044';ctx.fillRect(0,235,512,21);
    texture.update(false);this.surfaceTextures['cityscape-backdrop']=texture;return texture;
   }
