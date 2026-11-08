@@ -213,3 +213,11 @@ Last verified: 2026-11-08
 - Reviewed desktop 960x540 and mobile 390x844 headless Chromium captures. No obvious HUD overlap; physical device review remains open.
 - GitHub Actions runs for c1e1a3e and docs 56c3884 are both green (run IDs 42484005222 and 42484169340). The current lighting diff still needs a new CI run after push.
 - PR #3 remains Draft/open/unmerged. Camera focal hierarchy, alternate camera angles, physical-device GPU/touch acceptance remain open.
+
+## 2026-11-08 — Camera focal hierarchy pass
+- Applied the approved composition direction to the default Babylon.js camera: the playable founder and central work area are brought closer to the visual center while the rear windows remain in frame.
+- Default/reset camera: alpha π/4, beta 1.05, radius 16.5, target (0, 0.9, 0.85). The reset action now restores the same focal composition.
+- Added canvas diagnostics for camera target X/Y/Z and browser regression assertions for initial framing, bounded zoom/orbit, and reset consistency.
+- Local verification: production build passed (526 modules; main entry 1,357.13 kB minified / 335.68 kB gzip; existing Vite >500 kB chunk warning remains); unit tests 24/24; focused camera regression passed; full Playwright suite 28/28 in 3.6 minutes; `git diff --check` passed.
+- Scene profile remains 889 meshes / 100 materials / 5 lights at 20 workers. SwiftShader timing is diagnostic only; no GPU/FPS claim.
+- This camera slice is locally verified and awaits commit/push and its own hosted CI run. PR #3 remains Draft, open and unmerged. Headed physical-device visual/GPU/touch acceptance remains open; P4 is not accepted and P5 remains deferred.

@@ -21,9 +21,10 @@ export class OfficeGame {
  constructor(canvas:HTMLCanvasElement){
   this.engine=new Engine(canvas,true,{preserveDrawingBuffer:false,stencil:true,adaptToDeviceRatio:true});
   this.scene=new Scene(this.engine);this.scene.clearColor=new Color4(.72,.83,.91,1);
-  this.camera=new ArcRotateCamera('camera',Math.PI/4,1.05,15,new Vector3(0,0,0),this.scene);
+  // Frame the playable founder and central work area together while keeping the rear windows readable.
+  this.camera=new ArcRotateCamera('camera',Math.PI/4,1.05,16.5,new Vector3(0,.9,.85),this.scene);
   this.camera.lowerRadiusLimit=10;this.camera.upperRadiusLimit=22;this.camera.lowerBetaLimit=.7;this.camera.upperBetaLimit=1.35;this.camera.wheelPrecision=45;this.camera.panningSensibility=90;
-  const syncCameraState=()=>{for(const [name,value] of [['alpha',this.camera.alpha.toFixed(3)],['beta',this.camera.beta.toFixed(3)],['radius',this.camera.radius.toFixed(2)]] as const){const key='data-camera-'+name;if(canvas.getAttribute(key)!==value)canvas.setAttribute(key,value);}};
+  const syncCameraState=()=>{for(const [name,value] of [['alpha',this.camera.alpha.toFixed(3)],['beta',this.camera.beta.toFixed(3)],['radius',this.camera.radius.toFixed(2)],['target-x',this.camera.target.x.toFixed(2)],['target-y',this.camera.target.y.toFixed(2)],['target-z',this.camera.target.z.toFixed(2)]] as const){const key='data-camera-'+name;if(canvas.getAttribute(key)!==value)canvas.setAttribute(key,value);}};
   canvas.setAttribute('data-camera-beta-min','0.7');canvas.setAttribute('data-camera-beta-max','1.35');canvas.setAttribute('data-camera-radius-min','10');canvas.setAttribute('data-camera-radius-max','22');
   this.camera.onViewMatrixChangedObservable.add(syncCameraState);syncCameraState();
   this.camera.attachControl(canvas,true);this.camera.inputs.removeByType("ArcRotateCameraKeyboardMoveInput");
@@ -303,7 +304,7 @@ export class OfficeGame {
   let initialMaterialDiagnosticsReady=false;this.scene.onAfterRenderObservable.add(()=>{if(!initialMaterialDiagnosticsReady){initialMaterialDiagnosticsReady=true;canvas.setAttribute('data-scene-material-count',String(this.scene.materials.length));}});
   this.engine.runRenderLoop(()=>this.scene.render());window.addEventListener('resize',()=>this.engine.resize());
  }
- resetCamera(){this.camera.inertialAlphaOffset=0;this.camera.inertialBetaOffset=0;this.camera.inertialRadiusOffset=0;this.camera.alpha=Math.PI/4;this.camera.beta=1.05;this.camera.radius=15;this.camera.setTarget(Vector3.Zero());}
+ resetCamera(){this.camera.inertialAlphaOffset=0;this.camera.inertialBetaOffset=0;this.camera.inertialRadiusOffset=0;this.camera.alpha=Math.PI/4;this.camera.beta=1.05;this.camera.radius=16.5;this.camera.setTarget(new Vector3(0,.9,.85));}
  setPlacing(active:boolean){this.placing=active;if(!active)this.touchPlacementTarget=null;this.engine.getRenderingCanvas()?.setAttribute("data-desk-placement-active",String(active));if(!active&&this.placementPreview){this.placementPreview.isVisible=false;this.engine.getRenderingCanvas()?.setAttribute("data-desk-placement-preview-visible","false");this.engine.getRenderingCanvas()?.setAttribute("data-desk-placement-valid","false");}}
  addDesk(x:number,z:number){
   const root=new TransformNode('desk-root',this.scene);root.position.set(x,.08,z);

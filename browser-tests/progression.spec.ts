@@ -516,6 +516,9 @@ test('office camera zoom stays within safe viewing limits', async ({ page }) => 
   const radiusMin = Number(await canvas.getAttribute('data-camera-radius-min'));
   const radiusMax = Number(await canvas.getAttribute('data-camera-radius-max'));
   const initialRadius = Number(await canvas.getAttribute('data-camera-radius'));
+  const initialTarget = await Promise.all(['x', 'y', 'z'].map(async axis => Number(await canvas.getAttribute('data-camera-target-' + axis))));
+  expect(initialRadius).toBe(16.5);
+  expect(initialTarget).toEqual([0, 0.9, 0.85]);
 
   await page.mouse.move(300, 330);
   await page.mouse.wheel(0, -500);
@@ -587,6 +590,9 @@ test('office camera responds to pointer drag while keeping tilt and zoom bounded
   const initialAlpha = Number(await canvas.getAttribute('data-camera-alpha'));
   const initialBeta = Number(await canvas.getAttribute('data-camera-beta'));
   const initialRadius = Number(await canvas.getAttribute('data-camera-radius'));
+  const initialTarget = await Promise.all(['x', 'y', 'z'].map(async axis => Number(await canvas.getAttribute('data-camera-target-' + axis))));
+  expect(initialRadius).toBe(16.5);
+  expect(initialTarget).toEqual([0, 0.9, 0.85]);
   const betaMin = Number(await canvas.getAttribute('data-camera-beta-min'));
   const betaMax = Number(await canvas.getAttribute('data-camera-beta-max'));
   const radiusMin = Number(await canvas.getAttribute('data-camera-radius-min'));
@@ -611,6 +617,9 @@ test('office camera responds to pointer drag while keeping tilt and zoom bounded
   await expect.poll(async () => Number(await canvas.getAttribute('data-camera-alpha'))).toBe(initialAlpha);
   await expect.poll(async () => Number(await canvas.getAttribute('data-camera-beta'))).toBe(initialBeta);
   await expect.poll(async () => Number(await canvas.getAttribute('data-camera-radius'))).toBe(initialRadius);
+  for (const [index, axis] of ['x', 'y', 'z'].entries()) {
+    await expect.poll(async () => Number(await canvas.getAttribute('data-camera-target-' + axis))).toBe(initialTarget[index]);
+  }
   await page.locator('#lang').click();
   await expect(reset).toHaveAttribute('aria-label', 'بازنشانی نمای دوربین');
 });
