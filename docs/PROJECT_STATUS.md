@@ -185,3 +185,12 @@ Last verified: 2026-11-07
 ## UI HUD verification update - commit a732457
 - Full local Playwright browser suite completed: 27/27 passed in 5.4 minutes. The 20-worker scene profile passed locally: average CPU frame 11.249/12.318/15.100/17.776/22.370 ms for 0/5/10/12/20 workers; 20-worker p95 31.1 ms, 889 meshes, 100 materials and 5 lights (headless SwiftShader diagnostic only).
 - GitHub Actions #132 (run 42478680096) has passed production build and unit tests; hosted browser regression is still in progress at this update.
+
+
+## Approved Office Empire visual direction and implementation priority — 2026-11-08
+- User approved a premium cinematic semi-realistic/stylized 3D office direction, combined with anime-inspired founder/workers and the executive HUD. This is not a photorealism requirement. Detailed plan: [VISUAL_DIRECTION_AND_IMPLEMENTATION_PLAN.md](VISUAL_DIRECTION_AND_IMPLEMENTATION_PLAN.md).
+- Feasibility: high because the existing Babylon.js/TypeScript scene already has procedural office geometry/furniture, founder and worker characters, four office tiers, lighting/shadows, procedural materials, bilingual responsive HUD and interaction systems. The next work is refinement and optimization, not a rebuild.
+- Main measured risks from the latest recorded head: 20-worker diagnostic scene has 889 meshes, 100 materials and 5 lights; production main bundle is approximately 1,355 kB minified / 335 kB gzip, with the existing Vite chunk warning. These values require investigation and optimization; they are not proof of unacceptable runtime performance by themselves.
+- Priority order: P4-A baseline/bundle/scene audit; P4-B composition and lighting; P4-C materials/environment; P4-D character presentation; P4-E HUD/gameplay readability; P4-F optimization and real-device acceptance.
+- No P5/PWA/Android/deep business simulation until P4 exit criteria pass. PR #3 remains Draft and unmerged. Physical-device GPU/touch review remains outstanding.
+- No runtime code changes are included in this documentation update.
