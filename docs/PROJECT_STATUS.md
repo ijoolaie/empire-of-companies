@@ -1,78 +1,337 @@
 # Project Status
 
-Last verified: 2026-11-06
+Last verified: 2026-11-08
 
 ## Repository
 - GitHub: https://github.com/ijoolaie/empire-of-companies
-- Default branch: main; P2 merge: 06ebb5c.
-- Development branch: feat/p3-progression-ux.
-- Latest code/test head: bf23b0f; CI run #75 (42195870111) passed for a4f2889 and CI run #76 (42196373889) passed for bf23b0f. A subsequent documentation-only commit records these results. Optional profiling is enabled only with `?profile=1`; local verification: 22 unit tests, production build, 16 browser tests and diff check.
-- A* arrival routing starts at a shared office entrance and avoids desk, planter, and structural wall footprints; eight navigation tests cover entrance routing, fixed obstacles, blocked entrance fallback, deterministic routing, office bounds, alternate entry lanes around a reserved worker route, and 84 edge-desk/entrance-lane combinations. Active worker routes are reserved for later hires; the 12th browser test verifies three rapid arrivals in two desk layouts and checks each gets a non-fallback path.
-- New hires walk from the open side of the office toward their assigned desk for 1.6 seconds, swing their arms/legs, then transition into seated typing. Both thighs and lower legs now counter-swing during the arrival; lower-leg swing is exposed through a canvas diagnostic attribute and browser-tested. Restored employees remain seated on reload.
-- PR #2: https://github.com/ijoolaie/empire-of-companies/pull/2 (open, Draft, not merged).
-- GitHub Actions run #61 (42177670283) passed for 07551af; run #62 (42178572610) passed for 9a3eab4.
-- Local clone: C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies.
+- Default branch: `main`; latest merged baseline: `7914290` (PR #2).
+- Current work branch: `feat/p4-office-environment`; latest pushed code head: `b652cfb654beb474ff2fcc5a15fe5ab7bce398dd` (`feat: refine office camera composition`).
+- Local workspace: `C:\Users\Ali\local-mcp-bridge\workspaces\empire-of-companies`; worktree was clean after the code push.
+- PR #3 remains open, Draft and unmerged. CI #132 on older commit a732457 failed two browser checks; c1e1a3e contains timing-robustness fixes, but latest camera-composition head b652cfb has a green hosted CI run; the approved premium graphics redesign is next and is not yet implemented.
+
+## Product decisions
+- Browser-first 3D office/company management game, Babylon.js + TypeScript + Vite.
+- Persian/English with RTL/LTR.
+- Procedural original visuals; no Blender or paid asset dependency.
+- Game saves stay local. Supabase is identity-only when its phase is implemented.
+- PWA, then Android/Capacitor after browser stability.
 
 ## Phase status
-- P0/P1 complete.
-- P2 playable core loop complete and merged.
-- P3 progression/onboarding/UX active; mobile office panel now collapses nonessential XP/objective details while preserving tutorial controls and progression access.
-- P4 3D content active at an initial procedural-worker slice; not complete.
+- P0/P1: complete.
+- P2: playable core loop complete and merged.
+- P3: progression, onboarding, responsive UX and accessibility slice implemented and merged.
+- P4: active. P4-A baseline is complete locally on c1e1a3e (build pass, 24/24 unit, 28/28 browser, desktop/mobile reference captures, bundle and scene metrics). First P4-B visual refinement is pushed: warm premium palette, procedural skyline window texture, HUD spacing fixes and deferred Supabase auth chunk. Hosted CI for c1e1a3e and real-device headed desktop/mobile GPU/touch review remain open.
+- P5: Supabase Auth lifecycle not yet verified.
+- P6: quality/release, PWA and Android packaging remain.
 
-## P3 implemented and verified
-- Save schema v4, legacy migration, player XP and level.
-- Three ordered milestones with one-time cash/XP rewards.
-- Skippable first-run tutorial.
-- Persian/English and RTL/LTR.
-- Progression dialog with current XP, milestone states/rewards, and planned roadmap at levels 3, 5 and 10.
-- Dialog accessibility: modal semantics, accessible description, Escape/backdrop/close-button dismissal, keyboard focus containment and focus restoration.
-- Playwright CI suite covering progression, persistence, localization, accessibility and responsive layouts.
+## Latest P4 office-shell slice
+- Added the right-side wall and split front wall, leaving a 2.5-unit-wide open entrance aligned with the existing worker arrival lane.
+- Added entrance header, jambs, threshold and sign; the entrance remains physically open (no door leaf blocking arrivals).
+- Added window mullions and sills to the three rear glass panes.
+- Added three ceiling light panels, three warm point fill lights and wall baseboards.
+- Reused cached materials for architectural trim and finish surfaces.
+- Added a compact bookcase with shelves and books, a wall clock, framed wall art, a cork notice board with three pinned notes, a five-mesh waiting bench against the left wall, and desk-level paper, mug, pen and under-desk drawer storage. Bookcase and bench are registered as worker-path obstacles; desk accessories and storage are attached to each desk.
+- Added canvas diagnostics for wall segments, windows, structural entrance parts, scene light count, 18 subtle floor-tile joints, nine entrance emblem/mat detail meshes, eight notice-board meshes and 15 clock-detail meshes (12 hour markers, two hands and a center pin).
+- Added Playwright regressions asserting 5 wall segments, 3 windows, 5 structural entrance parts, 5 total lights, 4 office detail features, 8 notice-board meshes, 5 waiting-area meshes, 9 entry-detail meshes, 9 desk accessory meshes and 6 desk-storage meshes in the 3-desk fixture, with no browser page errors.
+- No external art assets introduced.
 
-## P4 initial procedural worker slice
-- Procedural seated worker models are attached to the first staffed desk positions.
-- Hiring calls syncWorkers and creates the additional worker model at the next available desk; only newly hired workers animate their arrival, while restored workers load directly into their seated state.
-- Workers have skin/shirt/hair meshes, torso/arm poses, procedural thighs, lower legs and shoes; lower-body positions are oriented toward the desk. New hires perform a short arrival walk with alternating leg/arm swing, then settle into subtle idle and typing motion. Appearance is deterministic by worker index: four skin tones, four hair colors, four shirt colors and four hair-cap proportions; a browser assertion checks that the first two workers have distinct appearance variants.
-- Desk furniture includes a chair backrest.
-- Canvas data attributes expose worker-model count and leg/shoe mesh count. Optional profiling is enabled only with `?profile=1`; it publishes rolling CPU render timing (average/p95/max over 120 frames) and scene mesh/active-mesh/material/light counts. Normal play does not register the profiling after-render observer. A same-session headless Chromium comparison (same five desks) measured zero workers at 2.478 ms average / 8.9 ms p95 / 29.2 ms max, with 71 meshes, 15 materials and 2 lights; five workers measured 3.635 ms average / 10.6 ms p95 / 24.6 ms max, with 115 meshes, 18 materials and 2 lights. The five-worker case added 44 scene meshes and 3 materials. CPU timings cover the scene render call, not GPU completion; this is a single headless-browser comparison, not a target-device benchmark.
-- Desk materials are cached and reused; worker skin/hair/trousers/shoes share materials, and shirt material is cached per one of four palette variants. Browser coverage verifies the fifth worker reuses the first variant without allocating a new material.
-- No external assets or Blender dependency.
-- Arrival uses deterministic bounded A* from a shared entrance to each assigned desk, avoiding desk, planter and structural wall footprints. Active routes are temporarily reserved for later hires; there is no dynamic replanning or modeled door yet. Worker route lengths are cached at hire time. Character variants, detailed poses and broader mobile/multi-angle visual acceptance remain open.
-- Direct Babylon module imports replaced the root barrel import; Vite transforms 464 modules instead of 2,221.
-- Material reuse prevents per-worker duplication of shared trouser/shoe and desk-furniture materials. Worker appearance now cycles deterministically through four skin tones, four hair colors, four shirt colors and four hair-cap proportions; the 4×4×4 palette uses cached material variants rather than creating a new material for every employee.
-
-## Verification
-- npm test: 22 passed, 0 failed (includes 8 navigation-planner tests; new edge-layout test checks 84 desk/lane combinations).
-- npm run build: passed.
-- npm run test:browser: 16 passed, 0 failed; includes rapid-hire routing, camera zoom clamping and pointer-drag orbit, six viewport sizes, and rolling CPU frame/scene profiling with five workers.
-- git diff --check: passed.
-- Babylon/main application chunk after direct module imports: about 1,142.55 kB minified / 282.20 kB gzip (about 81% smaller minified and 79% smaller gzip than the previous 6,026.40 / 1,322.29 kB bundle). The >500 kB warning remains.
-- GitHub Actions run #62 (42178572610) passed for 9a3eab4; run #64 (42179352858) passed for 195f2c5; run #66 (42180394613) passed for 08e2cfa; CI run #67 (42181556728) passed for ad9d934, including build, unit tests, Chromium and all 12 browser tests.
-- Automated tests verify model synchronization and mesh counts; manual Chromium review separately verified that the worker is visible in the 1280x720 default camera view after the angle correction.
-
-## Open
-- Manual Chromium visual review completed at 1280x720 and 375x667: default camera angle now shows the seated worker; compact mobile panel keeps the worker/office visible while tutorial and progression remain reachable. Alternate camera angles and other device sizes remain open.
-- Continue P3 screen-reader, HUD hierarchy and responsive UX work.
-- Continue P4 worker work-state animation, variants, furniture details and performance profiling. Camera beta is constrained to 0.7–1.35 radians and zoom radius to 10–22; zoom clamping and pointer-drag orbit are automated. Alternate-angle visual/screenshot acceptance remains unverified.
-- Supabase Auth lifecycle remains unverified.
-- PWA and Android packaging remain unimplemented.
+## Verification for this working branch
+- Latest local verification at head `7628d55`: `npm test` 22/22; `npm run build` passed (466 modules; main JS approximately 1,160.62 kB minified / 287.41 kB gzip; existing Vite >500 kB chunk warning remains); full Playwright browser regression 19/19 passed, including the 20-worker profile and 30 Hz animation cadence assertion; `git diff --check` passed.
+- GitHub Actions run #106 for `7628d55` passed every step: dependency installation, production build, unit tests, Chromium installation and all browser regression tests: https://github.com/ijoolaie/empire-of-companies/actions/runs/42265597027.
+- Latest worker-mesh optimization merges the two static shoe meshes into one per employee; the animated thighs/shins remain independent. Local `npm test` 22/22, build and Playwright 19/19 pass. In the 20-worker browser fixture, scene meshes fell from 661 to 641 (20 fewer, one per employee); CPU timing remains noisy and no performance gain is claimed from this single browser sample.
+- Worker-detail slice adds one color-varied necktie mesh per employee, reusing four cached tie materials across worker variants. Browser regressions assert one/two worker tie meshes and updated shared-material counts.
+- Scene profiling now samples 0, 5, 10, 12 and 20 employees across a 20-desk stress layout. Latest SwiftShader sample: CPU frame averages 7.353 / 8.824 / 9.856 / 13.328 / 12.145 ms; p95 17.5 / 20.0 / 18.9 / 40.9 / 26.9 ms; maximum spikes 63.0 / 74.3 / 67.1 / 78.4 / 89.9 ms. Meshes 433 / 481 / 541 / 565 / 661; materials 50 / 62 / 62 / 62 / 62; lights remain 5. Timing is noisy/non-monotonic under headless SwiftShader and is diagnostic only, not real-device GPU acceptance.
+- Visual review: inspected desktop views at two orbit angles in headless Chromium/SwiftShader. Corrected the notice board to mount flat on the rear wall and moved the clock to the right wall to remove the placement conflict. Re-captured the scene after the fix; the wall-mount diagnostics report `rear-wall` and `right-wall`, with no browser page errors. This remains simulated-browser review, not physical-device/GPU acceptance.
+- GitHub Actions run #92 passed for code head `64e1e9b0771eeb8825c0c860aca1b56517534d96`: https://github.com/ijoolaie/empire-of-companies/actions/runs/42235641909
+- GitHub Actions run #99 passed for head `acbd573`; run #100 passed for current pushed head `706207b`: build, unit tests and browser regression all succeeded. https://github.com/ijoolaie/empire-of-companies/actions/runs/42246878178
+- Latest local validation: `npm test` 22/22, build passed (1,160.29 kB minified / 287.25 kB gzip; existing Vite chunk warning), browser tests 19/19, diff check passed.
 
 ## Next actions
-1. Perform visual acceptance of alternate camera angles and additional device sizes; automated responsive checks now cover six viewport sizes, but alternate-angle screenshots have not been reviewed.
-2. CI run #73 passed for 3c6d180. New rolling frame-time and scene-count instrumentation is locally verified; push and verify CI. Edge-of-office routes have unit coverage across 84 combinations. Alternate-angle visual acceptance remains open.
-3. Profile scene mesh/material counts and address the large Babylon bundle with measured changes.
-4. Keep PR #2 Draft and unmerged unless explicitly requested.
-5. Keep game saves device-local; Supabase remains identity-only.
-6. Profile worker/render-loop cost with measured frame-time and scene-count evidence before further optimization.
-## Worker work-state variation — 2026-11-06
-- Seated workers now cycle deterministically through three idle work poses without adding meshes or materials: typing (two-hand alternating key taps), reviewing (one arm resting with a subtle downward head angle and one-hand input), and thinking (raised hand near the face with a small head tilt).
-- The pose is stable by worker index and updates continuously in the existing render loop. Head transforms are reset before applying the seated pose; arrival gait remains separate.
-- Canvas diagnostic data-worker-idle-pose-types reports which of the three pose families are present in the current staffed office.
-- Added a Playwright regression that restores three workers and verifies all three pose families are present and all workers load seated.
-- Verification on this change: 22 unit tests passed; production build passed (465 modules; 1,148.65 kB main JS / 284.45 kB gzip, existing >500 kB warning); all 17 browser tests passed; git diff --check passed.
+1. PR #3 is open as Draft; review the diff and keep it unmerged until explicitly approved.
+2. Continue P4 with furniture and environmental polish; validate each slice at desktop/mobile sizes and alternate camera angles.
+3. Add real-device GPU/browser review when a physical test environment is available.
+4. Keep business simulation, Supabase Auth, PWA and Android work in their planned phases.
 
-## Latest continuation � desk equipment detail (2026-11-06)
-- Added four procedural desk accessories to every workstation: monitor stand, monitor base, keyboard and mouse. All are parented to the desk transform, so placement remains consistent.
-- Reused two shared materials for all new accessories; no external assets and no per-desk material allocation.
-- Added data-desk-detail-mesh-count and a Playwright regression verifying three restored desks expose 12 detail meshes.
-- Local verification: 22/22 unit tests, production build, 18/18 browser tests and git diff --check passed. Build output: 1,149.43 kB main JS / 284.66 kB gzip; the existing Vite >500 kB chunk warning remains.
-- CI #82 (42215360981) passed for prior head 056ba34, including build, unit tests, Chromium installation and all 17 browser tests. This desk-detail change is not yet pushed or covered by CI.
+## Latest continuation - shared book materials
+- Reused four cached color materials across eight procedural book meshes; no geometry or worker animation changed.
+- Added data-office-book-material-count=4 diagnostic and browser regression assertion.
+- Verification: unit tests 22/22; production build passed; Playwright 19/19 passed. Baseline materials decreased from 50 to 46; 20-worker fixture decreased from 62 to 58. Existing Vite chunk-size warning remains.
+- CI #108 for previous docs head passed all steps. Current optimization is locally verified and awaiting CI.
+
+## Latest continuation - cancellable desk placement
+- Desk placement can now be cancelled with Escape or a visible toolbar action; the control is shown only while placement mode is active and is localized in English and Persian.
+- Added browser regression coverage for both cancellation paths and verified no desk is added or saved.
+- Local verification: unit tests 22/22; production build passed (466 modules; main JS 1,164.73 kB minified / 288.33 kB gzip; existing Vite chunk-size warning); focused browser test 1/1; `git diff --check` passed.
+- Work is local and not yet committed. CI #119 for the earlier pushed head 72f29c5 is running.
+
+## Latest continuation - accessible account dialog
+- The player-account sign-in/register dialog now exposes `role=dialog`, `aria-modal=true`, a labelled/described relationship, a translated accessible close-button name, and explicit accessible names for the email/password fields.
+- Keyboard behavior: initial focus moves to the email field; Tab/Shift+Tab stay inside the dialog; Escape and backdrop/close-button dismissal return focus to the account opener.
+- Added a Playwright regression for modal semantics, focus trapping and focus restoration.
+- Local verification: unit tests 22/22; production build passed (466 modules; main JS 1,164.34 kB minified / 288.20 kB gzip; existing Vite chunk-size warning remains); focused browser regression 1/1; `git diff --check` passed.
+- Current local work is not yet committed. CI #116 for prior head `eb3a883` has build and unit tests passing; full browser regression is still running.
+
+## Latest continuation - merged plant foliage
+- Combined five static leaf meshes per planter into one canopy mesh; the two planters now contribute two foliage meshes instead of ten (8 fewer scene meshes).
+- Added `data-office-plant-foliage-mesh-count=2` and a Playwright assertion.
+- Verification on current local tree: unit tests 22/22; production build passed; browser regression 19/19; `git diff --check` passed. The 20-worker profile reports 633 meshes (down from 641 after the shoe merge); materials 58, lights 5. Timing remains noisy and no FPS claim is made.
+- Visual review via preview could not be completed because the preview process was not reachable from the browser capture; real-device and headed visual review remain open.
+- Committed and pushed as `6b52839f8b189b99b86d2ae56f0ed4f9d3341d34` (`perf: merge static office plant foliage`). GitHub Actions run #110 passed all steps: https://github.com/ijoolaie/empire-of-companies/actions/runs/42348858343. PR #3 remains Draft and unmerged.
+
+## Latest continuation - emissive ceiling panels
+- Added a subtle emissive component to the three existing ceiling-panel materials; no additional geometry or lights were introduced.
+- Added `data-office-ceiling-panel-count=3` and a Playwright assertion.
+- Local verification on this tree: unit tests 22/22; production build passed (existing Vite chunk-size warning); Playwright 19/19 passed; `git diff --check` passed.
+- Latest 20-worker profile: average CPU frame 11.949 ms, p95 27.5 ms, max 79.3 ms; 633 meshes, 58 materials, 5 lights. Headless SwiftShader timings are diagnostic only.
+- Physical-device and headed visual/GPU review remain open. PR #3 stays Draft and unmerged.
+
+
+## Latest continuation - planter finishing details
+- Added a dark soil surface and decorative rim to each of the two existing planters (four meshes total); foliage remains merged into two canopy meshes.
+- Added data-office-planter-detail-count=4 and a browser regression assertion.
+- Local verification: unit tests 22/22; production build passed (466 modules; existing Vite >500 kB chunk warning); targeted office-shell Playwright regression passed 1/1.
+- A full Playwright invocation reached 14 passing tests but exceeded the local 120-second process limit during the long scene-profiling test; the targeted office-shell test was rerun independently and passed. Full browser CI verification is still required for this slice.
+- GitHub Actions #111 for prior head 94a5cb passed all steps: https://github.com/ijoolaie/empire-of-companies/actions/runs/42350040612.
+- Current planter changes are local only; not yet committed or pushed. PR #3 remains Draft and unmerged.
+
+## Latest continuation - window transom detail
+- Added one horizontal transom to each of the three rear window panes, visually dividing the glazing into upper/lower sections without changing window openings or navigation space.
+- Added `data-office-window-transom-count=3` and a Playwright assertion.
+- Local verification: unit tests 22/22; production build passed (466 modules; existing Vite >500 kB chunk warning); focused office-shell browser regression 1/1.
+- Latest planter-detail head `598c9b4` passed GitHub Actions #112 in full, including browser regression: https://github.com/ijoolaie/empire-of-companies/actions/runs/42350677749.
+- PR #3 description now records the passing CI #112 and current verification. Physical-device visual/GPU acceptance remains open.
+
+## Latest continuation - window grid detail
+- Added one central vertical mullion to each of the three rear windows, creating a consistent four-pane grid with the existing edge mullions and horizontal transom.
+- Added `data-office-window-center-mullion-count=3` and a Playwright assertion.
+- Local verification: unit tests 22/22; production build passed (existing Vite >500 kB chunk warning); focused office-shell browser regression 1/1; `git diff --check` passed.
+- Previous head `592257c` passed GitHub Actions #113 in full, including browser regression: https://github.com/ijoolaie/empire-of-companies/actions/runs/42351343608.
+- Latest central-mullion change is committed/pushed separately and requires its own CI run.
+- PR #3 remains Draft, open and unmerged. Physical-device visual/GPU acceptance remains open.
+
+## Latest continuation - desk placement preview and validation
+- Added one reusable, translucent desk-footprint preview. It follows the pointer over the office floor and switches to green for a valid position and red for an invalid/overlapping position; the guide is localized in English and Persian.
+- Preview validation calls the same canPlaceDesk rule used by buildDesk, and also checks the full desk-and-chair footprint against planters, bookcase, waiting bench, entrance mat and office boundaries. Insufficient cash also marks the preview invalid.
+- Placement works from pointer movement/down events, covering mouse and touch input. Desktop clicks commit valid positions; touch requires two taps on the same valid spot so the first tap previews and the second commits. Invalid clicks do not change cash or saved desks; changing or losing the touch target clears pending confirmation. Escape and the cancel toolbar action hide the preview.
+- Added a unit test proving preview validation does not mutate state, plus a browser regression that finds invalid and valid floor positions, verifies the red/green states, checks invalid placement does not charge, and confirms valid placement commits.
+- Local verification: unit tests 24/24; production build passed (469 modules; main JS 1,179.21 kB minified / 292.47 kB gzip; existing Vite >500 kB chunk warning remains); focused desktop/touch tests 2/2; full browser suite 23/23; git diff --check passed.
+- Previous pushed head 3242c54 passed GitHub Actions #120, including build, unit tests and browser regression: https://github.com/ijoolaie/empire-of-companies/actions/runs/42353651375. This new placement-preview slice is local only and still needs its own commit/push and CI.
+- PR #3 remains Draft and unmerged. Real-device touch and visual/GPU acceptance remain outstanding.
+
+
+## Latest P4 UX slice - camera reset
+- Added a top-bar camera-reset control with an accessible label, localized in English and Persian.
+- Reset restores default alpha/beta/radius and target and clears camera inertia.
+- Local verification: unit tests 24/24; production build passed (469 modules; main JS 1,179.75 kB minified / 292.62 kB gzip); Playwright excluding the long scene-profile test 22/22; scene-profile test not rerun locally in this slice. Existing Vite chunk warning remains.
+- Current change is local pending commit/push and CI. Physical-device GPU/visual acceptance remains open.
+
+
+## Latest P4 correction - Persian camera reset label
+- Fixed the camera-reset accessible label to render actual Persian text; the existing browser regression verifies the exact Persian accessible name.
+- Local verification: 24/24 unit tests; production build passed; focused camera browser regression 1/1; diff check passed. Existing Vite chunk-size warning remains.
+- Correction is local pending commit/push and CI. Physical-device review remains open.
+
+
+## Latest continuation - mobile build-mode toolbar regression
+- Added a Playwright regression that enters desk-placement mode at 390x844, 375x667 and 320x568 and verifies all five toolbar actions remain inside the viewport.
+- Focused browser regression: 1/1 passed. Unit tests: 24/24 passed. Production build passed (469 modules; main bundle 1,179.75 kB minified / 292.62 kB gzip); existing Vite chunk-size warning remains. git diff --check passed.
+- New browser test is local pending commit/push and CI. Physical-device touch/visual acceptance remains open. PR #3 remains Draft and unmerged.
+## Latest continuation - mobile panel/toolbar separation
+- Extended the mobile desk-placement browser regression to assert the progression panel does not overlap the toolbar, in addition to keeping all five toolbar actions within the viewport at 390x844, 375x667 and 320x568.
+- Fixed the overlap by increasing the mobile panel's bottom clearance (90px at widths <=600px; 132px at widths <=380px) and adjusting its maximum height accordingly.
+- Local verification on this exact tree: unit tests 24/24; production build passed (469 modules; main JS 1,179.75 kB minified / 292.64 kB gzip; existing Vite >500 kB warning remains); full Playwright suite 24/24 passed in 2.9 minutes; `git diff --check` passed.
+- Scene profile in this run: 0/5/10/12/20 workers reported 467/511/566/588/676 meshes; materials 52/64/64/64/64; lights 5 throughout. Headless SwiftShader CPU timing is diagnostic only, not a physical-device performance claim.
+- CI #124 passed on the previous pushed head `f118e2a`; this mobile panel/toolbar fix is local and requires its own commit, push and CI run.
+- Physical-device touch/visual/GPU acceptance remains open. PR #3 remains Draft, open and unmerged.
+
+## Latest continuation - responsive notification placement and visual acceptance
+- Headless Chromium visual captures reviewed at desktop 1440x900 and mobile 390x844; desk-placement mode also reviewed at 320x568. The office shell, entrance, windows, desks, workers and furniture render without obvious clipping in these captures. This is simulated-browser review, not physical-device acceptance.
+- Found that the placement-guide notification floated over the wrapped top bar on narrow mobile screens. Moved notifications into the existing scrollable office panel and added a polite live-region status; removed the floating toast layer.
+- Extended the mobile build-mode regression to assert the notification stays in the panel below the top bar and no floating toast is present. The touch-placement regression now checks the inline notification.
+- Local verification on this tree: unit tests 24/24; production build passed (469 modules; main JS 1,179.78 kB minified / 292.63 kB gzip; existing Vite >500 kB warning remains); full Playwright suite 24/24 passed in 2.9 minutes; `git diff --check` passed. Targeted responsive/camera/office suite 6/6 passed.
+- The 320x568, 375x667 and 390x844 build-mode samples have no horizontal overflow; all five actions remain inside the viewport and the panel stays above the toolbar. No browser page/console errors were recorded by the visual-check script.
+- Code commit `ba64876` is pushed; branch head `85112bd` is under CI #127. Physical-device headed desktop/mobile and GPU acceptance remain open. PR #3 remains Draft and unmerged.
+## Latest P4 graphics foundation - lighting, shadows and procedural surfaces
+- Added a 1024px blurred directional shadow map with a curated caster set (major architecture, furniture, plants and primary worker meshes); shadows are received by the floor, rug and office walls. New desks and worker meshes register their principal shadow casters when created.
+- Tuned hemispheric/sun lighting and scene exposure/contrast; StandardMaterials now use a restrained specular response.
+- Added cached, deterministic 512x512 procedural surface textures for stone floor, plaster walls and walnut desk wood. No external image assets or paid dependencies were introduced.
+- Added a one-time post-first-render material diagnostic refresh so Babylon's lazily created shadow material is included in the baseline before worker-material regression comparisons.
+- Local verification on this code: `npm run build` passed (526 modules; main JS approximately 1,333 kB minified / 329 kB gzip; existing Vite chunk-size warning remains); `npm test` 24/24 passed; full Playwright browser suite 24/24 passed. Headless SwiftShader scene profile (0/5/10/12/20 workers) averaged 8.714/9.702/11.705/12.500/15.030 ms CPU frame time; diagnostic only, not real-device GPU performance. `git diff --check` passed.
+- This is the first graphics-foundation slice, not completion of the art overhaul. Furniture/character model redesign, richer environment geometry, final visual review and physical-device/GPU acceptance remain open. PR #3 remains Draft and unmerged.
+## Latest graphics pass - player character, worker faces and office furniture
+- Added a persistent player-founder avatar in the right-front reception corner, independent of employee count. It has executive clothing, lapels, shirt/tie, hands, shoes, badge, a floating FOUNDER nameplate, hair, eyes/irises/pupils, brows, ears, nose, mouth and beard detail. A matching feature wall adds five vertical wood slats and an emblem. The avatar footprint is included in worker route avoidance.
+- Added worker facial features and merged same-material parts into six meshes per worker to limit draw calls. Added browser assertions for avatar presence/role/nameplate, feature-wall slats and worker face-detail counts.
+- Rebuilt desk chairs with upholstered seat/back cushions, armrests, gas lift, metal star base and caster wheels. Chair components are merged by material into three meshes per desk. Added a 512x512 procedural monitor dashboard with workspace header, performance graph, task-flow bars, team activity and project-status rows.
+- Local verification: production build passed (526 modules; main bundle 1,345.20 kB minified / 332.19 kB gzip; existing Vite >500 kB warning remains); unit tests 24/24 passed; all 24 non-profile Playwright browser tests passed in three groups; focused chair/avatar tests passed; `git diff --check` passed. Headless SwiftShader profile (0/5/10/12/20 workers) averaged 10.033/13.285/16.289/16.296/21.105 ms CPU frame time; 20-worker p95 was 50.6 ms. Diagnostic only, not real-device GPU performance.
+- This is a stronger first art pass, not a final character asset pipeline. Facial expressions/rigged animation, more furniture accessories, broader environment geometry and headed physical-device/GPU review remain open. CI for this slice is pending. PR #3 remains Draft and unmerged.
+
+## Latest P4 anime-character, player-control and office-upgrade pass
+- Worker heads now use a dedicated pivot. Eyes, irises, pupils, highlights, brows, ears, cheeks, nose, mouth, fringe and layered hair locks share one local face orientation; workers face the camera initially and turn along their arrival route.
+- Face mesh merging uses unique materials, avoiding Babylon Positions are required runtime errors. Face details remain grouped efficiently (six meshes per worker; 12 for two workers).
+- The founder avatar has larger anime-inspired eyes, iris/pupil highlights, cheek accents, layered hair spikes and selective outlines; it is visible near the front of the office and faces the camera at startup.
+- Founder movement works with WASD and arrow keys, normalized diagonal speed, walking limb/shoe animation, office-boundary and furniture/desk collision checks. Camera keyboard movement is disabled so these keys control the founder instead of rotating the camera.
+- Worker arrival animation is 3.2 seconds and its timer starts after model construction, so model-building time does not consume the visible walk-in.
+- Office upgrades now alter wall, floor, wood, chair and metal finishes across four visual tiers. Tier 2 unlocks a ceiling beam and three pendant lamps; tier 3 adds a wall management display and rug trim; tier 4 adds an executive wall plaque. The visual tier is restored from the saved office level after reload.
+- Local verification on this exact tree: npm test 24/24 passed; npm run build passed (526 modules; main JS 1,355.26 kB minified / 335.02 kB gzip; Vite existing >500 kB chunk warning remains); full Playwright suite 27/27 passed in 5.4 minutes; focused founder/face/upgrade suite 3/3 passed; git diff --check passed.
+- Headless SwiftShader scene profile (0/5/10/12/20 workers): average CPU frame times 12.020/15.429/17.114/18.607/23.065 ms; at 20 workers p95 29.7 ms, 889 meshes, 100 materials and 5 lights. These are headless software-rendering diagnostics only, not real-device GPU or FPS claims.
+- Changes are local and await commit/push plus a new GitHub Actions run. PR #3 remains Draft, open and unmerged. Physical-device headed desktop/mobile review and GPU acceptance remain open; do not mark P4 accepted or begin P5 yet.
+## Latest UI art direction pass - executive management HUD
+- Reworked the browser HUD with a restrained executive visual system: dark glass surfaces, fine borders, warm brass accents, cyan status accents, clearer typographic hierarchy, refined action states and a floating command dock. The 3D office scene and game mechanics were not altered.
+- Improved mobile toolbar wrapping and spacing. The five-action build-mode toolbar now stays inside 390x844, 375x667 and 320x568 viewports; the status notice and progression panel remain separated from the command dock.
+- Local verification: production build passed (526 modules; existing Vite >500 kB chunk-size warning remains); unit tests 24/24 passed; focused responsive browser regressions 4/4 passed; diff check passed. A full 27-test browser run is currently running locally.
+- Previous GitHub Actions #131 completed with 26/27 browser tests passing; the sole failure was the 20-worker scene-profile CPU timing attribute remaining zero in the hosted Linux browser after 45 seconds. Build and unit tests passed. This is a headless performance-diagnostic issue, not a visual regression; do not report the run as green.
+- Changes are local only pending full browser-suite result, commit/push and a new CI run. PR #3 remains Draft, open and unmerged. Headed physical-device desktop/mobile visual and GPU acceptance remain open; P4 is not yet accepted.
+
+## UI HUD verification update - commit a732457
+- Full local Playwright browser suite completed: 27/27 passed in 5.4 minutes. The 20-worker scene profile passed locally: average CPU frame 11.249/12.318/15.100/17.776/22.370 ms for 0/5/10/12/20 workers; 20-worker p95 31.1 ms, 889 meshes, 100 materials and 5 lights (headless SwiftShader diagnostic only).
+- GitHub Actions #132 (run 42478680096) has passed production build and unit tests; hosted browser regression is still in progress at this update.
+
+
+## Approved Office Empire visual direction and implementation priority — 2026-11-08
+- User approved a premium cinematic semi-realistic/stylized 3D office direction, combined with anime-inspired founder/workers and the executive HUD. This is not a photorealism requirement. Detailed plan: [VISUAL_DIRECTION_AND_IMPLEMENTATION_PLAN.md](VISUAL_DIRECTION_AND_IMPLEMENTATION_PLAN.md).
+- Feasibility: high because the existing Babylon.js/TypeScript scene already has procedural office geometry/furniture, founder and worker characters, four office tiers, lighting/shadows, procedural materials, bilingual responsive HUD and interaction systems. The next work is refinement and optimization, not a rebuild.
+- Main measured risks from the latest recorded head: 20-worker diagnostic scene has 889 meshes, 100 materials and 5 lights; production main bundle is approximately 1,355 kB minified / 335 kB gzip, with the existing Vite chunk warning. These values require investigation and optimization; they are not proof of unacceptable runtime performance by themselves.
+- Priority order: P4-A baseline/bundle/scene audit; P4-B composition and lighting; P4-C materials/environment; P4-D character presentation; P4-E HUD/gameplay readability; P4-F optimization and real-device acceptance.
+- No P5/PWA/Android/deep business simulation until P4 exit criteria pass. PR #3 remains Draft and unmerged. Physical-device GPU/touch review remains outstanding.
+- No runtime code changes are included in this documentation update.
+
+## 2026-11-08 implementation update
+- Commit pushed: c1e1a3e49878116844b35c124367fbb379189abd.
+- Build: 526 modules; main entry 1,356.84 kB minified / 335.59 kB gzip; Vite chunk warning remains.
+- Unit tests 24/24; full Playwright 28/28 in 4.4 minutes; git diff check passed.
+- Latest 20-worker SwiftShader profile: 889 meshes / 100 materials / 5 lights; average 27.163 ms, p95 43.5 ms, max 90 ms. Not real GPU evidence.
+- Auth SDK now loads on account interaction; configured build experiment reduced initial main chunk by 60.22 kB gzip.
+- First visual refinement: warm limestone/ivory/navy/walnut palette, procedural city view on three windows, short-desktop panel/topbar separation and mobile hint/toolbar separation.
+- CI #132's two failures were a time-sensitive worker-arrival assertion and a 120-frame profile timing timeout. Local regression fixes pass; new hosted CI is not yet confirmed.
+- PR #3 remains Draft/open/unmerged. P4 physical-device acceptance remains outstanding.
+
+## 2026-11-08 lighting continuation (local; pending commit/push)
+- Refined existing light colors/intensities: warmer hemispheric and directional key light, two warm office fills and one restrained cool fill; no additional lights. Shadow blur kernel increased 14 -> 18; exposure 1.12 -> 1.06 and contrast 1.12 -> 1.16.
+- Corrected Babylon.js light color property names after TypeScript caught the invalid `diffuseColor` member; use `diffuse` for these light types.
+- Verification on current tree: production build passed (526 modules; main entry 1,356.98 kB minified / 335.65 kB gzip; Vite chunk warning remains); unit tests 24/24; full Playwright 28/28 in 4.4 minutes; `git diff --check` passed.
+- Headless SwiftShader scene profile (0/5/10/12/20 workers): average 16.747/17.463/26.603/27.937/32.487 ms CPU frame; 20-worker p95 68.8 ms; 889 meshes, 100 materials, 5 lights. Diagnostic only; not real GPU/FPS evidence.
+- Reviewed desktop 960x540 and mobile 390x844 headless Chromium captures. No obvious HUD overlap; physical device review remains open.
+- GitHub Actions runs for c1e1a3e and docs 56c3884 are both green (run IDs 42484005222 and 42484169340). The current lighting diff still needs a new CI run after push.
+- PR #3 remains Draft/open/unmerged. Camera focal hierarchy, alternate camera angles, physical-device GPU/touch acceptance remain open.
+
+## 2026-11-08 — Camera focal hierarchy pass
+- Applied the approved composition direction to the default Babylon.js camera: the playable founder and central work area are brought closer to the visual center while the rear windows remain in frame.
+- Default/reset camera: alpha π/4, beta 1.05, radius 16.5, target (0, 0.9, 0.85). The reset action now restores the same focal composition.
+- Added canvas diagnostics for camera target X/Y/Z and browser regression assertions for initial framing, bounded zoom/orbit, and reset consistency.
+- Local verification: production build passed (526 modules; main entry 1,357.13 kB minified / 335.68 kB gzip; existing Vite >500 kB chunk warning remains); unit tests 24/24; focused camera regression passed; full Playwright suite 28/28 in 3.6 minutes; `git diff --check` passed.
+- Scene profile remains 889 meshes / 100 materials / 5 lights at 20 workers. SwiftShader timing is diagnostic only; no GPU/FPS claim.
+- This camera slice is locally verified and awaits commit/push and its own hosted CI run. PR #3 remains Draft, open and unmerged. Headed physical-device visual/GPU/touch acceptance remains open; P4 is not accepted and P5 remains deferred.
+
+## 2026-11-08 — Authoritative handoff: approved premium graphics direction
+
+**User approval:** The user explicitly approved the generated premium Office Empire visual concept on 2026-11-08. Treat this as the active art-direction decision and do not ask for approval of the overall style again.
+
+### Approved target
+- Premium, high-end, cinematic 3D office; polished stone/marble, refined wood, glass and metal, carefully controlled reflections and believable material response.
+- Warm architectural/golden practical lighting balanced with cool city-window light; rich but readable contrast and soft, intentional shadows.
+- Professional anime-inspired founder and staff characters, consistent with the stylized 3D world (not photorealistic).
+- Executive dark-navy/glass HUD with restrained gold/brass highlights and limited cyan accents.
+- Large, aspirational office atmosphere and city skyline as the visual north star. Adapt the reference to the actual playable office, camera, game state and responsive layout; do not copy its fictional statistics, labels, or every UI panel literally.
+
+### User acceptance notes / constraints
+- The user accepted the current camera framing (item 1: yes) and said the second reviewed aspect was good (item 2: no change).
+- The side panel is visibly positioned toward the front of the environment. Preserve its current placement for now; do not move or redesign it without showing a focused preview and receiving approval.
+- The generated concept is an approved art-direction reference, not proof that the game already looks like it and not a pixel-perfect implementation spec.
+- The user expects the assistant to lead the professional design work: prepare a concrete visual proposal, show it, obtain approval, then implement that approved proposal. Do not substitute camera tweaks, diagnostics, or test work for the promised graphics design.
+- For each materially new visual treatment (environment, furniture/materials, lighting, characters, HUD/layout), show a preview first and wait for explicit approval before implementing that treatment. The overall premium art direction itself is already approved.
+
+### Next work — graphics first
+1. Audit the current rendered scene and identify the highest-impact visual gap against the approved reference.
+2. Prepare a specific, high-quality visual proposal for the existing playable office (not another generic mood board). Show the proposed composition/material/lighting/furniture treatment and explain exactly what will change.
+3. Wait for explicit user approval of that concrete proposal.
+4. Implement only the approved slice in Babylon.js/TypeScript, keeping gameplay, navigation, responsive HUD and performance constraints intact.
+5. Capture comparable desktop/mobile views; inspect them visually where possible. Run build, unit and browser regressions, git diff --check, then verify hosted CI for the pushed commit.
+6. Update this handoff and status with exact commit/test/CI evidence. Never describe a generated mockup or headless diagnostic as implemented visual acceptance.
+
+### Release gates remain unchanged
+- P4 graphics and real-device/headed desktop/mobile GPU/touch acceptance are not complete.
+- P5 Supabase identity/auth, PWA, Android and broader business simulation remain deferred until P4 is accepted.
+- PR #3 must remain Draft/open/unmerged. Never merge without the user's explicit instruction.
+
+### Repository checkpoint
+- Branch: feat/p4-office-environment
+- Local HEAD at this handoff: b652cfb654beb474ff2fcc5a15fe5ab7bce398dd (feat: refine office camera composition)
+- The camera composition refinement is implemented and pushed; it is not the promised premium graphics redesign.
+- PR #3: https://github.com/ijoolaie/empire-of-companies/pull/3
+
+## 2026-11-08 — Graphics implementation status
+
+P4 graphics work has moved from planning into implementation. First procedural premium baseline pass is in the working tree: slate exterior ground, brighter ivory floor and city glazing, navy/champagne-gold architectural details, pendant fixtures/warm point lights, and lower cutaway front/right walls to expose more of the room. The side management panel and accepted camera composition were preserved.
+
+Local build and unit tests passed; focused office-shell browser regression passed. Full Playwright browser regression passed: 28/28 tests. This does not complete P4: visual refinement, final screenshot comparison, real headed/GPU/touch acceptance and explicit user sign-off remain open. P5 remains deferred.
+
+Screenshot review artifact: artifacts/office-premium-pass.jpg (1280x720 local Chromium capture; zero page errors). It is a headless visual diagnostic, not physical-device/GPU acceptance.
+
+## Latest continuation - premium furniture and semi-realistic character pass (local, not pushed)
+- Furniture pass: walnut desk edge banding, brass collars, ergonomic rounded lumbar/headrest cushions, upholstery seam accents, refined monitor bezel/camera, keyboard keycaps (merged into one mesh per desk) and mouse wheel. Existing room scale, camera framing and management panel were not changed.
+- Character pass: worker torsos now use smoother tailored silhouettes; jacket lapels and shirt fronts add layered clothing; heads use improved proportions and smoother geometry; hair uses side-part/fringe shapes rather than spiky anime locks; subtle beard details add variation. Founder hair was similarly refined while preserving movement controls, seated poses, arrival routing and desk assignment.
+- Added canvas diagnostics for the semi-realistic business character style and tailored-jacket counts, with Playwright assertions.
+- Local verification: production build passed (526 modules; main JS 1,364.46 kB minified / 337.53 kB gzip; existing >500 kB Vite chunk warning); unit tests 24/24; focused character/material/pose/20-worker profile tests 4/4; targeted furniture test 1/1; `git diff --check` passed.
+- The 20-worker headless profile in the focused run reported 1,177 meshes and 109 materials (8 lights); average frame sample 39.793 ms, p95 52.9 ms, max 162.8 ms. This is a diagnostic headless run, not a device FPS claim. The full browser suite is still running; two narrow-viewport tests have failed and require investigation. Do not mark full browser acceptance green.
+- Current changes are local only. PR #3 remains Draft/open/unmerged. Physical headed desktop/mobile and real-device GPU/touch acceptance remain outstanding.
+- Follow-up isolated rerun of the two narrow-viewport tests passed 2/2. The full 28-test run reported 26 passed and two transient browser-server/canvas startup failures (`#game` null and `ERR_CONNECTION_REFUSED`); the two failed tests passed when rerun alone. Full-suite acceptance is therefore not marked green pending a clean complete rerun.
+- Character screenshot saved locally as `artifacts/office-character-premium-pass.jpg` (1280x720 Chromium capture); this is a real app capture, not an AI concept render. Visual inspection on a headed physical device remains outstanding.
+
+
+## Character refinement follow-up � 2026-11-09 (local verification complete)
+- Visual review of the real application screenshot exposed residual stylized elements that the prior pass had not removed. Corrected the actual geometry: removed founder/worker blush marks and worker anime hair spikes; refined eye proportions and smoothed the worker hair cap.
+- Worker clothing now separates a neutral shirt front and tie from a dark tailored jacket. Four reusable jacket color/material variants distinguish hires; facial hair is conditional rather than applied uniformly.
+- Added browser assertions confirming zero worker anime hair-lock/blush meshes and zero founder anime blush meshes. Updated material-count expectations to account for the new reusable jacket material.
+- Latest local checks: production build passed (526 modules; 1,364.36 kB minified main JS / 337.49 kB gzip; Vite chunk-size warning remains); unit tests 24/24; complete Playwright browser suite 28/28 passed in 3.9 minutes; `git diff --check` passed.
+- 20-worker headless scene profile: 1,175 meshes, 1,152 active meshes, 112 materials, 8 lights; average sample 35.633 ms, p95 46.5 ms, max 152.6 ms. These are diagnostic headless measurements, not real-device FPS guarantees.
+- Refreshed actual-app screenshot: `artifacts/office-character-premium-pass.jpg`.
+- Changes are local pending commit/push. PR #3 stays Draft/open/unmerged. Real headed GPU/touch acceptance remains outstanding; P5 remains deferred.
+
+## Employee appearance diversity follow-up — 2026-11-09
+- Added four distinct, non-spiky hairstyle silhouettes (short crop, side-swept, brushed-back and soft-wave), plus three head/face proportions and three seated body silhouettes. Reused existing materials and merged hair/face details to avoid per-worker material growth.
+- Added canvas diagnostics and Playwright assertions for the hairstyle set, face-shape count and body-shape count. The 20-worker profile still reports 1,175 meshes, 1,152 active meshes, 112 materials and 8 lights; latest full-suite sample: average 29.140 ms, p95 46.4 ms, max 134.6 ms. Headless SwiftShader diagnostics only, not real-device FPS.
+- Production build passed; unit tests 24/24; focused diversity and 20-worker browser checks 2/2; complete Playwright browser suite 28/28 passed in 3.4 minutes with the new assertions; `git diff --check` passed.
+- New actual-app capture: `artifacts/office-character-variation-pass.jpg` (1280x720 Chromium, 4 workers; diagnostics show all four hairstyles; no page errors). It is a headless capture, not headed physical-device acceptance.
+- P4 remains in progress. PR #3 remains Draft/open/unmerged; physical headed GPU/touch acceptance remains outstanding; P5 remains deferred.
+
+## Headed GPU acceptance and favicon polish — 2026-11-09
+- Ran the production build in a visible headed Chrome session at 1280x720 using the host AMD Radeon(TM) Graphics adapter through ANGLE / Direct3D 11 (hardware-backed renderer; not SwiftShader). Four workers loaded with all four hairstyle types and three face/body shapes.
+- Browser diagnostics after favicon correction: zero page/console errors, zero HTTP responses >=400, and zero failed requests. The prior 404 was only the missing `/favicon.ico`; added a project SVG favicon at `public/favicon.svg` and linked it from `index.html`.
+- Added a Playwright regression test for the SVG favicon. Full browser suite: 29/29 passed in 3.8 minutes; unit tests: 24/24; production build passed (526 modules); `git diff --check` passed.
+- Captured `artifacts/office-headed-gpu-review.jpg` at 1280x720 from the visible headed Chrome session. This verifies one desktop GPU/browser configuration only; it is not a physical mobile/touch acceptance or a multi-device performance guarantee.
+- Headless SwiftShader 20-worker profile during the complete suite: 1,175 meshes, 1,152 active meshes, 112 materials, 8 lights; average 35.287 ms, p95 70.4 ms, max 138.4 ms. Do not compare directly with the headed GPU run.
+- PR #3 remains Draft/open/unmerged; P5 remains deferred. Await hosted CI for this new favicon/test commit before considering the slice complete.
+
+## 2026-11-09 — 20-worker headed AMD GPU acceptance and hosted CI
+
+- Re-ran the production app in a visible headed Chromium session at 1280x720 with a seeded 20-worker / 20-desk save.
+- WebGL renderer reported by WEBGL_debug_renderer_info: ANGLE (AMD, AMD Radeon(TM) Graphics, Direct3D11); this was hardware-backed D3D11, not SwiftShader.
+- All 20 workers loaded; all four hairstyle types and all three face/body shape variants were present.
+- Captured the actual app at `artifacts/office-headed-20-worker-review.jpg`.
+- Single-run frame diagnostics: average CPU frame 17.17 ms, p95 19.1 ms, max 19.6 ms; 1,175 meshes, 1,152 active meshes, 112 materials, 8 lights.
+- Runtime diagnostics: zero JavaScript page errors, zero failed network requests and zero HTTP responses >=400.
+- These measurements are one desktop/browser/GPU sample only. They are not an FPS guarantee, mobile result or multi-device acceptance.
+- GitHub Actions Build run #147 (ID 42608077550) for commit `4132d88c1635cd3e66fd9f42644a880392bbba4a` completed with conclusion `success`, including hosted browser regression.
+- Temporary test script and local preview server were removed/stopped. The only new worktree artifact is the headed 20-worker screenshot.
+- PR #3 remains Draft/open/unmerged. Physical mobile/touch acceptance and user sign-off remain outstanding. P5 remains deferred.
+
+## 2026-11-09 — Hosted CI #148 and current-scene visual audit
+
+- Hosted GitHub Actions Build run #148 (ID 42626297256) for commit `1412371b888a9ec05bb1b457f224c8adfc759fd8` completed with conclusion `success`. npm ci, production build, unit tests, Chromium installation and browser regression all passed.
+- Inspected the actual headed AMD/D3D11 20-worker capture at `artifacts/office-headed-20-worker-review.jpg` (1280x720).
+- Visual audit: the office interior has the intended warm stone/navy/walnut/gold materials, but the office currently reads as a small floating room on a very large, mostly empty gray exterior ground plane. The panoramic city backdrop is visually weak at the accepted default camera framing, so the scene lacks a convincing high-rise/penthouse context beyond the windows.
+- The accepted camera framing, room footprint, management panel placement, desk positions, and gameplay interactions are constraints and must remain unchanged.
+- Proposed next visual slice (NOT implemented): turn the existing exterior ground around the office into a restrained premium rooftop terrace. Keep the playable interior footprint exactly 10x8 and the camera unchanged. Replace the blank gray appearance with dark architectural pavers and subtle joints, add a slim champagne-brass perimeter reveal and low glass safety balustrade only around the outer rooftop edge, plus a restrained distant city silhouette/haze behind the existing three window panes. Keep the entrance/arrival approach clear; no new UI, no moved furniture, and no changes to worker navigation or desk placement. Reuse a small set of materials and static merged meshes to control draw calls.
+- This proposal requires explicit user approval before implementation. The two generated broad office concept images are not faithful to the current game composition and are not treated as implementation previews or accepted references.
+- PR #3 description now records run #148 success. PR remains Draft/open/unmerged; physical mobile/touch acceptance and user sign-off remain outstanding; P5 stays deferred.
+
+## Character art finalization (active - 2026-11-09)
+
+Priority changed by user: finalize worker character graphics BEFORE the rooftop terrace. The terrace direction is approved but deferred.
+
+- External free assets with valid licenses are now allowed. Prefer CC0 assets and retain exact source/license provenance.
+- Candidate retained at assets/character-source/innerscene/harper-locomotion.glb; see its adjacent README for source URL, license and technical inventory.
+- Candidate technical facts: 19,520,324-byte GLB, 12 meshes, 12 materials, 56-joint skin, seven animation groups; Babylon.js 8.56.2 import smoke test passed.
+- A static seated-office candidate was rejected because it has no armature or animation. No game character code has been changed yet.
+- Do not mark the character work complete based on import success. Acceptance requires high-quality visible face/hair/clothing, convincing seated desk poses, preserved walk/arrival and work-state animations, diverse worker appearances, and a verified 20-worker runtime profile.
+- The old procedural worker implementation remains active until the replacement passes actual-app visual and browser tests.

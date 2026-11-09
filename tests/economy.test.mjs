@@ -1,10 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  buildDesk, createInitialState, earnForElapsed, hireWorker, incomePerSecond,
+  buildDesk, canPlaceDesk, createInitialState, earnForElapsed, hireWorker, incomePerSecond,
   OFFLINE_CAP_SECONDS, parseGameState, serializeGameState, upgradeCost, upgradeOffice
 } from '../src/economy.ts';
 import { OBJECTIVES, playerLevelForXp, syncObjectives, xpIntoCurrentLevel } from '../src/progression.ts';
+import { canDeskFitOffice } from '../src/office-layout.ts';
 
 test('new game has valid starter economy and progression defaults', () => {
   const state = createInitialState(1_000);
@@ -24,6 +25,16 @@ test('hiring requires an empty desk and enough cash', () => {
   assert.equal(state.workers, 2);
   assert.equal(state.cash, 9_500);
   assert.equal(hireWorker(state), false);
+});
+
+test('desk preview validation matches the build rules without mutating state', () => {
+  const state = createInitialState();
+  const cash = state.cash;
+  assert.equal(canPlaceDesk(state, { x: 4, z: 2 }), true);
+  assert.equal(canPlaceDesk(state, { x: 0, z: -1 }), false);
+  assert.equal(canPlaceDesk(state, { x: 9, z: 9 }), false);
+  assert.equal(state.cash, cash);
+  assert.equal(state.desks.length, 2);
 });
 
 test('building a desk charges once and rejects overlap or invalid coordinates', () => {
@@ -151,4 +162,12 @@ test('player XP maps to bounded levels and progress within the current level', (
   assert.equal(xpIntoCurrentLevel(250), 50);
   assert.equal(xpIntoCurrentLevel(1_000_000), 100);
   assert.equal(OBJECTIVES.length, 3);
+});
+
+test('desk footprint must fit the office and avoid fixed furniture', () => {
+  assert.equal(canDeskFitOffice({ x: 2, z: 2 }), true);
+  assert.equal(canDeskFitOffice({ x: 4, z: -2 }), false); // planter
+  assert.equal(canDeskFitOffice({ x: 4, z: -1 }), false); // bookcase
+  assert.equal(canDeskFitOffice({ x: -4, z: 1 }), false); // waiting bench
+  assert.equal(canDeskFitOffice({ x: 0, z: 3 }), false); // entrance mat / front edge
 });

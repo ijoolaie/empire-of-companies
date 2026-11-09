@@ -112,10 +112,12 @@ export function hireWorker(state: GameState): boolean {
   return true;
 }
 
+export function canPlaceDesk(state: Pick<GameState, 'desks'>, position: DeskPosition): boolean {
+  if (!validDeskPosition(position) || state.desks.length >= 200) return false;
+  return !state.desks.some(d => Math.abs(d.x - position.x) < 2 && Math.abs(d.z - position.z) < 2);
+}
 export function buildDesk(state: GameState, position: DeskPosition): boolean {
-  if (state.cash < DESK_COST || state.desks.length >= 200 || !validDeskPosition(position)) return false;
-  const overlaps = state.desks.some(d => Math.abs(d.x - position.x) < 2 && Math.abs(d.z - position.z) < 2);
-  if (overlaps) return false;
+  if (state.cash < DESK_COST || !canPlaceDesk(state, position)) return false;
   state.cash -= DESK_COST;
   state.desks.push({ x: position.x, z: position.z });
   return true;

@@ -1,11 +1,10 @@
 # Work Breakdown Structure — Empire of Companies
 
-Last reviewed: 2026-11-06 — P3 accessibility CI verified; P4 procedural worker slice added locally
+Last reviewed: 2026-11-08 — approved Office Empire art direction and P4 implementation order recorded
 Owner: Product / engineering
 Status: Living plan; task status is only changed after observable verification.
 
 ## Product definition and release boundary
-
 A browser-first, bilingual 3D idle management game. The player starts with one small office, builds productive capacity, hires staff, earns and reinvests cash, unlocks departments and companies, and grows a business empire. The first release is a polished, stable vertical slice, not an endless content catalogue.
 
 ### Product constraints
@@ -17,198 +16,59 @@ A browser-first, bilingual 3D idle management game. The player starts with one s
 - Procedural 3D art first; free/licensed assets allowed with provenance records. Blender is not a prerequisite.
 - Public GitHub repository, explicitly approved by the user.
 - No feature is complete until its acceptance checks pass.
+- Approved visual direction: premium cinematic semi-realistic/stylized office + anime-inspired characters + executive HUD; no photorealism requirement.
 
-## Phase 0 — Direction, scope and continuity
-**Status: complete**
+## P4 — Approved Office Empire visual slice (active; top priority)
+The user approved the concept on 2026-11-08. Detailed feasibility, risks, implementation order and acceptance criteria are in [docs/VISUAL_DIRECTION_AND_IMPLEMENTATION_PLAN.md](VISUAL_DIRECTION_AND_IMPLEMENTATION_PLAN.md).
 
-0.1 Define game concept, target platform and first-release boundary.  
-0.2 Select technology stack and repository structure.  
-0.3 Record privacy, save ownership, authentication and asset constraints.  
-0.4 Create roadmap, status, development guide and session handoff.  
-0.5 Establish GitHub Actions build.
+### P4-A — Baseline and technical budget (complete locally on 2026-11-08)
+- [x] Reconfirm branch head and worktree state before code changes.
+- [x] Run/confirm production build, unit suite and full browser suite on the exact head (build pass; 24/24 unit; 28/28 browser).
+- [x] Capture desktop 960x540 and mobile 390x844 reference views (headless SwiftShader; physical device still pending).
+- [x] Record scene mesh/material/light counts and production bundle/chunk sizes.
+- [x] Identify the main Babylon.js chunk and defer Supabase auth loading to account interaction.
+- [x] Separate SwiftShader/CI diagnostics from real GPU/device evidence; real-device acceptance remains a P4-F gate.
 
-**Exit:** decisions and current state are documented; baseline CI build has passed.
+### P4-B — Visual composition and lighting (active; first visual refinement pushed)
 
-## Phase 1 — Reproducible engineering foundation
-**Status: complete**
+Initial pass on c1e1a3e: warm limestone/ivory/navy/walnut palette, procedural city skyline texture on three window panes, short-desktop HUD spacing, and mobile movement-hint spacing. Lighting refinement is locally verified on the current uncommitted tree: warm hemispheric/sun lighting, two warm and one cool fill light, softer shadow kernel, and tighter exposure/contrast. Next: camera focal hierarchy and alternate-angle review. Latest local checks: build pass, 24/24 unit, 28/28 browser; SwiftShader only.
+- [ ] Refine camera framing and scene focal hierarchy.
+- [x] Balance warm/cool lighting, exposure, shadow softness and contrast (first pass locally verified; final art-direction review still open).
+- [ ] Ensure entrance, reception/founder, employee work area and windows read as one space.
+- [ ] Prefer reuse/tuning of current lights over adding more lights.
+- [ ] Verify alternate camera angles and navigation clearance.
 
-1.1 Pin supported Node major version in project docs and CI.  
-1.2 Generate and commit package-lock.json using the project npm version.  
-1.3 Replace npm install with npm ci in CI.  
-1.4 Verify clean dependency install and production build locally and in CI.  
-1.5 Add formatting/lint rules only if they can be enforced without slowing feature work.  
-1.6 Add test runner and a minimal test command.  
-1.7 Add a pull-request check that runs build and tests.  
-1.8 Document environment variables; ensure .env.local and secrets remain ignored.
+### P4-C — Materials and environment finish
+- [ ] Refine existing stone, plaster, walnut, upholstery, glass and metal response.
+- [ ] Reuse cached procedural textures and shared materials.
+- [ ] Consolidate repeated static furniture details where safe.
+- [ ] Avoid unique high-resolution textures or one-off meshes without measured value.
 
-**Exit:** a fresh clone installs deterministically and build/tests pass locally and in CI.
+### P4-D — Character presentation
+- [ ] Refine founder/worker silhouette, clothing, facial readability and pose variety.
+- [ ] Preserve movement, collision, route avoidance, arrival and employee/desk behavior.
+- [ ] Prefer shared materials and simple animation over heavyweight rigs.
+- [ ] Verify appearance at normal gameplay camera distance.
 
-## Phase 2 — Playable core loop
-**Status: complete; PR #1 merged after local interactive browser acceptance**
+### P4-E — HUD and gameplay readability
+- [ ] Validate approved executive HUD at 320x568, 375x667, 390x844 and desktop sizes.
+- [ ] Verify no overlap between top bar, progression panel, status notices and command dock.
+- [ ] Audit Persian/English copy, RTL/LTR, keyboard access and touch target sizes.
+- [ ] Avoid duplicative decorative panels.
 
-### 2A. Game state and persistence
-2.1 Define a versioned GameState schema.  
-2.2 Validate every loaded field and apply safe defaults.  
-2.3 Add save migration from the prototype's previous keys/schema.  
-2.4 Save after meaningful actions and periodically without excessive writes.  
-2.5 Handle malformed, missing, and future-version saves safely.  
-2.6 Add explicit reset-save action with confirmation.  
-2.7 Add import/export backup in a later quality task.
+### P4-F — Performance and acceptance
+- [ ] Reduce avoidable draw calls, material duplication and unnecessary per-frame work.
+- [ ] Investigate main bundle size and safe code splitting.
+- [ ] Keep unit, build and full Playwright checks green.
+- [ ] Make scene-profile regression deterministic; document timing-only CI anomalies accurately.
+- [ ] Complete headed desktop/mobile and physical-device GPU/touch review.
+- [ ] Record tested devices, browser versions, viewport, GPU and observed performance.
+- [ ] Obtain user acceptance of completed P4 experience before moving to P5.
 
-### 2B. Economy simulation
-2.8 Define currency, starting cash, income rates and cost curves in one module.  
-2.9 Derive income from staffed production capacity and upgrades.  
-2.10 Use elapsed-time accumulation that does not lose fractional seconds.  
-2.11 Prevent negative balances and invalid worker/desk states.  
-2.12 Cap offline earnings and ignore negative/future clock deltas safely.  
-2.13 Show cash, rate, workers, capacity, level and offline reward clearly.  
-2.14 Add deterministic unit tests for income, costs, hiring, building and upgrades. (Implemented: 10 tests; CI run 41988139202 passed.)
-
-### 2C. First playable actions
-2.15 Place a desk on valid floor cells. (Bounds, overlap and interactive browser placement verified.)
-2.16 Reject overlap, wall, blocked and out-of-bounds placements.  
-2.17 Hire only when an unstaffed desk and enough cash exist.  
-2.18 Show staff assignment on the 3D desk/worker. (Deferred to Phase 4 worker visuals.)
-2.19 Upgrade office and expose the exact effect and cost.  
-2.20 Provide clear success/failure feedback and prevent double-click exploits.
-
-### 2D. First-session validation
-2.21 New player starts with a valid office and understandable objective.  
-2.22 Complete one loop: build capacity → hire → earn → upgrade.  
-2.23 Refresh page and confirm all progress persists.  
-2.24 Close/reopen after a delay and confirm bounded offline earnings.  
-2.25 Test corrupt save, insufficient cash, full capacity and clock rollback.
-
-**Exit:** a new player can complete the loop, refresh/reopen, and retain valid local progress; economy tests pass; browser smoke test passes.
-
-## Phase 3 — Progression, onboarding and usability
-**Status: in progress**
-
-3.1 Add a short first-run tutorial with skippable steps. (Implemented; covered by Playwright browser regression.)
-3.2 Add objectives and reward milestones. (Three initial milestones implemented with one-time cash/XP rewards; browser regression covers rewards and reload persistence.)
-3.3 Define XP/level progression and unlock requirements. (Player XP and level 2 threshold implemented; further unlocks remain.)
-3.4 Add a progression screen explaining next unlocks. (Implemented and CI-verified in run #33; XP summary, ordered milestone path and future unlock roadmap at levels 3/5/10. Future features clearly marked planned.)
-3.5 Add contextual hints, confirmation dialogs and error messages.  
-3.6 Improve HUD hierarchy and responsive layouts for desktop/tablet/mobile. (320x568 browser layout regression is automated; broader sizes remain.)
-3.7 Ensure all interactive actions are keyboard reachable where practical.  
-3.8 Add sound settings and restrained UI feedback (sound can be deferred).  
-3.9 Complete Persian and English copy; audit RTL/LTR, numbers, currency and layout.  
-3.10 Add settings for language, audio, graphics and save management.
-
-**Exit:** first-time users can understand the goal and complete the first progression milestone on supported screen sizes and both locales.
-
-## Phase 4 — 3D content and company identity
-**Status: in progress — initial procedural worker slice**
-
-4.1 Define visual direction, palette, scale and camera conventions.  
-4.2 Build reusable procedural furniture: desk, chair, monitor, lamp, cabinet, plant.  
-4.3 Build worker character variants using procedural meshes or licensed assets. (Initial procedural seated worker model added; variants remain.)
-4.4 Add idle/work/walk animations or simple readable motion. (Subtle body and typing/arm motion added; walk state remains.)
-4.5 Add room modules, walls, doors, windows and floor materials.  
-4.6 Add departments with distinct furniture and production roles.  
-4.7 Add additional company types with different production loops.  
-4.8 Add office/floor expansion and placement grid rules.  
-4.9 Add asset register with source, license, attribution and modification notes.  
-4.10 Profile draw calls, texture sizes, loading and memory; use instancing where useful.
-
-**Exit:** one visually coherent office/department set with identifiable workers, readable production states, documented asset provenance and acceptable browser performance.
-
-## Phase 5 — Business simulation depth
-**Status: planned; scope to be balanced against first-release size**
-
-5.1 Define departments and their inputs/outputs.  
-5.2 Add production capacity, throughput and bottlenecks.  
-5.3 Add products/services and market demand abstraction.  
-5.4 Add operating expenses, wages and maintenance.  
-5.5 Add pricing and profit/loss summaries.  
-5.6 Add contracts/orders or customer demand.  
-5.7 Add research/technology upgrades.  
-5.8 Add multiple companies and shared holding-level overview.  
-5.9 Add staff roles, skills and management bonuses.  
-5.10 Add balancing simulations and progression curves.
-
-**Exit:** players make meaningful trade-offs beyond clicking the highest-return upgrade; simulation remains understandable and balanced.
-
-## Phase 6 — Account, settings and optional identity
-**Status: scaffold exists; end-to-end verification pending**
-
-6.1 Configure Supabase email authentication and redirect URLs.  
-6.2 Verify sign-up, email confirmation, sign-in and sign-out.  
-6.3 Add password reset and session restoration.  
-6.4 Explain clearly that account identity does not sync game saves.  
-6.5 Test auth unavailable/offline and expired-session states.  
-6.6 Keep only publishable client key in browser; no service-role key.  
-6.7 Ensure sign-out/account deletion does not erase local game progress.  
-6.8 Add privacy notice and account deletion guidance if accounts are enabled for release.
-
-**Exit:** account lifecycle passes end-to-end tests; local save remains independent of account state. If accounts add no launch value, defer them rather than block release.
-
-## Phase 7 — Quality, reliability and release readiness
-**Status: planned**
-
-7.1 Unit tests for economy, save migration and progression.  
-7.2 Integration tests for player actions and state transitions.  
-7.3 Browser smoke tests on current Chrome, Firefox and Edge.  
-7.4 Mobile browser tests for touch, layout and performance.  
-7.5 Test refresh, crash/reopen, offline mode, storage full and invalid save.  
-7.6 Add telemetry only if privacy-safe and explicitly approved; no personal data by default.  
-7.7 Define performance budgets and profile low-end hardware.  
-7.8 Add error boundary/fallback UI and graceful WebGL failure handling.  
-7.9 Add backup export/import and save schema compatibility tests.  
-7.10 Prepare release checklist, known issues and version notes.
-
-**Exit:** release checklist passes; critical defects are zero; known limitations are documented.
-
-## Phase 8 — PWA and distribution
-**Status: planned**
-
-8.1 Add web app manifest and app icons.  
-8.2 Add service worker with safe cache versioning.  
-8.3 Verify installability and offline launch.  
-8.4 Verify update flow does not corrupt local saves.  
-8.5 Configure production hosting and HTTPS.  
-8.6 Add privacy/support/about pages.  
-8.7 Prepare public web release and collect feedback.  
-8.8 Fix release-blocking feedback before mobile packaging.
-
-**Exit:** installable web app works online/offline and updates without losing local progress.
-
-## Phase 9 — Android packaging
-**Status: later; do not start before browser release candidate**
-
-9.1 Add Capacitor Android wrapper.  
-9.2 Configure app ID, icons, splash screen and permissions minimally.  
-9.3 Test WebGL/Babylon rendering and touch on real Android devices.  
-9.4 Test pause/resume, background/foreground and local persistence.  
-9.5 Test performance, memory and thermal behavior.  
-9.6 Configure signing and release build securely.  
-9.7 Prepare store assets and privacy declarations if publishing to a store.
-
-**Exit:** signed Android release candidate passes device smoke tests and preserves local saves.
-
-## Phase 10 — Post-launch operations and expansion
-**Status: future**
-
-10.1 Maintain prioritized bug backlog.  
-10.2 Add analytics only with privacy review and explicit product approval.  
-10.3 Plan new departments, companies, events and progression content.  
-10.4 Add localization and accessibility improvements.  
-10.5 Maintain save migrations and backward compatibility.  
-10.6 Publish changelog and release cadence.
-
-**Exit:** sustainable update process with regression coverage and safe save compatibility.
-
-## Current execution order (do not skip ahead)
-
-1. Continue P3 usability: screen-reader review, HUD hierarchy, responsive layouts and settings.
-2. Keep save migration, progression and browser regression tests green.
-3. Continue P4 procedural workers and furniture; add work-state animation and visual variants.
-4. Verify worker-to-desk assignment and rendering across supported browsers.
-5. Profile scene meshes/materials and rendering performance before expanding content.
-6. Defer Supabase Auth lifecycle to Phase 6.
+## Deferred phases
+P5 Supabase Auth, P6 PWA/release, Android packaging, and deep P7 business simulation remain deferred until P4 exit criteria pass.
 
 ## Definition of done for every task
-
 - Code/documentation exists in the intended branch.
 - Build passes.
 - Relevant tests pass.
@@ -216,3 +76,88 @@ A browser-first, bilingual 3D idle management game. The player starts with one s
 - Save compatibility and security constraints are respected.
 - Status and handoff docs reflect only verified facts.
 - No task is marked complete solely because code was written.
+## 2026-11-08 — Camera focal hierarchy pass
+- Applied the approved composition direction to the default Babylon.js camera: the playable founder and central work area are brought closer to the visual center while the rear windows remain in frame.
+- Default/reset camera: alpha π/4, beta 1.05, radius 16.5, target (0, 0.9, 0.85). The reset action now restores the same focal composition.
+- Added canvas diagnostics for camera target X/Y/Z and browser regression assertions for initial framing, bounded zoom/orbit, and reset consistency.
+- Local verification: production build passed (526 modules; main entry 1,357.13 kB minified / 335.68 kB gzip; existing Vite >500 kB chunk warning remains); unit tests 24/24; focused camera regression passed; full Playwright suite 28/28 in 3.6 minutes; `git diff --check` passed.
+- Scene profile remains 889 meshes / 100 materials / 5 lights at 20 workers. SwiftShader timing is diagnostic only; no GPU/FPS claim.
+- This camera slice is locally verified and awaits commit/push and its own hosted CI run. PR #3 remains Draft, open and unmerged. Headed physical-device visual/GPU/touch acceptance remains open; P4 is not accepted and P5 remains deferred.
+
+## 2026-11-08 — Authoritative handoff: approved premium graphics direction
+
+**User approval:** The user explicitly approved the generated premium Office Empire visual concept on 2026-11-08. Treat this as the active art-direction decision and do not ask for approval of the overall style again.
+
+### Approved target
+- Premium, high-end, cinematic 3D office; polished stone/marble, refined wood, glass and metal, carefully controlled reflections and believable material response.
+- Warm architectural/golden practical lighting balanced with cool city-window light; rich but readable contrast and soft, intentional shadows.
+- Professional anime-inspired founder and staff characters, consistent with the stylized 3D world (not photorealistic).
+- Executive dark-navy/glass HUD with restrained gold/brass highlights and limited cyan accents.
+- Large, aspirational office atmosphere and city skyline as the visual north star. Adapt the reference to the actual playable office, camera, game state and responsive layout; do not copy its fictional statistics, labels, or every UI panel literally.
+
+### User acceptance notes / constraints
+- The user accepted the current camera framing (item 1: yes) and said the second reviewed aspect was good (item 2: no change).
+- The side panel is visibly positioned toward the front of the environment. Preserve its current placement for now; do not move or redesign it without showing a focused preview and receiving approval.
+- The generated concept is an approved art-direction reference, not proof that the game already looks like it and not a pixel-perfect implementation spec.
+- The user expects the assistant to lead the professional design work: prepare a concrete visual proposal, show it, obtain approval, then implement that approved proposal. Do not substitute camera tweaks, diagnostics, or test work for the promised graphics design.
+- For each materially new visual treatment (environment, furniture/materials, lighting, characters, HUD/layout), show a preview first and wait for explicit approval before implementing that treatment. The overall premium art direction itself is already approved.
+
+### Next work — graphics first
+1. Audit the current rendered scene and identify the highest-impact visual gap against the approved reference.
+2. Prepare a specific, high-quality visual proposal for the existing playable office (not another generic mood board). Show the proposed composition/material/lighting/furniture treatment and explain exactly what will change.
+3. Wait for explicit user approval of that concrete proposal.
+4. Implement only the approved slice in Babylon.js/TypeScript, keeping gameplay, navigation, responsive HUD and performance constraints intact.
+5. Capture comparable desktop/mobile views; inspect them visually where possible. Run build, unit and browser regressions, git diff --check, then verify hosted CI for the pushed commit.
+6. Update this handoff and status with exact commit/test/CI evidence. Never describe a generated mockup or headless diagnostic as implemented visual acceptance.
+
+### Release gates remain unchanged
+- P4 graphics and real-device/headed desktop/mobile GPU/touch acceptance are not complete.
+- P5 Supabase identity/auth, PWA, Android and broader business simulation remain deferred until P4 is accepted.
+- PR #3 must remain Draft/open/unmerged. Never merge without the user's explicit instruction.
+
+### Repository checkpoint
+- Branch: feat/p4-office-environment
+- Local HEAD at this handoff: b652cfb654beb474ff2fcc5a15fe5ab7bce398dd (feat: refine office camera composition)
+- The camera composition refinement is implemented and pushed; it is not the promised premium graphics redesign.
+- PR #3: https://github.com/ijoolaie/empire-of-companies/pull/3
+
+## 2026-11-08 — P4 graphics implementation slice
+
+Completed in this slice: premium default-tier procedural details; warm pendant lighting; navy/gold identity panel and inlays; improved floor/exterior/city glazing palette; cutaway front/right wall presentation; regression coverage for the new scene attributes.
+
+Remaining: improve visual fidelity beyond procedural primitives, refine furniture/character/environment materials, inspect higher-resolution headed screenshots on a real GPU/device, and obtain user acceptance. Keep PR #3 Draft/open/unmerged. P5 is blocked on P4 acceptance.
+
+## Latest continuation - premium furniture and semi-realistic character pass (local, not pushed)
+- Furniture pass: walnut desk edge banding, brass collars, ergonomic rounded lumbar/headrest cushions, upholstery seam accents, refined monitor bezel/camera, keyboard keycaps (merged into one mesh per desk) and mouse wheel. Existing room scale, camera framing and management panel were not changed.
+- Character pass: worker torsos now use smoother tailored silhouettes; jacket lapels and shirt fronts add layered clothing; heads use improved proportions and smoother geometry; hair uses side-part/fringe shapes rather than spiky anime locks; subtle beard details add variation. Founder hair was similarly refined while preserving movement controls, seated poses, arrival routing and desk assignment.
+- Added canvas diagnostics for the semi-realistic business character style and tailored-jacket counts, with Playwright assertions.
+- Local verification: production build passed (526 modules; main JS 1,364.46 kB minified / 337.53 kB gzip; existing >500 kB Vite chunk warning); unit tests 24/24; focused character/material/pose/20-worker profile tests 4/4; targeted furniture test 1/1; `git diff --check` passed.
+- The 20-worker headless profile in the focused run reported 1,177 meshes and 109 materials (8 lights); average frame sample 39.793 ms, p95 52.9 ms, max 162.8 ms. This is a diagnostic headless run, not a device FPS claim. The full browser suite is still running; two narrow-viewport tests have failed and require investigation. Do not mark full browser acceptance green.
+- Current changes are local only. PR #3 remains Draft/open/unmerged. Physical headed desktop/mobile and real-device GPU/touch acceptance remain outstanding.
+- Follow-up isolated rerun of the two narrow-viewport tests passed 2/2. The full 28-test run reported 26 passed and two transient browser-server/canvas startup failures (`#game` null and `ERR_CONNECTION_REFUSED`); the two failed tests passed when rerun alone. Full-suite acceptance is therefore not marked green pending a clean complete rerun.
+- Character screenshot saved locally as `artifacts/office-character-premium-pass.jpg` (1280x720 Chromium capture); this is a real app capture, not an AI concept render. Visual inspection on a headed physical device remains outstanding.
+
+
+## Character refinement follow-up � 2026-11-09 (local verification complete)
+- Visual review of the real application screenshot exposed residual stylized elements that the prior pass had not removed. Corrected the actual geometry: removed founder/worker blush marks and worker anime hair spikes; refined eye proportions and smoothed the worker hair cap.
+- Worker clothing now separates a neutral shirt front and tie from a dark tailored jacket. Four reusable jacket color/material variants distinguish hires; facial hair is conditional rather than applied uniformly.
+- Added browser assertions confirming zero worker anime hair-lock/blush meshes and zero founder anime blush meshes. Updated material-count expectations to account for the new reusable jacket material.
+- Latest local checks: production build passed (526 modules; 1,364.36 kB minified main JS / 337.49 kB gzip; Vite chunk-size warning remains); unit tests 24/24; complete Playwright browser suite 28/28 passed in 3.9 minutes; `git diff --check` passed.
+- 20-worker headless scene profile: 1,175 meshes, 1,152 active meshes, 112 materials, 8 lights; average sample 35.633 ms, p95 46.5 ms, max 152.6 ms. These are diagnostic headless measurements, not real-device FPS guarantees.
+- Refreshed actual-app screenshot: `artifacts/office-character-premium-pass.jpg`.
+- Changes are local pending commit/push. PR #3 stays Draft/open/unmerged. Real headed GPU/touch acceptance remains outstanding; P5 remains deferred.
+
+## Employee appearance diversity follow-up — 2026-11-09
+- Added four distinct, non-spiky hairstyle silhouettes (short crop, side-swept, brushed-back and soft-wave), plus three head/face proportions and three seated body silhouettes. Reused existing materials and merged hair/face details to avoid per-worker material growth.
+- Added canvas diagnostics and Playwright assertions for the hairstyle set, face-shape count and body-shape count. The 20-worker profile still reports 1,175 meshes, 1,152 active meshes, 112 materials and 8 lights; latest full-suite sample: average 29.140 ms, p95 46.4 ms, max 134.6 ms. Headless SwiftShader diagnostics only, not real-device FPS.
+- Production build passed; unit tests 24/24; focused diversity and 20-worker browser checks 2/2; complete Playwright browser suite 28/28 passed in 3.4 minutes with the new assertions; `git diff --check` passed.
+- New actual-app capture: `artifacts/office-character-variation-pass.jpg` (1280x720 Chromium, 4 workers; diagnostics show all four hairstyles; no page errors). It is a headless capture, not headed physical-device acceptance.
+- P4 remains in progress. PR #3 remains Draft/open/unmerged; physical headed GPU/touch acceptance remains outstanding; P5 remains deferred.
+
+## Headed GPU acceptance and favicon polish — 2026-11-09
+- Ran the production build in a visible headed Chrome session at 1280x720 using the host AMD Radeon(TM) Graphics adapter through ANGLE / Direct3D 11 (hardware-backed renderer; not SwiftShader). Four workers loaded with all four hairstyle types and three face/body shapes.
+- Browser diagnostics after favicon correction: zero page/console errors, zero HTTP responses >=400, and zero failed requests. The prior 404 was only the missing `/favicon.ico`; added a project SVG favicon at `public/favicon.svg` and linked it from `index.html`.
+- Added a Playwright regression test for the SVG favicon. Full browser suite: 29/29 passed in 3.8 minutes; unit tests: 24/24; production build passed (526 modules); `git diff --check` passed.
+- Captured `artifacts/office-headed-gpu-review.jpg` at 1280x720 from the visible headed Chrome session. This verifies one desktop GPU/browser configuration only; it is not a physical mobile/touch acceptance or a multi-device performance guarantee.
+- Headless SwiftShader 20-worker profile during the complete suite: 1,175 meshes, 1,152 active meshes, 112 materials, 8 lights; average 35.287 ms, p95 70.4 ms, max 138.4 ms. Do not compare directly with the headed GPU run.
+- PR #3 remains Draft/open/unmerged; P5 remains deferred. Await hosted CI for this new favicon/test commit before considering the slice complete.
