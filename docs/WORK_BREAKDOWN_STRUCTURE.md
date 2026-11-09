@@ -146,3 +146,10 @@ Remaining: improve visual fidelity beyond procedural primitives, refine furnitur
 - 20-worker headless scene profile: 1,175 meshes, 1,152 active meshes, 112 materials, 8 lights; average sample 35.633 ms, p95 46.5 ms, max 152.6 ms. These are diagnostic headless measurements, not real-device FPS guarantees.
 - Refreshed actual-app screenshot: `artifacts/office-character-premium-pass.jpg`.
 - Changes are local pending commit/push. PR #3 stays Draft/open/unmerged. Real headed GPU/touch acceptance remains outstanding; P5 remains deferred.
+
+## Employee appearance diversity follow-up — 2026-11-09
+- Added four distinct, non-spiky hairstyle silhouettes (short crop, side-swept, brushed-back and soft-wave), plus three head/face proportions and three seated body silhouettes. Reused existing materials and merged hair/face details to avoid per-worker material growth.
+- Added canvas diagnostics and Playwright assertions for the hairstyle set, face-shape count and body-shape count. The 20-worker profile still reports 1,175 meshes, 1,152 active meshes, 112 materials and 8 lights; latest full-suite sample: average 29.140 ms, p95 46.4 ms, max 134.6 ms. Headless SwiftShader diagnostics only, not real-device FPS.
+- Production build passed; unit tests 24/24; focused diversity and 20-worker browser checks 2/2; complete Playwright browser suite 28/28 passed in 3.4 minutes with the new assertions; `git diff --check` passed.
+- New actual-app capture: `artifacts/office-character-variation-pass.jpg` (1280x720 Chromium, 4 workers; diagnostics show all four hairstyles; no page errors). It is a headless capture, not headed physical-device acceptance.
+- P4 remains in progress. PR #3 remains Draft/open/unmerged; physical headed GPU/touch acceptance remains outstanding; P5 remains deferred.

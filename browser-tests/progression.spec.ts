@@ -359,6 +359,10 @@ test('main character is visible and worker models include facial features', asyn
   await expect(canvas).toHaveAttribute('data-worker-anime-hair-lock-count', '0');
   await expect(canvas).toHaveAttribute('data-worker-anime-blush-count', '0');
   await expect(canvas).toHaveAttribute('data-worker-tailored-jacket-count', '2');
+  await expect(canvas).toHaveAttribute('data-worker-hair-style-count', '2');
+  await expect(canvas).toHaveAttribute('data-worker-hairstyle-types', 'short-crop,side-swept');
+  await expect(canvas).toHaveAttribute('data-worker-face-shape-count', '2');
+  await expect(canvas).toHaveAttribute('data-worker-body-shape-count', '2');
   await expect(canvas).toHaveAttribute('data-main-character-nameplate', 'true');
   await expect(canvas).toHaveAttribute('data-office-feature-wall-slat-count', '5');
   await expect(canvas).toHaveAttribute('data-worker-model-count', '2');
@@ -452,6 +456,8 @@ test('office upgrades visibly transform room finishes and unlock decor tiers', a
   await page.evaluate(({ key, value }) => localStorage.setItem(key, JSON.stringify(value)), { key: SAVE_KEY, value: save(20) });
   await page.reload();
   await expect(canvas).toHaveAttribute('data-worker-model-count', '20');
+  await expect(canvas).toHaveAttribute('data-worker-hair-style-count', '4');
+  await expect(canvas).toHaveAttribute('data-worker-hairstyle-types', 'short-crop,side-swept,brushed-back,soft-wave');
   await expect.poll(async () => Number(await canvas.getAttribute('data-frame-cpu-ms-avg')), { timeout: 45000 }).toBeGreaterThan(0);
   const twentyWorkers = await readMetrics();
   console.log('Scene profile samples', JSON.stringify({ zeroWorkers, fiveWorkers, tenWorkers, twelveWorkers, twentyWorkers }));
