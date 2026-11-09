@@ -324,3 +324,14 @@ Screenshot review artifact: artifacts/office-premium-pass.jpg (1280x720 local Ch
 - Proposed next visual slice (NOT implemented): turn the existing exterior ground around the office into a restrained premium rooftop terrace. Keep the playable interior footprint exactly 10x8 and the camera unchanged. Replace the blank gray appearance with dark architectural pavers and subtle joints, add a slim champagne-brass perimeter reveal and low glass safety balustrade only around the outer rooftop edge, plus a restrained distant city silhouette/haze behind the existing three window panes. Keep the entrance/arrival approach clear; no new UI, no moved furniture, and no changes to worker navigation or desk placement. Reuse a small set of materials and static merged meshes to control draw calls.
 - This proposal requires explicit user approval before implementation. The two generated broad office concept images are not faithful to the current game composition and are not treated as implementation previews or accepted references.
 - PR #3 description now records run #148 success. PR remains Draft/open/unmerged; physical mobile/touch acceptance and user sign-off remain outstanding; P5 stays deferred.
+
+## Character art finalization (active - 2026-11-09)
+
+Priority changed by user: finalize worker character graphics BEFORE the rooftop terrace. The terrace direction is approved but deferred.
+
+- External free assets with valid licenses are now allowed. Prefer CC0 assets and retain exact source/license provenance.
+- Candidate retained at assets/character-source/innerscene/harper-locomotion.glb; see its adjacent README for source URL, license and technical inventory.
+- Candidate technical facts: 19,520,324-byte GLB, 12 meshes, 12 materials, 56-joint skin, seven animation groups; Babylon.js 8.56.2 import smoke test passed.
+- A static seated-office candidate was rejected because it has no armature or animation. No game character code has been changed yet.
+- Do not mark the character work complete based on import success. Acceptance requires high-quality visible face/hair/clothing, convincing seated desk poses, preserved walk/arrival and work-state animations, diverse worker appearances, and a verified 20-worker runtime profile.
+- The old procedural worker implementation remains active until the replacement passes actual-app visual and browser tests.
