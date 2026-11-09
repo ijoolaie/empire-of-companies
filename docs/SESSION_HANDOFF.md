@@ -355,3 +355,13 @@ Screenshot review artifact:
 - GitHub Actions Build run #147 (ID 42608077550) for commit `4132d88c1635cd3e66fd9f42644a880392bbba4a` completed with conclusion `success`, including hosted browser regression.
 - Temporary test script and local preview server were removed/stopped. The only new worktree artifact is the headed 20-worker screenshot.
 - PR #3 remains Draft/open/unmerged. Physical mobile/touch acceptance and user sign-off remain outstanding. P5 remains deferred.
+
+## 2026-11-09 — Hosted CI #148 and current-scene visual audit
+
+- Hosted GitHub Actions Build run #148 (ID 42626297256) for commit `1412371b888a9ec05bb1b457f224c8adfc759fd8` completed with conclusion `success`. npm ci, production build, unit tests, Chromium installation and browser regression all passed.
+- Inspected the actual headed AMD/D3D11 20-worker capture at `artifacts/office-headed-20-worker-review.jpg` (1280x720).
+- Visual audit: the office interior has the intended warm stone/navy/walnut/gold materials, but the office currently reads as a small floating room on a very large, mostly empty gray exterior ground plane. The panoramic city backdrop is visually weak at the accepted default camera framing, so the scene lacks a convincing high-rise/penthouse context beyond the windows.
+- The accepted camera framing, room footprint, management panel placement, desk positions, and gameplay interactions are constraints and must remain unchanged.
+- Proposed next visual slice (NOT implemented): turn the existing exterior ground around the office into a restrained premium rooftop terrace. Keep the playable interior footprint exactly 10x8 and the camera unchanged. Replace the blank gray appearance with dark architectural pavers and subtle joints, add a slim champagne-brass perimeter reveal and low glass safety balustrade only around the outer rooftop edge, plus a restrained distant city silhouette/haze behind the existing three window panes. Keep the entrance/arrival approach clear; no new UI, no moved furniture, and no changes to worker navigation or desk placement. Reuse a small set of materials and static merged meshes to control draw calls.
+- This proposal requires explicit user approval before implementation. The two generated broad office concept images are not faithful to the current game composition and are not treated as implementation previews or accepted references.
+- PR #3 description now records run #148 success. PR remains Draft/open/unmerged; physical mobile/touch acceptance and user sign-off remain outstanding; P5 stays deferred.
