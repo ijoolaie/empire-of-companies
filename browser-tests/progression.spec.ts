@@ -62,7 +62,7 @@ test('progression rewards are granted once and persist after reload', async ({ p
   await expect(page.locator('#game')).toHaveAttribute('data-worker-leg-mesh-count', '10');
   await expect(page.locator('#game')).toHaveAttribute('data-worker-necktie-mesh-count', '2');
   await expect(page.locator('#game')).toHaveAttribute('data-walking-worker-count', '0', { timeout: 12000 });
-  await expect(page.locator('#game')).toHaveAttribute('data-scene-material-count', String(Number(materialCountBeforeHire) + 5));
+  await expect(page.locator('#game')).toHaveAttribute('data-scene-material-count', String(Number(materialCountBeforeHire) + 6));
   await expect(rows.nth(1)).toHaveClass(/is-complete/);
   await expect(page.locator('.progress-heading')).toContainText('50 / 100 XP');
 
@@ -99,7 +99,7 @@ test('worker material variants are reused instead of allocating one material set
   for (let workerCount = 2; workerCount <= 5; workerCount++) {
     await page.locator('#hire').click();
     await expect(canvas).toHaveAttribute('data-worker-model-count', String(workerCount));
-    const expectedMaterials = initialMaterials + Math.min(workerCount - 1, 3) * 5;
+    const expectedMaterials = initialMaterials + Math.min(workerCount - 1, 3) * 6;
     await expect(canvas).toHaveAttribute('data-scene-material-count', String(expectedMaterials));
   }
 });
@@ -354,7 +354,10 @@ test('main character is visible and worker models include facial features', asyn
   await expect(canvas).toHaveAttribute('data-main-character-present', 'true');
   await expect(canvas).toHaveAttribute('data-main-character-role', 'player-founder');
   await expect(canvas).toHaveAttribute('data-main-character-style', 'semi-realistic-business');
+  await expect(canvas).toHaveAttribute('data-main-character-anime-blush-count', '0');
   await expect(canvas).toHaveAttribute('data-worker-style', 'semi-realistic-business');
+  await expect(canvas).toHaveAttribute('data-worker-anime-hair-lock-count', '0');
+  await expect(canvas).toHaveAttribute('data-worker-anime-blush-count', '0');
   await expect(canvas).toHaveAttribute('data-worker-tailored-jacket-count', '2');
   await expect(canvas).toHaveAttribute('data-main-character-nameplate', 'true');
   await expect(canvas).toHaveAttribute('data-office-feature-wall-slat-count', '5');
