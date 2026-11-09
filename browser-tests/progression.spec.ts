@@ -2,6 +2,12 @@ import { test, expect } from '@playwright/test';
 
 const SAVE_KEY = 'eoc-save-v4';
 
+test('app favicon is served as an SVG without a missing-resource response', async ({ request }) => {
+  const response = await request.get('/favicon.svg');
+  expect(response.ok()).toBeTruthy();
+  expect(response.headers()['content-type']).toContain('image/svg+xml');
+});
+
 async function seedSave(page, state) {
   await page.addInitScript(({ key, value }) => {
     if (!localStorage.getItem(key)) localStorage.setItem(key, JSON.stringify(value));

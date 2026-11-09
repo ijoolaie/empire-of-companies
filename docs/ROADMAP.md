@@ -141,3 +141,11 @@ Do not skip P4 acceptance to start authentication, deep simulation, PWA or Andro
 - Production build passed; unit tests 24/24; focused diversity and 20-worker browser checks 2/2; complete Playwright browser suite 28/28 passed in 3.4 minutes with the new assertions; `git diff --check` passed.
 - New actual-app capture: `artifacts/office-character-variation-pass.jpg` (1280x720 Chromium, 4 workers; diagnostics show all four hairstyles; no page errors). It is a headless capture, not headed physical-device acceptance.
 - P4 remains in progress. PR #3 remains Draft/open/unmerged; physical headed GPU/touch acceptance remains outstanding; P5 remains deferred.
+
+## Headed GPU acceptance and favicon polish — 2026-11-09
+- Ran the production build in a visible headed Chrome session at 1280x720 using the host AMD Radeon(TM) Graphics adapter through ANGLE / Direct3D 11 (hardware-backed renderer; not SwiftShader). Four workers loaded with all four hairstyle types and three face/body shapes.
+- Browser diagnostics after favicon correction: zero page/console errors, zero HTTP responses >=400, and zero failed requests. The prior 404 was only the missing `/favicon.ico`; added a project SVG favicon at `public/favicon.svg` and linked it from `index.html`.
+- Added a Playwright regression test for the SVG favicon. Full browser suite: 29/29 passed in 3.8 minutes; unit tests: 24/24; production build passed (526 modules); `git diff --check` passed.
+- Captured `artifacts/office-headed-gpu-review.jpg` at 1280x720 from the visible headed Chrome session. This verifies one desktop GPU/browser configuration only; it is not a physical mobile/touch acceptance or a multi-device performance guarantee.
+- Headless SwiftShader 20-worker profile during the complete suite: 1,175 meshes, 1,152 active meshes, 112 materials, 8 lights; average 35.287 ms, p95 70.4 ms, max 138.4 ms. Do not compare directly with the headed GPU run.
+- PR #3 remains Draft/open/unmerged; P5 remains deferred. Await hosted CI for this new favicon/test commit before considering the slice complete.
