@@ -342,3 +342,16 @@ Screenshot review artifact:
 - Captured `artifacts/office-headed-gpu-review.jpg` at 1280x720 from the visible headed Chrome session. This verifies one desktop GPU/browser configuration only; it is not a physical mobile/touch acceptance or a multi-device performance guarantee.
 - Headless SwiftShader 20-worker profile during the complete suite: 1,175 meshes, 1,152 active meshes, 112 materials, 8 lights; average 35.287 ms, p95 70.4 ms, max 138.4 ms. Do not compare directly with the headed GPU run.
 - PR #3 remains Draft/open/unmerged; P5 remains deferred. Await hosted CI for this new favicon/test commit before considering the slice complete.
+
+## 2026-11-09 — 20-worker headed AMD GPU acceptance and hosted CI
+
+- Re-ran the production app in a visible headed Chromium session at 1280x720 with a seeded 20-worker / 20-desk save.
+- WebGL renderer reported by WEBGL_debug_renderer_info: ANGLE (AMD, AMD Radeon(TM) Graphics, Direct3D11); this was hardware-backed D3D11, not SwiftShader.
+- All 20 workers loaded; all four hairstyle types and all three face/body shape variants were present.
+- Captured the actual app at `artifacts/office-headed-20-worker-review.jpg`.
+- Single-run frame diagnostics: average CPU frame 17.17 ms, p95 19.1 ms, max 19.6 ms; 1,175 meshes, 1,152 active meshes, 112 materials, 8 lights.
+- Runtime diagnostics: zero JavaScript page errors, zero failed network requests and zero HTTP responses >=400.
+- These measurements are one desktop/browser/GPU sample only. They are not an FPS guarantee, mobile result or multi-device acceptance.
+- GitHub Actions Build run #147 (ID 42608077550) for commit `4132d88c1635cd3e66fd9f42644a880392bbba4a` completed with conclusion `success`, including hosted browser regression.
+- Temporary test script and local preview server were removed/stopped. The only new worktree artifact is the headed 20-worker screenshot.
+- PR #3 remains Draft/open/unmerged. Physical mobile/touch acceptance and user sign-off remain outstanding. P5 remains deferred.
